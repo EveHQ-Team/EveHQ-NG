@@ -1,0 +1,43 @@
+{
+	"compileOnSave": false,
+	"compilerOptions": {
+		"moduleResolution": "node",
+		"target": "es5",
+		"module": "es2015",
+		"sourceMap": true,
+		"suppressImplicitAnyIndexErrors": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"noImplicitAny": true,
+		"forceConsistentCasingInFileNames": true,
+		"noFallthroughCasesInSwitch": true,
+		"strictNullChecks": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"skipLibCheck": true,
+		"isolatedModules": false,
+		"skipDefaultLibCheck": true,
+		"lib": ["es6", "es5", "dom"],
+		"baseUrl": ".",
+		"noEmitHelpers": true,
+		"importHelpers": true,
+		"outDir": "../../compiled/temp/offline/out-tsc",
+		"declaration": false,
+		"allowJs": false,
+		"paths": {
+			"environments": [
+				"environments"
+			]
+		},
+		"types": [
+			"node"
+		],
+		"typeRoots": [
+			"../node_modules/@types"
+		]
+	},
+	"exclude": [
+		"../node_modules"
+	],
+	"atom": { "rewriteTsconfig": false }
+}

@@ -1,0 +1,57 @@
+{
+	"project": {
+		"name": "evehq-ng",
+		"ejected": true
+	},
+	"apps": [
+		{
+			"root": ".",
+			"outDir": "../bin/dist",
+			"assets": [
+				"assets"
+			],
+			"index": "index.html",
+			"main": "index.ts",
+			"polyfills": "polyfills.ts",
+			"tsconfig": "tsconfig.json",
+			"prefix": "app",
+			"styles": [
+				"styles.scss"
+			],
+			"environmentSource": "environments/environment.ts",
+			"environments": {
+				"dev": "environments/environment.ts",
+				"prod": "environments/environment.prod.ts"
+			}
+		}
+	],
+	"packageManager": "npm",
+	"defaults": {
+		"styleExt": "scss",
+		"interface": {
+			"prefix": ""
+		},
+		"class": {
+			"spec": false
+		},
+		"component": {
+			"inlineStyle": false,
+			"inlineTemplate": false,
+			"spec": false
+		},
+		"directive": {
+			"spec": false,
+			"flat": true
+		},
+		"module": {
+			"spec": false
+		},
+		"pipe": {
+			"spec": false,
+			"flat": true
+		},
+		"service": {
+			"spec": false
+		}
+	}
+}

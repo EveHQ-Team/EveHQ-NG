@@ -1,0 +1,13 @@
+{
+	"compileOnSave": false,
+	"compilerOptions": {
+		"outDir": "../../../bin/dist",
+		"declaration": false,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"lib": ["es6", "dom"],
+		"moduleResolution": "node",
+		"sourceMap": false,
+		"target": "es5"
+	}
+}
