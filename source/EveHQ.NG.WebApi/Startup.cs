@@ -74,7 +74,7 @@ namespace EveHQ.NG.WebApi
 		private IContainer _applicationContainer;
 
 		private const int SignalRPort = 5000;
-		private const string AuthenticationNotificationHubName = "authentication-notification";
+		private const string AuthenticationNotificationHubName = "/authentication-notification";
 		private const string CorsPolicyName = "CorsPolicy";
 	}
 }
