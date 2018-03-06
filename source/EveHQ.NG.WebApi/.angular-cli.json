@@ -37,21 +37,24 @@
 		"component": {
 			"inlineStyle": false,
 			"inlineTemplate": false,
-			"spec": false
+			"spec": false,
+			"flat": false
 		},
 		"directive": {
 			"spec": false,
 			"flat": true
 		},
 		"module": {
-			"spec": false
+			"spec": false,
+			"flat": false
 		},
 		"pipe": {
 			"spec": false,
 			"flat": true
 		},
 		"service": {
-			"spec": false
+			"spec": false,
+			"flat": false
 		}
 	}
 }

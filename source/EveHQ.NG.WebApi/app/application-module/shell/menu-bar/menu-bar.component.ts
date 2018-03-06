@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuCommand } from 'shell/menu-bar/menu-command';
+import { MenuCommand } from './menu-command';
 
 @Component({
 	selector: 'evehq-menu-bar',
