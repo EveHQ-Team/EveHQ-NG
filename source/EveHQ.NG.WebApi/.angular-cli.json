@@ -14,7 +14,7 @@
 			"main": "index.ts",
 			"polyfills": "polyfills.ts",
 			"tsconfig": "tsconfig.json",
-			"prefix": "app",
+			"prefix": "evehq",
 			"styles": [
 				"styles.scss"
 			],

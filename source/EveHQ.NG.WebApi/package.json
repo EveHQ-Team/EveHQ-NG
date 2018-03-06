@@ -1,118 +1,110 @@
 {
-	"name": "evehq-ng",
-	"productName": "EveHQ NG",
-	"version": "0.0.1",
-	"description": "EVE Online professions assistant tool",
-	"homepage": "https://evehq.co",
-	"author": {
-		"name": "EveHQ Team",
-		"email": "mike@eshva.ru"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/Eshva/EveHQ-NG.Prototype.git"
-	},
-	"bugs": {
-		"url": "https://github.com/Eshva/EveHQ-NG.Prototype/issues"
-	},
-	"keywords": [
-		"eve online",
-		"tool"
-	],
-	"license": "SEE LICENSE IN LICENSE.md",
-	"main": "main.js",
-	"private": true,
-	"scripts": {
-		"start": "npm run electrontsc && npm-run-all --parallel webpack:watch serve",
-		"electrontsc":
-			"tsc -p ./electron/ && ncp ./electron/package.json ../../bin/dist/package.json && cd ../../bin/dist/ && npm install",
-		"webpack:watch": "webpack --watch",
-		"serve": "electron ../../bin/dist --serve --enable-logging",
-		"build:ui:dev": "webpack --display-error-details",
-		"copy-sde": "ncp ../../data/eve.db.zip ../../bin/dist/publish/eve.db.zip",
-		"build:windows:service": "dotnet publish ../EveHQ-NG.sln --runtime win-x64 --configuration Debug --self-contained",
-		"build:windows:copyservice":
-			"cd ../../bin/debug/core/win-x64/ && fsys --task=copy --filesFolders=publish --destination=../../../dist/ --clobber='true' --preserveTimestamps='true'",
-		"build:windows":
-			"npm run build:ui:dev && npm run build:windows:service && npm run build:windows:copyservice && npm run copy-sde && npm run electrontsc",
-		"build:linux:service":
-			"rm -r -f ../../bin/debug/core/linux-x64/ && dotnet publish ../EveHQ-NG.sln --runtime linux-x64 --configuration Debug --self-contained",
-		"build:linux:copyservice":
-			"cd ../../bin/debug/core/linux-x64/ && fsys --task=copy --filesFolders=publish --destination=../../../dist/ --clobber='true' --preserveTimestamps='true'",
-		"build:linux":
-			"npm run build:ui:dev && npm run build:linux:service && npm run build:linux:copyservice && npm run copy-sde && npm run electrontsc",
-		"build:mac:service":
-			"rm -r -f ../../bin/debug/core/osx-x64/ && dotnet publish ../EveHQ-NG.sln --runtime osx-x64 --configuration Debug --self-contained",
-		"build:mac:copyservice":
-			"cd ../../bin/debug/core/osx-x64/ && fsys --task=copy --filesFolders=publish --destination=../../../dist/ --clobber='true' --preserveTimestamps='true'",
-		"build:mac":
-			"npm run build:ui:dev && npm run build:mac:service && npm run build:mac:copyservice && npm run copy-sde && npm run electrontsc",
-		"build:windows:package": "npm run build:windows && electron-builder --win",
-		"build:linux:package": "npm run build:linux && electron-builder --linux",
-		"build:mac:package": "npm run build:mac && electron-builder --mac"
-	},
-	"engines": {
-		"node": "<9.0",
-		"npm": "<5.0"
-	},
-	"dependencies": {
-		"@angular/common": "5.2.1",
-		"@angular/compiler": "5.2.1",
-		"@angular/core": "5.2.1",
-		"@angular/forms": "5.2.1",
-		"@angular/http": "5.2.1",
-		"@angular/platform-browser": "5.2.1",
-		"@angular/platform-browser-dynamic": "5.2.1",
-		"@angular/router": "5.2.1",
-		"@aspnet/signalr-client": "1.0.0-alpha2-final",
-		"@types/core-js": "0.9.43",
-		"@types/lodash": "4.14.92",
-		"core-js": "2.4.1",
-		"enhanced-resolve": "3.3.0",
-		"lodash": "4.17.4",
-		"rxjs": "5.5.6",
-		"zone.js": "0.8.20"
-	},
-	"devDependencies": {
-		"@angular/cli": "1.6.6",
-		"@angular/compiler-cli": "5.2.1",
-		"@angular/language-service": "5.2.1",
-		"autoprefixer": "7.1.5",
-		"codelyzer": "3.2.0",
-		"cross-env": "5.0.5",
-		"css-loader": "0.28.7",
-		"cssnano": "3.10.0",
-		"devtron": "^1.4.0",
-		"electron": "1.8.2-beta.4",
-		"electron-builder": "19.37.2",
-		"exports-loader": "0.6.4",
-		"file-loader": "0.11.2",
-		"fs-extra-cli": "0.0.4",
-		"html-loader": "0.5.1",
-		"json-loader": "0.5.7",
-		"minimist": "1.2.0",
-		"mkdirp": "0.5.1",
-		"ncp": "2.0.0",
-		"node-fs-extra": "0.8.2",
-		"node-sass": "4.6.0",
-		"npm": "4.6.1",
-		"npm-run-all": "4.1.1",
-		"postcss-loader": "2.0.6",
-		"postcss-url": "7.1.2",
-		"raw-loader": "0.5.1",
-		"sass-loader": "6.0.6",
-		"script-loader": "0.7.1",
-		"source-map-loader": "0.2.1",
-		"style-loader": "0.18.2",
-		"stylelint": "8.2.0",
-		"stylelint-webpack-plugin": "0.9.0",
-		"ts-node": "3.3.0",
-		"tslint": "5.7.0",
-		"typescript": "2.6.2",
-		"url-loader": "0.5.9",
-		"webdriver-manager": "12.0.6",
-		"webpack": "3.10.0",
-		"webpack-concat-plugin": "2.4.2",
-		"webpack-dev-server": "2.11.1"
-	}
+  "name": "evehq-ng",
+  "productName": "EveHQ NG",
+  "version": "0.0.1",
+  "description": "EVE Online professions assistant tool",
+  "homepage": "https://evehq.co",
+  "author": {
+    "name": "EveHQ Team",
+    "email": "mike@eshva.ru"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Eshva/EveHQ-NG.Prototype.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Eshva/EveHQ-NG.Prototype/issues"
+  },
+  "keywords": [
+    "eve online",
+    "tool"
+  ],
+  "license": "SEE LICENSE IN LICENSE.md",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "npm run electrontsc && npm-run-all --parallel webpack:watch serve",
+    "electrontsc": "tsc -p ./electron/ && ncp ./electron/package.json ../../bin/dist/package.json && cd ../../bin/dist/ && npm install",
+    "webpack:watch": "webpack --watch",
+    "serve": "electron ../../bin/dist --serve --enable-logging",
+    "build:ui:dev": "webpack --display-error-details",
+    "copy-sde": "ncp ../../data/eve.db.zip ../../bin/dist/publish/eve.db.zip",
+    "build:windows:service": "dotnet publish ../EveHQ-NG.sln --runtime win-x64 --configuration Debug --self-contained",
+    "build:windows:copyservice": "cd ../../bin/debug/core/win-x64/ && fsys --task=copy --filesFolders=publish --destination=../../../dist/ --clobber='true' --preserveTimestamps='true'",
+    "build:windows": "npm run build:ui:dev && npm run build:windows:service && npm run build:windows:copyservice && npm run copy-sde && npm run electrontsc",
+    "build:linux:service": "rm -r -f ../../bin/debug/core/linux-x64/ && dotnet publish ../EveHQ-NG.sln --runtime linux-x64 --configuration Debug --self-contained",
+    "build:linux:copyservice": "cd ../../bin/debug/core/linux-x64/ && fsys --task=copy --filesFolders=publish --destination=../../../dist/ --clobber='true' --preserveTimestamps='true'",
+    "build:linux": "npm run build:ui:dev && npm run build:linux:service && npm run build:linux:copyservice && npm run copy-sde && npm run electrontsc",
+    "build:mac:service": "rm -r -f ../../bin/debug/core/osx-x64/ && dotnet publish ../EveHQ-NG.sln --runtime osx-x64 --configuration Debug --self-contained",
+    "build:mac:copyservice": "cd ../../bin/debug/core/osx-x64/ && fsys --task=copy --filesFolders=publish --destination=../../../dist/ --clobber='true' --preserveTimestamps='true'",
+    "build:mac": "npm run build:ui:dev && npm run build:mac:service && npm run build:mac:copyservice && npm run copy-sde && npm run electrontsc",
+    "build:windows:package": "npm run build:windows && electron-builder --win",
+    "build:linux:package": "npm run build:linux && electron-builder --linux",
+    "build:mac:package": "npm run build:mac && electron-builder --mac"
+  },
+  "engines": {
+    "node": "<9.0",
+    "npm": "<5.0"
+  },
+  "dependencies": {
+    "@angular/common": "5.2.1",
+    "@angular/compiler": "5.2.1",
+    "@angular/core": "5.2.1",
+    "@angular/forms": "5.2.1",
+    "@angular/http": "5.2.1",
+    "@angular/platform-browser": "5.2.1",
+    "@angular/platform-browser-dynamic": "5.2.1",
+    "@angular/router": "5.2.1",
+    "@aspnet/signalr-client": "1.0.0-alpha2-final",
+    "@types/core-js": "0.9.43",
+    "@types/lodash": "4.14.92",
+    "core-js": "2.4.1",
+    "enhanced-resolve": "3.3.0",
+    "lodash": "4.17.4",
+    "rxjs": "5.5.6",
+    "zone.js": "0.8.20"
+  },
+  "devDependencies": {
+    "@angular/cli": "1.6.6",
+    "@angular/compiler-cli": "5.2.1",
+    "@angular/language-service": "5.2.1",
+    "autoprefixer": "7.1.5",
+    "codelyzer": "3.2.0",
+    "cross-env": "5.0.5",
+    "css-loader": "0.28.7",
+    "cssnano": "3.10.0",
+    "devtron": "^1.4.0",
+    "electron": "1.8.2-beta.4",
+    "electron-builder": "19.37.2",
+    "exports-loader": "0.6.4",
+    "file-loader": "0.11.2",
+    "fs-extra-cli": "0.0.4",
+    "html-loader": "0.5.1",
+    "json-loader": "0.5.7",
+    "minimist": "1.2.0",
+    "mkdirp": "0.5.1",
+    "ncp": "2.0.0",
+    "node-fs-extra": "0.8.2",
+    "node-sass": "4.6.0",
+    "npm": "4.6.1",
+    "npm-run-all": "4.1.1",
+    "postcss-loader": "2.0.6",
+    "postcss-url": "7.1.2",
+    "raw-loader": "0.5.1",
+    "sass-loader": "6.0.6",
+    "script-loader": "0.7.1",
+    "source-map-loader": "0.2.1",
+    "style-loader": "0.18.2",
+    "stylelint": "8.2.0",
+    "stylelint-webpack-plugin": "0.9.0",
+    "ts-node": "3.3.0",
+    "tslint": "5.7.0",
+    "typescript": "2.6.2",
+    "typey": "1.1.2",
+    "url-loader": "0.5.9",
+    "webdriver-manager": "12.0.6",
+    "webpack": "3.10.0",
+    "webpack-concat-plugin": "2.4.2",
+    "webpack-dev-server": "2.11.1"
+  }
 }

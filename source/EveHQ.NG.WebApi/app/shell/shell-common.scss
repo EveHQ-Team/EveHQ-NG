@@ -1,0 +1,6 @@
+@import "~assets/styles/sizes";
+
+$menu-bar-button-size: $grid-step * 10;
+$menu-bar-width: $menu-bar-button-size;
+$application-header-height: $menu-bar-button-size;
+$application-footer-height: $grid-step * 5;

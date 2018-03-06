@@ -29,7 +29,7 @@ console.log(`applicationRootDirectory = ${applicationRootDirectory}`);
 
 //add all external css to be added in our index.html--> like as if it's .angular-cli.json
 const styles = [
-	path.resolve(applicationRootDirectory, 'styles.scss')
+	path.resolve(applicationRootDirectory, 'assets', 'root-styles', 'styles.scss')
 ];
 
 //we add all our external scripts we want to load externally, like inserting in our index.html --> like as if it's .angular-cli.json

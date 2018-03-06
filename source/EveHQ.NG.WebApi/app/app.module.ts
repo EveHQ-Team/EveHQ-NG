@@ -4,7 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { AppComponent } from 'app/app.component';
 import { AppRoutingModule } from 'app-routing.module';
 import { ApiService } from 'services/api.service';
 import { LoginPageComponent } from 'login-page/login-page.component';
@@ -13,13 +12,20 @@ import { CharacterInfoPageComponent } from 'character-info-page/character-info-p
 import { RomanNumberPipe } from 'services/roman-number.pipe';
 import { LogService } from 'services/log.service';
 import { ApiEndpointsService } from 'services/api-endpoints.service';
+import { ShellComponent } from './shell/shell.component';
+import { MenuBarComponent } from './shell/menu-bar/menu-bar.component';
+import { ApplicationHeaderComponent } from './shell/application-header/application-header.component';
+import { ApplicationFooterComponent } from './shell/application-footer/application-footer.component';
 
 @NgModule({
 	declarations: [
-		AppComponent,
 		LoginPageComponent,
 		CharacterInfoPageComponent,
-		RomanNumberPipe
+		RomanNumberPipe,
+		ShellComponent,
+		MenuBarComponent,
+		ApplicationHeaderComponent,
+		ApplicationFooterComponent
 	],
 	imports: [
 		BrowserModule,
@@ -33,7 +39,7 @@ import { ApiEndpointsService } from 'services/api-endpoints.service';
 		LogService,
 		ApiEndpointsService
 	],
-	bootstrap: [AppComponent]
+	bootstrap: [ShellComponent]
 })
 export class AppModule {
 }

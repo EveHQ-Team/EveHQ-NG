@@ -25,7 +25,9 @@ export class ApiService {
 				}
 				else {
 					console.log('Try to start the API-service.');
-					this.apiServiceChildProcess = childProcess.spawn(this.buildPathToWebApi());
+					const webApiPath = this.buildPathToWebApi();
+					console.log(`Path to API-service: ${webApiPath}`);
+					this.apiServiceChildProcess = childProcess.spawn(webApiPath);
 
 					Observable.interval(2000).take(10).takeUntil(this.isServiceStartedEvent)
 						.subscribe(_ => {
