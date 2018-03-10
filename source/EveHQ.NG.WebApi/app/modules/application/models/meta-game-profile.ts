@@ -1,4 +1,4 @@
-import { Character } from 'character-module/models/character';
+import { Character } from 'modules/character/models/character';
 
 export class MetaGameProfile {
 	public characters: Character[] = [];
