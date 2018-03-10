@@ -1,5 +1,30 @@
 @import "~assets/styles/colors";
+@import "~assets/styles/sizes";
 
 :host {
+	$navigation-button-size: $grid-step * 10;
+
+	display: grid;
+	grid-template-columns: 1fr $navigation-button-size $navigation-button-size;
+	grid-template-rows: $navigation-button-size;
+	grid-template-areas: "header-text backward-button forward-button";
 	background-color: $grey-200;
+	color: white;
+
+	.header-text {
+		grid-area: header-text;
+		margin-left: $grid-step * 5;
+	}
+
+	.navigation-button {
+		background-color: orangered;
+	}
+
+	.backward-button {
+		grid-area: backward-button;
+	}
+
+	.forward-button {
+		grid-area: forward-button;
+	}
 }

@@ -54,7 +54,7 @@
 		},
 		"service": {
 			"spec": false,
-			"flat": false
+			"flat": true
 		}
 	}
 }

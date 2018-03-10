@@ -2,16 +2,16 @@ import { Component, AfterViewInit } from '@angular/core';
 import { ShellService } from 'application-module/services/shell.service';
 
 @Component({
-	selector: 'evehq-user-dashboard',
-	templateUrl: './user-dashboard.component.html',
-	styleUrls: ['./user-dashboard.component.scss']
+	selector: 'evehq-new-user',
+	templateUrl: './new-user.component.html',
+	styleUrls: ['./new-user.component.scss']
 })
-export class UserDashboardComponent implements AfterViewInit {
+export class NewUserComponent implements AfterViewInit {
 
 	constructor(private readonly shellService: ShellService) {
 	}
 
 	public ngAfterViewInit(): void {
-		this.shellService.setHeader('User dashboard');
+		this.shellService.setHeader('Create the user');
 	}
 }

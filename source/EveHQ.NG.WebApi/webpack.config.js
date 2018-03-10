@@ -6,11 +6,12 @@ const autoprefixer = require('autoprefixer');
 const postcssUrl = require('postcss-url');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const ConcatPlugin = require('webpack-concat-plugin');
+const rxPaths = require('rxjs/_esm5/path-mapping');
 
 const { NoEmitOnErrorsPlugin, LoaderOptionsPlugin, DefinePlugin, HashedModuleIdsPlugin } = require('webpack');
 const { GlobCopyWebpackPlugin, BaseHrefWebpackPlugin, InsertConcatAssetsWebpackPlugin } =
 	require('@angular/cli/plugins/webpack');
-const { CommonsChunkPlugin, UglifyJsPlugin } = require('webpack').optimize;
+const { CommonsChunkPlugin, UglifyJsPlugin, ModuleConcatenationPlugin } = require('webpack').optimize;
 const { AotPlugin } = require('@ngtools/webpack');
 
 const entryPoints = ['inline', 'polyfills', 'styles', 'vendor', 'main'];
@@ -22,6 +23,12 @@ const isProduction = process.env.NODE_ENV === 'production';
 const projectRoot = path.resolve(__dirname, '.');
 const nodeModulesDirectory = path.resolve(projectRoot, 'node_modules');
 const applicationRootDirectory = path.resolve(projectRoot, 'app');
+
+const environmentPathAlias = {
+	// WORKAROUND See. angular-cli/issues/5433
+	"environments": isProduction
+						? path.resolve(applicationRootDirectory, 'environments/index.prod.ts')
+						: path.resolve(applicationRootDirectory, 'environments/index.ts')};
 
 console.log(`projectRoot = ${projectRoot}`);
 console.log(`nodeModulesDirectory = ${nodeModulesDirectory}`);
@@ -251,6 +258,8 @@ function getPlugins() {
 			}));
 	}
 
+	plugins.push(new ModuleConcatenationPlugin());
+
 	return plugins;
 }
 
@@ -284,11 +293,8 @@ module.exports = {
 		"extensions": ['.ts', '.js', '.scss', '.html'],
 		symlinks: false,
 		"aliasFields": [],
-		"alias": { // WORKAROUND See. angular-cli/issues/5433
-			"environments": isProduction
-								? path.resolve(applicationRootDirectory, 'environments/index.prod.ts')
-								: path.resolve(applicationRootDirectory, 'environments/index.ts')
-		},
+		"alias": Object.assign({}, rxPaths(), environmentPathAlias)
+		,
 		"modules": [
 			nodeModulesDirectory,
 			applicationRootDirectory
