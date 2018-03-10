@@ -1,0 +1,47 @@
+$base-font-size-xl: 32px;
+$base-font-size-l: 24px;
+$base-font-size-m: 16px;
+$base-font-size-s: 12px;
+$base-font-size-xs: 8px;
+
+$base-line-height-xl: 40px;
+$base-line-height-l: 32px;
+$base-line-height-m: 24px;
+$base-line-height-s: 16px;
+$base-line-height-xs: 12px;
+
+$base-font-light: "jura-light";
+$base-font-regular: "jura-regular";
+$base-font-medium: "jura-medium";
+$base-font-semibold: "jura-semibold";
+$base-font-bold: "jura-bold";
+
+$base-font-sizes: (xl: $base-font-size-xl, l: $base-font-size-l, m: $base-font-size-m, s: $base-font-size-s, xs: $base-font-size-xs);
+$base-line-heights: (xl: $base-line-height-xl, l: $base-line-height-l, m: $base-line-height-m, s: $base-line-height-s, xs: $base-line-height-xs);
+$base-font-weights: (
+	100: $base-font-light,
+	200: $base-font-light, 300: $base-font-light, 400: $base-font-regular, 500: $base-font-medium, 600: $base-font-semibold, 700: $base-font-bold, 800: $base-font-bold, 900: $base-font-bold, thin: $base-font-light, light: $base-font-light, normal: $base-font-regular, medium: $base-font-medium, semibold: $base-font-semibold, bold: $base-font-bold, heavy: $base-font-bold);
+
+@mixin base-font($size, $weight) {
+	@if map-has-key($base-font-sizes, $size) {
+		font-size: map-get($base-font-sizes, $size);
+	}
+	@else {
+		font-size: $size;
+	}
+
+	@if map-has-key($base-line-heights, $size) {
+		line-height: map-get($base-line-heights, $size);
+	}
+	@else {
+		line-height: $size * 1.5;
+	}
+
+	@if map-has-key($base-font-weights, $weight) {
+		font-family: map-get($base-font-weights, $weight);
+		font-weight: normal;
+	}
+	@else {
+		font-weight: $weight;
+	}
+}

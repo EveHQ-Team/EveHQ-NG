@@ -1,5 +1,6 @@
 @import "~assets/styles/colors";
 @import "~assets/styles/sizes";
+@import "~assets/styles/typography";
 
 :host {
 	$navigation-button-size: $grid-step * 10;
@@ -13,7 +14,9 @@
 
 	.header-text {
 		grid-area: header-text;
-		margin-left: $grid-step * 5;
+		align-self: center;
+		margin: 0 $grid-step * 5;
+		@include base-font(xl, medium);
 	}
 
 	.navigation-button {
