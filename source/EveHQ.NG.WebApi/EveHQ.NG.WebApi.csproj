@@ -46,11 +46,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="app\application-module\models\" />
-	  <Folder Include="app\application-module\services\" />
 	  <Folder Include="app\character-module\models\" />
-	  <Folder Include="app\meta-game-module\models\" />
-	  <Folder Include="app\meta-game-module\services\" />
+	  <Folder Include="app\modules\meta-game\models\" />
+	  <Folder Include="app\modules\meta-game\services\" />
 	  <Folder Include="electron\build\" />
 	</ItemGroup>
 

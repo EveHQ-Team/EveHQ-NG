@@ -1,0 +1,33 @@
+@import "~assets/styles/colors";
+@import "~assets/styles/sizes";
+@import "~modules/application/shell/shell-common";
+@import "~assets/styles/z-indices";
+
+:host {
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: $nav-bar-z-index;
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: space-between;
+	align-items: flex-start;
+	width: $menu-bar-button-size;
+	height: 100%;
+	background-color: $grey-200;
+
+	.commands-holder {
+		display: flex;
+		flex-flow: column nowrap;
+		justify-content: flex-start;
+		align-items: stretch;
+		margin: 0;
+		padding: 0;
+	}
+
+	.menu-bar-item {
+		width: $menu-bar-button-size;
+		height: $menu-bar-button-size;
+		background-color: orangered;
+	}
+}
