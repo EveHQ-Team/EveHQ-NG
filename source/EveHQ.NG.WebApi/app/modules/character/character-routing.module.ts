@@ -4,10 +4,6 @@ import { CharacterDashboardComponent } from 'modules/character/character-dashboa
 
 const routes: Routes = [
 	{
-		path: '',
-		component: CharacterDashboardComponent
-	},
-	{
 		path: 'character-dashboard',
 		component: CharacterDashboardComponent
 	}

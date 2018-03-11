@@ -22,6 +22,10 @@
 
 	.content-holder {
 		grid-area: content-holder;
+		padding: $grid-step * 2 $grid-step * 5;
+		background-color: $grey-100;
+		overflow-x: hidden;
+		overflow-y: auto;
 	}
 
 	.application-footer {

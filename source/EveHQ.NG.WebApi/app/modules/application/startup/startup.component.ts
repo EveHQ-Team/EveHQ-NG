@@ -1,54 +1,21 @@
-import { Component, OnInit, ComponentFactoryResolver, ViewChild, Type } from '@angular/core';
-import { Router } from '@angular/router'
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ComponentHostDirective } from 'modules/application/services/component-host.directive';
-import { NewUserComponent } from 'modules/application/new-user/new-user.component';
-import { UserManagerService } from 'modules/application/services/user-manager.service';
-import { UserLoginComponent } from 'modules/application/user-login/user-login.component';
-import { MetaGameProfileSelectorComponent } from
-	'modules/application/meta-game-profile-selector/meta-game-profile-selector.component';
+import { StartupContext } from 'modules/application/startup/startup.context';
 
 @Component({
 	selector: 'evehq-application-startup',
 	templateUrl: './startup.component.html',
 	styleUrls: ['./startup.component.scss']
 })
-export class ApplicationStartupComponent implements OnInit {
+export class StartupComponent implements OnInit {
 
 	constructor(
-		private readonly componentFactoryResolver: ComponentFactoryResolver,
-		private readonly userManagerService: UserManagerService,
-		private readonly router: Router) {
+		private readonly startupContext: StartupContext) {
 	}
 
 	public ngOnInit() {
-		const viewContainerRef = this.componentHost.viewContainerRef;
-		viewContainerRef.clear();
-
-		const componentType = this.selectStartupPage();
-		if (componentType) {
-			const componentFactory = this.componentFactoryResolver.resolveComponentFactory(componentType);
-			viewContainerRef.createComponent(componentFactory);
-		}
-		else if (this.userManagerService.user && this.userManagerService.user.defaultMetaGameProfile.characters.length === 0) {
-			this.router.navigate(['user-dashboard']);
-		}
-		else {
-			this.router.navigate(['character-dashboard']);
-		}
-	}
-
-	private selectStartupPage(): Type<any> | undefined {
-		if (!this.userManagerService.isUserCreated) {
-			return NewUserComponent;
-		}
-		else if (this.userManagerService.user.isLoginRequired && !this.userManagerService.user.isLoggedIn) {
-			return UserLoginComponent;
-		}
-		else if (this.userManagerService.user.metaGamesProfiles.length > 1) {
-			return MetaGameProfileSelectorComponent;
-		}
-
-		return undefined;
+		this.startupContext.initialize(this.componentHost);
+		this.startupContext.start();
 	}
 
 	@ViewChild(ComponentHostDirective)

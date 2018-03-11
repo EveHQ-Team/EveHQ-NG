@@ -1,3 +1,15 @@
-<p>
-  new-user works!
-</p>
+<form [formGroup]="formModel">
+	<label>
+		Name:
+		<input formControlName="name" />
+	</label>
+	<label>
+		Password:
+		<input formControlName="password" />
+	</label>
+	<label>
+		Is login required:
+		<input formControlName="isLoginRequired" type="checkbox" />
+	</label>
+</form>
+<button (click)="createUser()">Create the user</button>

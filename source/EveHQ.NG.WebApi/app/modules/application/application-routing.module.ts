@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { UserDashboardComponent } from 'modules/application/user-dashboard/user-dashboard.component';
-import { ApplicationStartupComponent } from 'modules/application/startup/startup.component';
+import { StartupComponent } from 'modules/application/startup/startup.component';
 
 const routes: Routes = [
 	{
 		path: '',
-		component: ApplicationStartupComponent
+		component: StartupComponent
 	},
 	{
 		path: 'user-dashboard',

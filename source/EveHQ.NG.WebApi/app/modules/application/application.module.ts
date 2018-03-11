@@ -2,7 +2,7 @@ import 'zone.js/dist/zone-mix';
 import 'polyfills';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ApplicationRoutingModule } from './application-routing.module';
 import { ApiService } from 'modules/common/services/api.service';
@@ -16,13 +16,17 @@ import { ApplicationFooterComponent } from 'modules/application/shell-footer/she
 import { UserDashboardComponent } from 'modules/application/user-dashboard/user-dashboard.component';
 import { NewUserComponent } from 'modules/application/new-user/new-user.component';
 import { ComponentHostDirective } from 'modules/application/services/component-host.directive';
-import { UserManagerService } from 'modules/application/services/user-manager.service';
 import { UserLoginComponent } from 'modules/application/user-login/user-login.component';
 import { MetaGameProfileSelectorComponent } from
 	'modules/application/meta-game-profile-selector/meta-game-profile-selector.component';
-import { ApplicationStartupComponent } from 'modules/application/startup/startup.component';
+import { StartupComponent as ApplicationStartupComponent } from 'modules/application/startup/startup.component';
 import { ShellService } from 'modules/application/services/shell.service';
 import { CharacterModule } from 'modules/character/character.module';
+import { MetaGameModule } from 'modules/meta-game/meta-game.module';
+import { StartupContext } from 'modules/application/startup/startup.context';
+import { UserRepository } from 'modules/application/services/user.repository';
+import { NewInstallationContext } from 'modules/application/startup/new-installation.context';
+import { PresentInstallationContext } from 'modules/application/startup/present-installation.context';
 
 @NgModule({
 	declarations: [
@@ -40,17 +44,21 @@ import { CharacterModule } from 'modules/character/character.module';
 	],
 	imports: [
 		BrowserModule,
-		FormsModule,
+		ReactiveFormsModule,
 		HttpClientModule,
 		CharacterModule,
+		MetaGameModule,
 		ApplicationRoutingModule
 	],
 	providers: [
 		ApiService,
 		LogService,
 		ApiEndpointsService,
-		UserManagerService,
-		ShellService
+		ShellService,
+		StartupContext,
+		UserRepository,
+		NewInstallationContext,
+		PresentInstallationContext
 	],
 	entryComponents: [
 		NewUserComponent,
