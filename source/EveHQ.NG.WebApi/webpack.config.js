@@ -326,7 +326,7 @@ module.exports = {
 				"test": /\.(js|ts)$/,
 				"loader": 'source-map-loader',
 				"exclude": [
-					/\/node_modules\//,
+					nodeModulesDirectory,
 					path.join(nodeModulesDirectory, '@angular/compiler')
 				]
 			},
