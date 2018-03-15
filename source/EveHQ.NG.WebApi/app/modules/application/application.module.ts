@@ -2,6 +2,7 @@ import 'zone.js/dist/zone-mix';
 import 'polyfills';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
@@ -9,6 +10,11 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ApplicationRoutingModule } from 'modules/application/application-routing.module';
+
+import { StoreModule } from '@ngrx/store';
+
+import { reducers, metaReducers } from 'modules/application/stores/application-reducers.store'
+
 import { ApiService } from 'modules/common/services/api.service';
 import { RomanNumberPipe } from 'modules/common/pipes/roman-number.pipe';
 import { LogService } from 'modules/common/services/log.service';
@@ -24,7 +30,6 @@ import { UserLoginComponent } from 'modules/application/user-login/user-login.co
 import { MetaGameProfileSelectorComponent } from
 	'modules/application/meta-game-profile-selector/meta-game-profile-selector.component';
 import { StartupComponent as ApplicationStartupComponent } from 'modules/application/startup/startup.component';
-import { ShellService } from 'modules/application/services/shell.service';
 import { CharacterModule } from 'modules/character/character.module';
 import { MetaGameModule } from 'modules/meta-game/meta-game.module';
 import { StartupContext } from 'modules/application/startup/startup.context';
@@ -47,6 +52,7 @@ import { PresentInstallationContext } from 'modules/application/startup/present-
 		ApplicationStartupComponent
 	],
 	imports: [
+		CommonModule,
 		BrowserModule,
 		BrowserAnimationsModule,
 		ReactiveFormsModule,
@@ -56,13 +62,13 @@ import { PresentInstallationContext } from 'modules/application/startup/present-
 		PasswordModule,
 		CharacterModule,
 		MetaGameModule,
+		StoreModule.forRoot(reducers, { metaReducers }),
 		ApplicationRoutingModule
 	],
 	providers: [
 		ApiService,
 		LogService,
 		ApiEndpointsService,
-		ShellService,
 		StartupContext,
 		UserRepository,
 		NewInstallationContext,

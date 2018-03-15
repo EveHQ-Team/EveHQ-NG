@@ -1,24 +1,23 @@
-import { Component, OnDestroy } from '@angular/core';
-import { ShellService } from 'modules/application/services/shell.service';
-import { Subscription } from 'rxjs';
+import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Store, select } from '@ngrx/store';
+import * as fromRoot from 'modules/application/stores/application-reducers.store'
+
 
 @Component({
 	selector: 'evehq-shell-header',
 	templateUrl: './shell-header.component.html',
 	styleUrls: ['./shell-header.component.scss']
 })
-export class ApplicationHeaderComponent implements OnDestroy {
+export class ApplicationHeaderComponent {
 
-	constructor(
-		private readonly shellService: ShellService) {
-		this.headerChangedSubscription = shellService.headerChanged.subscribe(value => this.header = value);
+	constructor(private readonly store: Store<fromRoot.ApplicationState>) {
+		this.header$ = this.store.pipe(select(fromRoot.getHeader));
 	}
 
-	public ngOnDestroy(): void {
-		this.headerChangedSubscription.unsubscribe();
-	}
+	private header$: Observable<string>;
 
 	private header: string = 'EveHQ NG';
-	private headerChangedSubscription: Subscription;
 
 }

@@ -1,8 +1,11 @@
 import { Component, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { ShellService } from 'modules/application/services/shell.service';
 import { UserRepository } from 'modules/application/services/user.repository';
 import { ApplicationUser } from 'modules/application/models/application-user';
+
+import * as shellActions from 'modules/application/stores/shell-actions.store';
+import * as fromRoot from 'modules/application/stores/application-reducers.store'
+import { Store } from '@ngrx/store';
 
 @Component({
 	selector: 'evehq-new-user',
@@ -12,7 +15,7 @@ import { ApplicationUser } from 'modules/application/models/application-user';
 export class NewUserComponent implements AfterViewInit {
 
 	constructor(
-		private readonly shellService: ShellService,
+		private readonly store: Store<fromRoot.ApplicationState>,
 		private readonly userRepository: UserRepository) {
 		this.formModel = this.createFormModel();
 	}
@@ -21,7 +24,7 @@ export class NewUserComponent implements AfterViewInit {
 	public userDataEntered = new EventEmitter<void>();
 
 	public ngAfterViewInit(): void {
-		this.shellService.setHeader('Create the user');
+		this.store.dispatch(new shellActions.SetShellHeader('Create the user'));
 	}
 
 	private createFormModel(): FormGroup {
