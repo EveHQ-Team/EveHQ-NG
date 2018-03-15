@@ -3,8 +3,12 @@ import 'polyfills';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { ApplicationRoutingModule } from './application-routing.module';
+import { CheckboxModule } from 'primeng/checkbox';
+import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
+import { ApplicationRoutingModule } from 'modules/application/application-routing.module';
 import { ApiService } from 'modules/common/services/api.service';
 import { RomanNumberPipe } from 'modules/common/pipes/roman-number.pipe';
 import { LogService } from 'modules/common/services/log.service';
@@ -44,8 +48,12 @@ import { PresentInstallationContext } from 'modules/application/startup/present-
 	],
 	imports: [
 		BrowserModule,
+		BrowserAnimationsModule,
 		ReactiveFormsModule,
 		HttpClientModule,
+		CheckboxModule,
+		InputTextModule,
+		PasswordModule,
 		CharacterModule,
 		MetaGameModule,
 		ApplicationRoutingModule

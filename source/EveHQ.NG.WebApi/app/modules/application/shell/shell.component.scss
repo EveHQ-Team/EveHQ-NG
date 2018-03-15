@@ -22,10 +22,16 @@
 
 	.content-holder {
 		grid-area: content-holder;
-		padding: $grid-step * 2 $grid-step * 5;
+		padding: $grid-step * 2.5 $grid-step * 5;
 		background-color: $grey-100;
 		overflow-x: hidden;
 		overflow-y: auto;
+		display: flex;
+		flex-flow: column nowrap;
+
+		&::ng-deep router-outlet + * {
+			flex-grow: 1;
+		}
 	}
 
 	.application-footer {

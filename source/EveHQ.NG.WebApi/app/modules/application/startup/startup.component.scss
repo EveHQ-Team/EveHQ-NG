@@ -1,3 +1,22 @@
+@import "~assets/styles/sizes";
+
 :host {
-	color: yellowgreen;
+	display: grid;
+	grid-template-rows: 100% $grid-step * 5;
+	grid-template-areas: "content" "navigation";
+
+	.wizard-content {
+		grid-area: content;
+		display: flex;
+		flex-flow: column nowrap;
+		color: yellowgreen;
+
+		&::ng-deep > * {
+			flex-grow: 1;
+		}
+	}
+
+	.wizard-navigation {
+		grid-area: navigation;
+	}
 }

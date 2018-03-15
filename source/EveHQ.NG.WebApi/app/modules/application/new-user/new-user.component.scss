@@ -1,3 +1,37 @@
+@import "~assets/styles/sizes";
+@import "~assets/styles/typography";
+
+@mixin wall-of-text {
+	p {
+		margin-bottom: $base-line-height-m;
+	}
+}
+
 :host {
 	color: yellowgreen;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-areas: "form description";
+	grid-gap: $grid-step * 4;
+
+	.form {
+		grid-area: form;
+
+		.field-holder {
+			display: flex;
+			flex-flow: column nowrap;
+			margin-bottom: $grid-step * 2;
+
+			.field-name {
+				margin-bottom: $half-grid-step;
+			}
+		}
+	}
+
+	.description {
+		grid-area: description;
+
+		@include base-font(m, light);
+		@include wall-of-text;
+	}
 }
