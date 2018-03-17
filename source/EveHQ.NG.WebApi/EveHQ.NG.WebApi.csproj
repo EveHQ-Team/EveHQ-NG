@@ -46,6 +46,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="app\modules\application\models\" />
+	  <Folder Include="app\modules\application\services\" />
+	  <Folder Include="app\modules\common\pipes\" />
 	  <Folder Include="app\modules\meta-game\models\" />
 	  <Folder Include="app\modules\meta-game\services\" />
 	  <Folder Include="electron\build\" />

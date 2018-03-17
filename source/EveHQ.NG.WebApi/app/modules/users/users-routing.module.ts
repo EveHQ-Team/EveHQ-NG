@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MetaGameProfileManagerComponent } from 'modules/users/meta-game-profile-manager/meta-game-profile-manager.component';
-import { AuthenticationGuard } from 'modules/common/services/authentication-guard.service';
+import { AuthenticationGuard } from 'modules/users/services/authentication-guard.service';
 import { LoginRouteGuard } from 'modules/users/services/login-route-guard.service';
 import { CreateUserRouteGuard } from 'modules/users/services/create-user-route-guard.service';
 import { UserDashboardComponent } from 'modules/users/user-dashboard/user-dashboard.component';
@@ -10,7 +10,7 @@ import { UserLoginComponent } from 'modules/users/user-login/user-login.componen
 
 const dashboardUrl = 'dashboard';
 
-const routes: Routes = [
+export const usersRoutes: Routes = [
 	{
 		path: '',
 		pathMatch: 'full',
@@ -37,10 +37,11 @@ const routes: Routes = [
 		component: MetaGameProfileManagerComponent
 	}
 ];
-
+/*
 @NgModule({
 	imports: [RouterModule.forChild(routes)],
 	exports: [RouterModule]
 })
 export class UsersRoutingModule {
 }
+*/

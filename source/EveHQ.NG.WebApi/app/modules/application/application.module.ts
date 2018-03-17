@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ApplicationRoutingModule } from 'modules/application/application-routing.module';
 
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 import { reducers, metaReducers } from 'modules/application/stores/application-reducers.store'
 
@@ -17,10 +18,9 @@ import { ShellComponent } from 'modules/application/shell/shell.component';
 import { MenuBarComponent } from 'modules/application/shell-menu/shell-menu.component';
 import { ApplicationHeaderComponent } from 'modules/application/shell-header/shell-header.component';
 import { ApplicationFooterComponent } from 'modules/application/shell-footer/shell-footer.component';
-import { ComponentHostDirective } from 'modules/application/services/component-host.directive';
 import { StartupComponent as ApplicationStartupComponent } from 'modules/application/startup/startup.component';
 import { CharacterModule } from 'modules/character/character.module';
-import { UserRepository } from 'modules/application/services/user.repository';
+import { UsersModule } from 'modules/users/users.module';
 
 @NgModule({
 	declarations: [
@@ -28,7 +28,6 @@ import { UserRepository } from 'modules/application/services/user.repository';
 		MenuBarComponent,
 		ApplicationHeaderComponent,
 		ApplicationFooterComponent,
-		ComponentHostDirective,
 		ApplicationStartupComponent
 	],
 	imports: [
@@ -39,11 +38,10 @@ import { UserRepository } from 'modules/application/services/user.repository';
 		HttpClientModule,
 		CharacterModule,
 		StoreModule.forRoot(reducers, { metaReducers }),
+		EffectsModule.forRoot([]),
 		CommonServicesModule.forRoot(),
+		UsersModule.forRoot(),
 		ApplicationRoutingModule
-	],
-	providers: [
-		UserRepository
 	],
 	bootstrap: [ShellComponent]
 })

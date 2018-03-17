@@ -8,23 +8,23 @@ export enum ShellActionTypes {
 
 export class ShowShellMenu implements Action {
 	public readonly type: string = ShellActionTypes.ShowShellMenu;
-
-	constructor(public readonly payload: string) {
-	}
+	public readonly payload?: any;
 }
 
 export class HideShellMenu implements Action {
 	public readonly type: string = ShellActionTypes.HideShellMenu;
-
-	constructor(public readonly payload: string) {
-	}
+	public readonly payload?: any;
 }
 
 export class SetShellHeader implements Action {
-	public readonly type: string = ShellActionTypes.SetShellHeader;
 
 	constructor(public readonly payload: string) {
 	}
+
+	public readonly type: string = ShellActionTypes.SetShellHeader;
 }
 
-export type ShellActions = | ShowShellMenu | HideShellMenu | SetShellHeader;
+export type ShellActions =
+	| ShowShellMenu
+	| HideShellMenu
+	| SetShellHeader;

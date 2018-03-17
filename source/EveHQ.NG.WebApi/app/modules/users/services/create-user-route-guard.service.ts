@@ -22,11 +22,11 @@ export class CreateUserRouteGuard implements CanActivate {
 	}
 
 	private isUserCreated(): boolean {
-		return true;
+		return false;
 	}
 
 	private isLoginRequired(): boolean {
-		return true;
+		return false;
 	}
 
 	private isLoggedIn(): boolean {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import * as shellActions from 'modules/application/stores/shell-actions.store';
+import { SetShellHeader } from 'modules/application/stores/shell.actions';
 
 @Component({
 	selector: 'evehq-shell',
@@ -9,7 +9,6 @@ import * as shellActions from 'modules/application/stores/shell-actions.store';
 export class ShellComponent implements OnInit {
 
 	public ngOnInit() {
-		const a = new shellActions.SetShellHeader('JJJ');
+		const a = new SetShellHeader('JJJ');
 	}
-
 }

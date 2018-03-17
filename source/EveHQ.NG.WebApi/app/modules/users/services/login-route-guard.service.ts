@@ -28,7 +28,7 @@ export class LoginRouteGuard implements CanActivate {
 	}
 
 	private isLoginRequired(): boolean {
-		return true;
+		return false;
 	}
 
 	private isLoggedIn(): boolean {
