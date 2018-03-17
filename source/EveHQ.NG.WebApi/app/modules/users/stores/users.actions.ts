@@ -9,7 +9,8 @@ export enum UsersActionTypes {
 	LoginSuccess = '[USERS] Login Success',
 	LoginFailure = '[Auth] Login Failure',
 	CreateUserRedirect = '[USERS] Create User Redirect',
-	LoginRedirect = '[USERS] Login Redirect'
+	LoginRedirect = '[USERS] Login Redirect',
+	HomeRedirect = '[USERS] Home Redirect'
 }
 
 export class SetUser implements Action {
@@ -57,6 +58,11 @@ export class LoginRedirect implements Action {
 	public readonly payload?: any;
 }
 
+export class HomeRedirect implements Action {
+	public readonly type: string = UsersActionTypes.HomeRedirect;
+	public readonly payload?: any;
+}
+
 export type UsersActions =
 	| SetUser
 	| Login
@@ -64,4 +70,5 @@ export type UsersActions =
 	| LoginSuccess
 	| LoginFailure
 	| CreateUserRedirect
-	| LoginRedirect;
+	| LoginRedirect
+	| HomeRedirect;

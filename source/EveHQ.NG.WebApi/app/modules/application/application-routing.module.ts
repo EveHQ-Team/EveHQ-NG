@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { StartupComponent } from 'modules/application/startup/startup.component';
 import { AuthenticationGuard } from 'modules/users/services/authentication-guard.service';
+import { UsersModule } from 'modules/users/users.module';
 
 const routes: Routes = [
 	{
@@ -9,10 +10,6 @@ const routes: Routes = [
 		pathMatch: 'full',
 		canActivate: [AuthenticationGuard],
 		component: StartupComponent
-	},
-	{
-		path: 'users',
-		loadChildren: 'modules/users/users.module#UsersModule'
 	}
 ];
 

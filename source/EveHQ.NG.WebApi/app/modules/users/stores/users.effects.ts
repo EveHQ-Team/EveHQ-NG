@@ -32,7 +32,7 @@ export class UserBasedStatusEffects {
 	@Effect({ dispatch: false })
 	public loginSuccess$ = this.actions$.pipe(
 		ofType(UsersActionTypes.LoginSuccess),
-		tap(() => this.router.navigate(['/characters/dashboard']))
+		tap(() => this.router.navigate(['/users/dashboard']))
 	);
 
 	@Effect({ dispatch: false })
@@ -47,5 +47,11 @@ export class UserBasedStatusEffects {
 	public createUserRedirect$ = this.actions$.pipe(
 		ofType(UsersActionTypes.CreateUserRedirect),
 		tap(_ => this.router.navigate(['/users/create']))
+	);
+
+	@Effect({ dispatch: false })
+	public homeRedirect$ = this.actions$.pipe(
+		ofType(UsersActionTypes.HomeRedirect),
+		tap(_ => this.router.navigate(['/users/dashboard'])) // TODO: Redirect to default characters dashboard when it is ready.
 	);
 }

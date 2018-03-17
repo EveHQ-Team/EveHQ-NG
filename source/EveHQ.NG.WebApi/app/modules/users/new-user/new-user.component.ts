@@ -1,8 +1,5 @@
 import { Component, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { UserRepository } from 'modules/application/services/user.repository';
-import { ApplicationUser } from 'modules/application/models/application-user';
-
 import { SetShellHeader } from 'modules/application/stores/shell.actions';
 import * as fromRoot from 'modules/application/stores/application-reducers.store'
 import { Store } from '@ngrx/store';
@@ -15,8 +12,7 @@ import { Store } from '@ngrx/store';
 export class NewUserComponent implements AfterViewInit {
 
 	constructor(
-		private readonly store: Store<fromRoot.ApplicationState>,
-		private readonly userRepository: UserRepository) {
+		private readonly store: Store<fromRoot.ApplicationState>) {
 		this.formModel = this.createFormModel();
 	}
 
@@ -38,10 +34,8 @@ export class NewUserComponent implements AfterViewInit {
 	}
 
 	private createUser(): void {
-		this.userRepository.user = this.user;
 		this.userDataEntered.emit();
 	}
 
-	private readonly user = new ApplicationUser;
 	private readonly formModel: FormGroup;
 }

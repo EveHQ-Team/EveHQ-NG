@@ -1,6 +1,4 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { MetaGameProfileManagerComponent } from 'modules/users/meta-game-profile-manager/meta-game-profile-manager.component';
+import { Routes } from '@angular/router';
 import { AuthenticationGuard } from 'modules/users/services/authentication-guard.service';
 import { LoginRouteGuard } from 'modules/users/services/login-route-guard.service';
 import { CreateUserRouteGuard } from 'modules/users/services/create-user-route-guard.service';
@@ -8,11 +6,11 @@ import { UserDashboardComponent } from 'modules/users/user-dashboard/user-dashbo
 import { NewUserComponent } from 'modules/users/new-user/new-user.component';
 import { UserLoginComponent } from 'modules/users/user-login/user-login.component';
 
-const dashboardUrl = 'dashboard';
+const dashboardUrl = 'users/dashboard';
 
 export const usersRoutes: Routes = [
 	{
-		path: '',
+		path: 'users',
 		pathMatch: 'full',
 		redirectTo: dashboardUrl
 	},
@@ -22,26 +20,13 @@ export const usersRoutes: Routes = [
 		component: UserDashboardComponent
 	},
 	{
-		path: 'create',
+		path: 'users/create',
 		canActivate: [CreateUserRouteGuard],
 		component: NewUserComponent
 	},
 	{
-		path: 'login',
+		path: 'users/login',
 		canActivate: [LoginRouteGuard],
 		component: UserLoginComponent
-	},
-	{
-		path: 'meta-game-profile-manager',
-		canActivate: [AuthenticationGuard],
-		component: MetaGameProfileManagerComponent
 	}
 ];
-/*
-@NgModule({
-	imports: [RouterModule.forChild(routes)],
-	exports: [RouterModule]
-})
-export class UsersRoutingModule {
-}
-*/

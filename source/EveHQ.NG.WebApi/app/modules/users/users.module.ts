@@ -43,10 +43,6 @@ const selfComponents =
 	exports: [
 		// TODO: Do I really need to export this internal components?
 		selfComponents
-	],
-	providers: [
-		LoginRouteGuard,
-		CreateUserRouteGuard
 	]
 })
 export class UsersModule {
@@ -55,7 +51,9 @@ export class UsersModule {
 			ngModule: RootUsersModule,
 			providers: [
 				AuthenticationService,
-				AuthenticationGuard
+				AuthenticationGuard,
+				CreateUserRouteGuard,
+				LoginRouteGuard
 			]
 		};
 	}
