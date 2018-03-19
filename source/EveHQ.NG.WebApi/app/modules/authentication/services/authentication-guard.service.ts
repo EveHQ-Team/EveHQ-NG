@@ -3,11 +3,11 @@ import { CanActivate, Router, RouterStateSnapshot, ActivatedRouteSnapshot } from
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { take, tap } from 'rxjs/operators';
-import { HomeRedirect, CreateUserRedirect } from 'modules/users/stores/users.actions';
-import * as fromUsers from 'modules/users/stores/users-module.reducers';
+import { LoginRedirect, CreateUserRedirect } from 'modules/authentication/stores/authentication.actions';
+import * as fromUsers from 'modules/authentication/stores/authentication-module.reducers';
 
 @Injectable()
-export class LoginRouteGuard implements CanActivate {
+export class AuthenticationGuard implements CanActivate {
 
 	constructor(
 		private readonly router: Router,
@@ -16,8 +16,7 @@ export class LoginRouteGuard implements CanActivate {
 
 	public canActivate(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Observable<boolean> {
 		// TODO: Remove logging.
-		console.warn('LoginRouteGuard.canActivate');
-		//this.isUserCreated().subscribe(value => console.log('this.isUserCreated(): ', value));
+		console.warn('AuthenticationGuard.canActivate');
 
 		return this.store.combineLatest(
 			this.isUserCreated(),
@@ -26,40 +25,38 @@ export class LoginRouteGuard implements CanActivate {
 			(state, isUserCreated, isLoginRequired, isLoggedIn) => {
 				if (isUserCreated) {
 					if (isLoginRequired && !isLoggedIn) {
-						return true;
+						this.store.dispatch(new LoginRedirect());
+						return false;
 					}
 					else {
-						this.store.dispatch(new HomeRedirect());
-						return false;
+						return true;
 					}
 				}
 				else {
 					this.store.dispatch(new CreateUserRedirect());
 					return false;
 				}
-
-
 			});
 	}
 
 	private isUserCreated(): Observable<boolean> {
 		return this.store.pipe(
 			select(fromUsers.getIsUserCreated),
-			tap(value => console.log('LoginRouteGuard.isUserCreated: ', value)),
+			tap(value => console.log('AuthenticationGuard.isUserCreated: ', value)),
 			take(1));
 	}
 
 	private isLoginRequired(): Observable<boolean> {
 		return this.store.pipe(
 			select(fromUsers.getIsLogInRequired),
-			tap(value => console.log('LoginRouteGuard.isLoginRequired: ', value)),
+			tap(value => console.log('AuthenticationGuard.isLoginRequired: ', value)),
 			take(1));
 	}
 
 	private isLoggedIn(): Observable<boolean> {
 		return this.store.pipe(
 			select(fromUsers.getIsLoggedIn),
-			tap(value => console.log('LoginRouteGuard.isLoggedIn: ', value)),
+			tap(value => console.log('AuthenticationGuard.isLoggedIn: ', value)),
 			take(1));
 	}
 }

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs/observable/of';
 import { _throw } from 'rxjs/observable/throw';
-import { User} from 'modules/users/models/user';
-import { Authenticate } from 'modules/users/models/authenticate';
+import { User } from 'modules/authentication/models/user';
+import { Authenticate } from 'modules/authentication/models/authenticate';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()

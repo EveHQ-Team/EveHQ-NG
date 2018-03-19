@@ -1,4 +1,4 @@
-import { User } from 'modules/users/models/user';
+import { User } from 'modules/authentication/models/user';
 
 export interface AuthenticationState {
 	user: User | undefined;

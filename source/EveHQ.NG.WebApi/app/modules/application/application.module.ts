@@ -20,16 +20,9 @@ import { ApplicationHeaderComponent } from 'modules/application/shell-header/she
 import { ApplicationFooterComponent } from 'modules/application/shell-footer/shell-footer.component';
 import { StartupComponent as ApplicationStartupComponent } from 'modules/application/startup/startup.component';
 import { CharacterModule } from 'modules/character/character.module';
-import { UsersModule } from 'modules/users/users.module';
+import { AuthenticationModule } from 'modules/authentication/authentication.module';
 
 @NgModule({
-	declarations: [
-		ShellComponent,
-		MenuBarComponent,
-		ApplicationHeaderComponent,
-		ApplicationFooterComponent,
-		ApplicationStartupComponent
-	],
 	imports: [
 		CommonModule,
 		BrowserModule,
@@ -40,8 +33,15 @@ import { UsersModule } from 'modules/users/users.module';
 		StoreModule.forRoot(reducers, { metaReducers }),
 		EffectsModule.forRoot([]),
 		CommonServicesModule.forRoot(),
-		UsersModule.forRoot(),
+		AuthenticationModule,
 		ApplicationRoutingModule
+	],
+	declarations: [
+		ShellComponent,
+		MenuBarComponent,
+		ApplicationHeaderComponent,
+		ApplicationFooterComponent,
+		ApplicationStartupComponent
 	],
 	bootstrap: [ShellComponent]
 })

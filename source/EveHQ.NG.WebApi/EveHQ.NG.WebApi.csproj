@@ -20,6 +20,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="app\modules\meta-game\**" />
+    <Content Remove="app\modules\meta-game\**" />
+    <EmbeddedResource Remove="app\modules\meta-game\**" />
+    <None Remove="app\modules\meta-game\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
   </ItemGroup>
 
@@ -49,8 +56,7 @@
 	  <Folder Include="app\modules\application\models\" />
 	  <Folder Include="app\modules\application\services\" />
 	  <Folder Include="app\modules\common\pipes\" />
-	  <Folder Include="app\modules\meta-game\models\" />
-	  <Folder Include="app\modules\meta-game\services\" />
+	  <Folder Include="app\modules\users\services\" />
 	  <Folder Include="electron\build\" />
 	</ItemGroup>
 

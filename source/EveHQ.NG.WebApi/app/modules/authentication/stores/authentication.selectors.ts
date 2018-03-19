@@ -1,4 +1,4 @@
-import { AuthenticationState } from 'modules/users/stores/users.state';
+import { AuthenticationState } from 'modules/authentication/stores/authentication.state';
 
 export class AuthenticationSelector {
 	public static readonly getUser = (state: AuthenticationState) => state.user;

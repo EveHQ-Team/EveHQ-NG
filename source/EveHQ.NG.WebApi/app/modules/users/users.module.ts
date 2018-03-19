@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -13,21 +13,7 @@ import { MetaGameProfileSelectorComponent } from 'modules/users/meta-game-profil
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { LoginRouteGuard } from 'modules/users/services/login-route-guard.service';
-import { CreateUserRouteGuard } from 'modules/users/services/create-user-route-guard.service';
-import { AuthenticationService } from 'modules/users/services/authentication.service';
-import { UserBasedStatusEffects } from 'modules/users/stores/users.effects';
 import { usersModuleReducers } from 'modules/users/stores/users-module.reducers';
-import { AuthenticationGuard } from 'modules/users/services/authentication-guard.service';
-
-const selfComponents =
-[
-	UserDashboardComponent,
-	NewUserComponent,
-	UserLoginComponent,
-	MetaGameProfileSelectorComponent,
-	MetaGameProfileManagerComponent
-];
 
 @NgModule({
 	imports: [
@@ -35,37 +21,20 @@ const selfComponents =
 		ReactiveFormsModule,
 		CheckboxModule,
 		InputTextModule,
-		PasswordModule
+		PasswordModule,
+		RouterModule.forChild(usersRoutes),
+		StoreModule.forFeature('users', usersModuleReducers),
+		EffectsModule.forFeature([])
 	],
 	declarations: [
-		selfComponents
-	],
-	exports: [
-		// TODO: Do I really need to export this internal components?
-		selfComponents
+		[
+			UserDashboardComponent,
+			NewUserComponent,
+			UserLoginComponent,
+			MetaGameProfileSelectorComponent,
+			MetaGameProfileManagerComponent
+		]
 	]
 })
 export class UsersModule {
-	public static forRoot(): ModuleWithProviders {
-		return {
-			ngModule: RootUsersModule,
-			providers: [
-				AuthenticationService,
-				AuthenticationGuard,
-				CreateUserRouteGuard,
-				LoginRouteGuard
-			]
-		};
-	}
-}
-
-@NgModule({
-	imports: [
-		UsersModule,
-		RouterModule.forChild(usersRoutes),
-		StoreModule.forFeature('users', usersModuleReducers),
-		EffectsModule.forFeature([UserBasedStatusEffects])
-	]
-})
-export class RootUsersModule {
 }

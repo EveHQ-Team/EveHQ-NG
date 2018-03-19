@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
-import { User } from 'modules/users/models/user';
-import { Authenticate } from 'modules/users/models/authenticate';
+import { User } from 'modules/authentication/models/user';
+import { Authenticate } from 'modules/authentication/models/authenticate';
 
 export enum UsersActionTypes {
 	SetUser = '[USERS] Set User',

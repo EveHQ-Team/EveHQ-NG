@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { of } from 'rxjs/observable/of';
 import { tap, map, exhaustMap, catchError } from 'rxjs/operators';
-import { UsersActionTypes, Login, LoginSuccess, LoginFailure } from 'modules/users/stores/users.actions';
-import { AuthenticationService } from 'modules/users/services/authentication.service';
-import { Authenticate } from 'modules/users/models/authenticate';
+import { UsersActionTypes, Login, LoginSuccess, LoginFailure } from 'modules/authentication/stores/authentication.actions';
+import { AuthenticationService } from 'modules/authentication/services/authentication.service';
+import { Authenticate } from 'modules/authentication/models/authenticate';
 
 @Injectable()
 export class UserBasedStatusEffects {

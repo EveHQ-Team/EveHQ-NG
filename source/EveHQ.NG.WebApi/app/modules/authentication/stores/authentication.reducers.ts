@@ -5,8 +5,8 @@ import {
 	createSelector,
 	createFeatureSelector
 	} from '@ngrx/store';
-import { UsersActionTypes, UsersActions } from 'modules/users/stores/users.actions';
-import { AuthenticationState } from 'modules/users/stores/users.state';
+import { UsersActionTypes, UsersActions } from 'modules/authentication/stores/authentication.actions';
+import { AuthenticationState } from 'modules/authentication/stores/authentication.state';
 
 const initialState: AuthenticationState = {
 	user: undefined,
