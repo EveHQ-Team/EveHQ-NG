@@ -56,7 +56,6 @@
 	  <Folder Include="app\modules\application\models\" />
 	  <Folder Include="app\modules\application\services\" />
 	  <Folder Include="app\modules\common\pipes\" />
-	  <Folder Include="app\modules\users\services\" />
 	  <Folder Include="electron\build\" />
 	</ItemGroup>
 

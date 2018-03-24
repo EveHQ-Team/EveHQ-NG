@@ -1,41 +1,33 @@
-import { Component, Output, EventEmitter, AfterViewInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Observable } from 'rxjs'
+import { tap } from 'rxjs/operators'
 import { SetShellHeader } from 'modules/application/stores/shell.actions';
-import * as fromRoot from 'modules/application/stores/application-reducers.store'
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
+import { UsersModuleState, getUser } from 'modules/users/stores/users-module.reducers';
+import { Load, SetUser } from 'modules/users/stores/users.actions';
+import { User } from 'modules/users/models/user';
 
 @Component({
 	selector: 'evehq-new-user',
 	templateUrl: './new-user.component.html',
 	styleUrls: ['./new-user.component.scss']
 })
-export class NewUserComponent implements AfterViewInit {
+export class NewUserComponent implements OnInit, AfterViewInit {
 
-	constructor(
-		private readonly store: Store<fromRoot.ApplicationState>) {
-		this.formModel = this.createFormModel();
+	constructor(private readonly store: Store<UsersModuleState>) {
 	}
 
-	@Output()
-	public userDataEntered = new EventEmitter<void>();
+	public ngOnInit(): void {
+		this.user = { name: '', password: '', email: '', isLogInRequired: false };
+	}
 
 	public ngAfterViewInit(): void {
 		this.store.dispatch(new SetShellHeader('Create the user'));
 	}
 
-	private createFormModel(): FormGroup {
-		const formModel = new FormGroup({
-			name: new FormControl('', [Validators.minLength(3), Validators.maxLength(100)]),
-			password: new FormControl(''),
-			isLoginRequired: new FormControl(true)
-		});
-
-		return formModel;
+	private save(): void {
+		this.store.dispatch(new SetUser(this.user));
 	}
 
-	private createUser(): void {
-		this.userDataEntered.emit();
-	}
-
-	private readonly formModel: FormGroup;
+	private user: User;
 }

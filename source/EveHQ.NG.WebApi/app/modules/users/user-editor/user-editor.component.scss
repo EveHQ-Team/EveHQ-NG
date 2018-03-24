@@ -1,0 +1,24 @@
+@import "~assets/styles/sizes";
+
+:host {
+	.form {
+		display: grid;
+		grid-template-columns: 1fr;
+		grid-auto-rows: max-content;
+		grid-gap: $grid-step * 2;
+
+		@media (min-width: 800px) {
+			grid-template-columns: 1fr 1fr;
+		}
+
+		.field-holder {
+			display: flex;
+			flex-flow: column nowrap;
+			margin-bottom: $grid-step * 2;
+
+			.field-name {
+				margin-bottom: $half-grid-step;
+			}
+		}
+	}
+}

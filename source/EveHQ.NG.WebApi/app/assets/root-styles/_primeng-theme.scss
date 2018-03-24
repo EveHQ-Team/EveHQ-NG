@@ -17,43 +17,47 @@ $headerIconTextColor: #222222;
 $contentBorderWidth: 1px;
 $contentBorderColor: #dddddd;
 $contentBgColor: $grey-200;
-$contentTextColor: white;
+$contentTextColor: $grey-1000;
 
 //Default State
 $stateDefaultBorderWidth: 1px;
-$stateDefaultBorderColor: #aed0ea;
-$stateDefaultBgColor: #d7ebf9;
-$stateDefaultTextColor: #2779aa;
+$stateDefaultBorderColor: $general-border-color;
+$stateDefaultBgColor: $grey-300;
+$stateDefaultTextColor: $general-text-color;
 
 //Active State
-$stateActiveBorderColor: #2694e8;
-$stateActiveBgColor: #3baae3;
-$stateActiveTextColor: #ffffff;
+$stateActiveBorderColor: $general-border-color;
+$stateActiveBgColor: $grey-300;
+$stateActiveTextColor: $general-text-color;
 
 //Highlight State
-$stateHighlightBorderColor: #aaaaaa;
+$stateHighlightBorderColor: $grey-800;
 $stateHighlightBgColor: #ffef8f;
 $stateHighlightTextColor: #363636;
 
 //Focus State
-$stateFocusBorderColor: #aaaaaa;
-$stateFocusBgColor: #e4f1fb;
-$stateFocusTextColor: #0070a3;
+$stateFocusBorderColor: $grey-1000;
+$stateFocusBgColor: $grey-300;
+$stateFocusTextColor: $grey-1000;
 
 //Error State
-$stateErrorBorderColor: #cd0a0a;
-$stateErrorBgColor: #cd0a0a;
-$stateErrorTextColor: #ffffff;
+$stateErrorBorderColor: $error-color;
+$stateErrorBgColor: $error-color;
+$stateErrorTextColor: $grey-1000;
 
 //Hover State
-$stateHoverBorderColor: #74b2e2;
-$stateHoverBgColor: #e4f1fb;
-$stateHoverTextColor: #0070a3;
+$stateHoverBorderColor: $grey-1000;
+$stateHoverBgColor: $grey-300;
+$stateHoverTextColor: $grey-1000;
 
 //Forms
 $inputBgColor: $grey-200;
-$inputTextColor: white;
-$invalidInputBorderColor: #cd0a0a;
+$inputTextColor: $grey-1000;
+$invalidInputBorderColor: $error-color;
 $inputGroupTextColor: #2779aa;
 
-@import "~primeng/resources/themes/_theme";
+@import "~primeng/resources/themes/theme";
+
+.ui-inputtext:focus {
+	box-shadow: none;
+}

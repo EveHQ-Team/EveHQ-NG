@@ -1,24 +1,24 @@
 import { Action } from '@ngrx/store';
-import { User } from 'modules/authentication/models/user';
+import { AuthenticatedUser } from 'modules/authentication/models/authenticated-user';
 import { Authenticate } from 'modules/authentication/models/authenticate';
 
-export enum UsersActionTypes {
-	SetUser = '[USERS] Set User',
-	Login = '[USERS] Login',
-	Logout = '[USERS] Logout',
-	LoginSuccess = '[USERS] Login Success',
+export enum AuthenticationActionTypes {
+	SetUser = '[AUTHENTICATION] Set User',
+	Login = '[AUTHENTICATION] Login',
+	Logout = '[AUTHENTICATION] Logout',
+	LoginSuccess = '[AUTHENTICATION] Login Success',
 	LoginFailure = '[Auth] Login Failure',
-	CreateUserRedirect = '[USERS] Create User Redirect',
-	LoginRedirect = '[USERS] Login Redirect',
-	HomeRedirect = '[USERS] Home Redirect'
+	CreateUserRedirect = '[AUTHENTICATION] Create User Redirect',
+	LoginRedirect = '[AUTHENTICATION] Login Redirect',
+	HomeRedirect = '[AUTHENTICATION] Home Redirect'
 }
 
 export class SetUser implements Action {
 
-	constructor(public readonly payload: User | undefined) {
+	constructor(public readonly payload: AuthenticatedUser | undefined) {
 	}
 
-	public readonly type: string = UsersActionTypes.SetUser;
+	public readonly type: string = AuthenticationActionTypes.SetUser;
 }
 
 export class Login implements Action {
@@ -26,44 +26,44 @@ export class Login implements Action {
 	constructor(public readonly payload: Authenticate) {
 	}
 
-	public readonly type: string = UsersActionTypes.Login;
+	public readonly type: string = AuthenticationActionTypes.Login;
 }
 
 export class Logout implements Action {
-	public readonly type: string = UsersActionTypes.Logout;
+	public readonly type: string = AuthenticationActionTypes.Logout;
 	public readonly payload?: any;
 }
 
 export class LoginSuccess implements Action {
-	constructor(public readonly payload: { user: User }) {
+	constructor(public readonly payload: { user: AuthenticatedUser }) {
 	}
 
-	public readonly type: string = UsersActionTypes.LoginSuccess;
+	public readonly type: string = AuthenticationActionTypes.LoginSuccess;
 }
 
 export class LoginFailure implements Action {
 	constructor(public readonly payload: any) {
 	}
 
-	public readonly type: string = UsersActionTypes.LoginFailure;
+	public readonly type: string = AuthenticationActionTypes.LoginFailure;
 }
 
 export class CreateUserRedirect implements Action {
-	public readonly type: string = UsersActionTypes.CreateUserRedirect;
+	public readonly type: string = AuthenticationActionTypes.CreateUserRedirect;
 	public readonly payload?: any;
 }
 
 export class LoginRedirect implements Action {
-	public readonly type: string = UsersActionTypes.LoginRedirect;
+	public readonly type: string = AuthenticationActionTypes.LoginRedirect;
 	public readonly payload?: any;
 }
 
 export class HomeRedirect implements Action {
-	public readonly type: string = UsersActionTypes.HomeRedirect;
+	public readonly type: string = AuthenticationActionTypes.HomeRedirect;
 	public readonly payload?: any;
 }
 
-export type UsersActions =
+export type AuthenticationActions =
 	| SetUser
 	| Login
 	| Logout

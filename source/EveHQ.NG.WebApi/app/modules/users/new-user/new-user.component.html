@@ -1,19 +1,11 @@
-<form [formGroup]="formModel" class="form">
-	<div class="field-holder">
-		<label class="field-name">Name:</label>
-		<input type="text" pInputText formControlName="name"/>
-	</div>
-	<div class="field-holder">
-		<label class="field-name">Password:</label>
-		<input type="password" pPassword formControlName="password"/>
-	</div>
-	<div class="field-holder">
-		<label>
-			<p-checkbox formControlName="isLoginRequired" binary="true"></p-checkbox>
-			Is login required
-		</label>
-	</div>
-</form>
+<div>
+	<evehq-user-editor class="user-editor" [user]="user" #userEditor></evehq-user-editor>
+	<button class="create-button"
+			pButton (click)="save()"
+			label="Create applicaiton user"
+			[disabled]="!(userEditor.isValid$ | async)">
+	</button>
+</div>
 <div class="description">
 	<p>
 		The EveHQ application should know it's user. The user is one and only one per OS user. User provides authentication possibility

@@ -1,6 +1,6 @@
-import { User } from 'modules/authentication/models/user';
+import { AuthenticatedUser } from 'modules/authentication/models/authenticated-user';
 
 export interface AuthenticationState {
-	user: User | undefined;
+	user: AuthenticatedUser | undefined;
 	isLoggedIn: boolean;
 }

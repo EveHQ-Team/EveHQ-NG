@@ -1,6 +1,8 @@
 @import "_reset.scss";
+@import "../styles/colors.scss";
 @import "_primeng-theme.scss";
 
 html, body {
 	height: 100%;
+	color: $general-text-color;
 }

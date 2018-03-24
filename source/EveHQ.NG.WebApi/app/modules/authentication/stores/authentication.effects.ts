@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { of } from 'rxjs/observable/of';
 import { tap, map, exhaustMap, catchError } from 'rxjs/operators';
-import { UsersActionTypes, Login, LoginSuccess, LoginFailure } from 'modules/authentication/stores/authentication.actions';
+import { AuthenticationActionTypes, Login, LoginSuccess, LoginFailure } from 'modules/authentication/stores/authentication.actions';
 import { AuthenticationService } from 'modules/authentication/services/authentication.service';
 import { Authenticate } from 'modules/authentication/models/authenticate';
 
@@ -17,7 +17,7 @@ export class UserBasedStatusEffects {
 
 	@Effect()
 	public login$ = this.actions$.pipe(
-		ofType(UsersActionTypes.Login),
+		ofType(AuthenticationActionTypes.Login),
 		map((action: Login) => action.payload),
 		exhaustMap((auth: Authenticate) =>
 			this.authenticationService
@@ -31,13 +31,13 @@ export class UserBasedStatusEffects {
 
 	@Effect({ dispatch: false })
 	public loginSuccess$ = this.actions$.pipe(
-		ofType(UsersActionTypes.LoginSuccess),
+		ofType(AuthenticationActionTypes.LoginSuccess),
 		tap(() => this.router.navigate(['/users/dashboard']))
 	);
 
 	@Effect({ dispatch: false })
 	public loginRedirect$ = this.actions$.pipe(
-		ofType(UsersActionTypes.LoginRedirect, UsersActionTypes.Logout),
+		ofType(AuthenticationActionTypes.LoginRedirect, AuthenticationActionTypes.Logout),
 		tap(_ => {
 			this.router.navigate(['/users/login']);
 		})
@@ -45,13 +45,13 @@ export class UserBasedStatusEffects {
 
 	@Effect({ dispatch: false })
 	public createUserRedirect$ = this.actions$.pipe(
-		ofType(UsersActionTypes.CreateUserRedirect),
+		ofType(AuthenticationActionTypes.CreateUserRedirect),
 		tap(_ => this.router.navigate(['/users/create']))
 	);
 
 	@Effect({ dispatch: false })
 	public homeRedirect$ = this.actions$.pipe(
-		ofType(UsersActionTypes.HomeRedirect),
+		ofType(AuthenticationActionTypes.HomeRedirect),
 		tap(_ => this.router.navigate(['/users/dashboard'])) // TODO: Redirect to default characters dashboard when it is ready.
 	);
 }

@@ -37,7 +37,6 @@ console.log(`applicationRootDirectory = ${applicationRootDirectory}`);
 //add all external css to be added in our index.html--> like as if it's .angular-cli.json
 const styles = [
 	path.resolve(nodeModulesDirectory, 'font-awesome', 'css', 'font-awesome.min.css'),
-	path.resolve(nodeModulesDirectory, 'primeng', 'resources', 'themes', 'omega', 'theme.css'),
 	path.resolve(nodeModulesDirectory, 'primeng', 'resources', 'primeng.min.css'),
 	path.resolve(applicationRootDirectory, 'assets', 'root-styles', 'styles.scss')
 ];

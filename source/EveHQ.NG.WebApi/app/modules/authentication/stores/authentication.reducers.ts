@@ -5,7 +5,7 @@ import {
 	createSelector,
 	createFeatureSelector
 	} from '@ngrx/store';
-import { UsersActionTypes, UsersActions } from 'modules/authentication/stores/authentication.actions';
+import { AuthenticationActionTypes, AuthenticationActions } from 'modules/authentication/stores/authentication.actions';
 import { AuthenticationState } from 'modules/authentication/stores/authentication.state';
 
 const initialState: AuthenticationState = {
@@ -13,19 +13,19 @@ const initialState: AuthenticationState = {
 	isLoggedIn: false
 };
 
-export function authenticationReducer(state: AuthenticationState = initialState, action: UsersActions): AuthenticationState {
+export function authenticationReducer(state: AuthenticationState = initialState, action: AuthenticationActions): AuthenticationState {
 	switch (action.type) {
-		case UsersActionTypes.SetUser:
+		case AuthenticationActionTypes.SetUser:
 			return {
 				...state,
 				user: action.payload
 			};
-		case UsersActionTypes.LoginSuccess:
+		case AuthenticationActionTypes.LoginSuccess:
 			return {
 				...state,
 				isLoggedIn: true,
 			};
-		case UsersActionTypes.Logout:
+		case AuthenticationActionTypes.Logout:
 			return {
 				...state,
 				isLoggedIn: false,

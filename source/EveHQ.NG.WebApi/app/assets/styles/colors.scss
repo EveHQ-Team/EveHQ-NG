@@ -1,2 +1,16 @@
-$grey-100: #1a1a1a;
-$grey-200: #2d2d2d;
+$grey-000: hsl(0, 0, 0);
+$grey-100: hsl(0, 0, 10%);
+$grey-200: hsl(0, 0, 20%);
+$grey-300: hsl(0, 0, 30%);
+$grey-400: hsl(0, 0, 40%);
+$grey-500: hsl(0, 0, 50%);
+$grey-600: hsl(0, 0, 60%);
+$grey-700: hsl(0, 0, 70%);
+$grey-800: hsl(0, 0, 80%);
+$grey-900: hsl(0, 0, 90%);
+$grey-1000: hsl(0, 0, 100%);
+
+$general-text-color: $grey-800;
+$general-border-color: $grey-800;
+
+$error-color: #cd0a0a;

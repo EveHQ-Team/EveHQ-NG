@@ -1,9 +1,9 @@
 import { LoginPageState, initialState } from 'modules/users/stores/login-page.state';
-import { UsersActionTypes, UsersActions } from 'modules/authentication/stores/authentication.actions';
+import { AuthenticationActionTypes, AuthenticationActions } from 'modules/authentication/stores/authentication.actions';
 
-export function loginPageReducer(state = initialState, action: UsersActions): LoginPageState {
+export function loginPageReducer(state = initialState, action: AuthenticationActions): LoginPageState {
 	switch (action.type) {
-		case UsersActionTypes.Login:
+		case AuthenticationActionTypes.Login:
 		{
 			return {
 				...state,
@@ -12,7 +12,7 @@ export function loginPageReducer(state = initialState, action: UsersActions): Lo
 			};
 		}
 
-		case UsersActionTypes.LoginSuccess:
+		case AuthenticationActionTypes.LoginSuccess:
 		{
 			return {
 				...state,
@@ -21,7 +21,7 @@ export function loginPageReducer(state = initialState, action: UsersActions): Lo
 			};
 		}
 
-		case UsersActionTypes.LoginFailure:
+		case AuthenticationActionTypes.LoginFailure:
 		{
 			return {
 				...state,

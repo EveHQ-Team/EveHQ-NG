@@ -1,4 +1,5 @@
 @import "~assets/styles/sizes";
+@import "~assets/styles/colors";
 @import "~assets/styles/typography";
 
 @mixin wall-of-text {
@@ -8,24 +9,13 @@
 }
 
 :host {
-	color: yellowgreen;
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	grid-template-areas: "form description";
 	grid-gap: $grid-step * 4;
 
-	.form {
+	.user-editor {
 		grid-area: form;
-
-		.field-holder {
-			display: flex;
-			flex-flow: column nowrap;
-			margin-bottom: $grid-step * 2;
-
-			.field-name {
-				margin-bottom: $half-grid-step;
-			}
-		}
 	}
 
 	.description {
@@ -33,5 +23,10 @@
 
 		@include base-font(m, light);
 		@include wall-of-text;
+	}
+
+	.create-button {
+		padding: $grid-step;
+		margin-top: $grid-step * 4;
 	}
 }
