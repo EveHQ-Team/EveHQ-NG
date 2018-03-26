@@ -110,6 +110,6 @@ export class ShellEffects {
 	@Effect({ dispatch: false })
 	public openCharacterDashboard$ = this.actions$.pipe(
 		ofType(ShellActionTypes.OpenCharacterDashboard),
-		tap(() => this.router.navigate(['/characters/dashboard']))
+		tap(() => this.router.navigate(['/characters']))
 	);
 }

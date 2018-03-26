@@ -2,14 +2,15 @@ import { Routes } from '@angular/router';
 import { AuthenticationGuard } from 'modules/application/services/authentication-guard.service';
 import { CharacterDashboardComponent } from 'modules/characters/character-dashboard/character-dashboard.component';
 
+const dashboardPath = 'dashboard';
 export const routes: Routes = [
 	{
 		path: '',
 		pathMatch: 'full',
-		redirectTo: 'characters/dashboard'
+		redirectTo: dashboardPath
 	},
 	{
-		path: 'dashboard',
+		path: dashboardPath,
 		canActivate: [AuthenticationGuard],
 		component: CharacterDashboardComponent
 	}
