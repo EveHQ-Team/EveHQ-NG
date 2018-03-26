@@ -32,3 +32,5 @@ export const metaReducers: MetaReducer<ApplicationState>[] = [logger];
 export const getShellState = createFeatureSelector<ShellState>('shell');
 export const getIsMenuShown = createSelector(getShellState, ShellSelector.getIsMenuShown);
 export const getHeader = createSelector(getShellState, ShellSelector.getHeader);
+export const getUser = createSelector(getShellState, ShellSelector.getUser);
+export const getProfile = createSelector(getShellState, ShellSelector.getProfile);

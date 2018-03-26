@@ -3,10 +3,11 @@ import 'polyfills';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ApplicationRoutingModule } from 'modules/application/application-routing.module';
+import { BackendModule } from 'modules/backend/backend.module';
 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -18,30 +19,30 @@ import { ShellComponent } from 'modules/application/shell/shell.component';
 import { MenuBarComponent } from 'modules/application/shell-menu/shell-menu.component';
 import { ApplicationHeaderComponent } from 'modules/application/shell-header/shell-header.component';
 import { ApplicationFooterComponent } from 'modules/application/shell-footer/shell-footer.component';
-import { StartupComponent as ApplicationStartupComponent } from 'modules/application/startup/startup.component';
-import { CharacterModule } from 'modules/character/character.module';
-import { AuthenticationModule } from 'modules/authentication/authentication.module';
+import { ShellEffects } from 'modules/application/stores/shell.effects';
+import { AuthenticationGuard } from 'modules/application/services/authentication-guard.service';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		BrowserModule,
 		BrowserAnimationsModule,
-		ReactiveFormsModule,
+		FormsModule,
 		HttpClientModule,
-		CharacterModule,
+		BackendModule,
 		StoreModule.forRoot(reducers, { metaReducers }),
-		EffectsModule.forRoot([]),
+		EffectsModule.forRoot([ShellEffects]),
 		CommonServicesModule.forRoot(),
-		AuthenticationModule,
 		ApplicationRoutingModule
 	],
 	declarations: [
 		ShellComponent,
 		MenuBarComponent,
 		ApplicationHeaderComponent,
-		ApplicationFooterComponent,
-		ApplicationStartupComponent
+		ApplicationFooterComponent
+	],
+	providers: [
+		AuthenticationGuard
 	],
 	bootstrap: [ShellComponent]
 })

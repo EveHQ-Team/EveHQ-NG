@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { SetShellHeader } from 'modules/application/stores/shell.actions';
+import { Store } from '@ngrx/store';
+import { ApplicationState } from 'modules/application/stores/application-reducers.store';
+import { InitializeApplication } from 'modules/application/stores/shell.actions';
 
 @Component({
 	selector: 'evehq-shell',
@@ -7,8 +9,10 @@ import { SetShellHeader } from 'modules/application/stores/shell.actions';
 	styleUrls: ['./shell.component.scss']
 })
 export class ShellComponent implements OnInit {
+	constructor(private readonly store: Store<ApplicationState>) {
+	}
 
 	public ngOnInit() {
-		const a = new SetShellHeader('JJJ');
+		this.store.dispatch(new InitializeApplication());
 	}
 }

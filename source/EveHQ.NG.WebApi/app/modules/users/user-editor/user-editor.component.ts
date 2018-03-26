@@ -1,8 +1,7 @@
-import { Component, Input, ViewChild, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ViewChild, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { User } from 'modules/users/models/user'
+import { User } from 'modules/application/models/user'
 
 @Component({
 	selector: 'evehq-user-editor',
@@ -19,7 +18,7 @@ export class UserEditorComponent implements OnInit {
 
 	public ngOnInit(): void {
 		if (this.form.statusChanges !== null) {
-			this.isValid$ = this.form.statusChanges.map((validityStatus: string) => validityStatus === 'VALID');
+			this.isValid$ = this.form.control.statusChanges.map((validityStatus: string) => validityStatus === 'VALID');
 		}
 	}
 

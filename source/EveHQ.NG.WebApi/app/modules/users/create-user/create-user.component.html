@@ -1,0 +1,34 @@
+<section>
+	<div class="header">The application user data</div>
+	<evehq-user-editor class="editor" [user]="user$ | async" #userEditor></evehq-user-editor>
+	<div class="description">
+		<p>
+			The EveHQ application should know it's user. There is one and only one application user per OS user.
+			User provides authentication possibilities on start which could be skipped if you prefer so.
+		</p>
+	</div>
+</section>
+<section>
+	<div class="header">The user meta-game profiles</div>
+	<evehq-profiles-editor
+		class="editor"
+		[profiles]="profiles$ | async"
+		(addProfile)="addProfile($event)"
+		(removeProfile)="removeProfile($event)"></evehq-profiles-editor>
+	<div class="description">
+		<p>
+			Most of the EVE players have no need for a few different meta-game profiles. You need more than one if you, for example,
+			if you manage a corporation as a CEO, lead fleets as fleet commander and play as a single player sometimes.
+			Profile is more about list of characters playing together.
+		</p>
+		<p>
+			Most of the players need just one.
+		</p>
+	</div>
+</section>
+<button class="create-button"
+		pButton
+		(click)="save()"
+		label="Create applicaiton user"
+		[disabled]="!(userEditor.isValid$ | async)">
+</button>

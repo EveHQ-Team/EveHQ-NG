@@ -1,32 +1,26 @@
 import { Routes } from '@angular/router';
-import { AuthenticationGuard } from 'modules/authentication/services/authentication-guard.service';
-import { LoginRouteGuard } from 'modules/authentication/services/login-route-guard.service';
-import { CreateUserRouteGuard } from 'modules/authentication/services/create-user-route-guard.service';
+import { AuthenticationGuard } from 'modules/application/services/authentication-guard.service';
 import { UserDashboardComponent } from 'modules/users/user-dashboard/user-dashboard.component';
-import { NewUserComponent } from 'modules/users/new-user/new-user.component';
+import { CreateUserComponent } from 'modules/users/create-user/create-user.component';
 import { UserLoginComponent } from 'modules/users/user-login/user-login.component';
-
-const dashboardUrl = 'users/dashboard';
 
 export const usersRoutes: Routes = [
 	{
 		path: '',
 		pathMatch: 'full',
-		redirectTo: dashboardUrl
+		redirectTo: 'users/dashboard'
 	},
 	{
-		path: dashboardUrl,
+		path: 'dashboard',
 		canActivate: [AuthenticationGuard],
 		component: UserDashboardComponent
 	},
 	{
 		path: 'create',
-		canActivate: [CreateUserRouteGuard],
-		component: NewUserComponent
+		component: CreateUserComponent
 	},
 	{
 		path: 'login',
-		canActivate: [LoginRouteGuard],
 		component: UserLoginComponent
 	}
 ];

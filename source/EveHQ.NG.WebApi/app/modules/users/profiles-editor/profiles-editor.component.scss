@@ -1,0 +1,34 @@
+@import "~assets/styles/sizes";
+
+:host {
+	display: flex;
+	flex-flow: column nowrap;
+	align-content: stretch;
+	align-items: stretch;
+
+	.profile-name {
+		flex-grow: 1;
+		margin-right: $grid-step * 2;
+	}
+
+	.item-command {
+		flex-grow: 0;
+	}
+
+	.profile-name-subsection {
+		display: flex;
+		flex-flow: row nowrap;
+		margin-bottom: $grid-step * 2;
+	}
+
+	.profile-list {
+		flex-grow: 1;
+		align-self: stretch;
+
+		li {
+			display: flex;
+			flex-flow: row nowrap;
+			margin-bottom: $grid-step * 2;
+		}
+	}
+}

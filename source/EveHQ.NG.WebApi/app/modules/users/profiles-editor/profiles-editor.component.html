@@ -1,0 +1,27 @@
+<form class="form" #profileNameForm="ngForm">
+	<div class="profile-name-subsection">
+		<input pInputText
+				name="profileName"
+				class="profile-name"
+				[(ngModel)]="profileName"
+				type="text"
+				placeholder="Enter profile name"
+				required minlength="4"/>
+		<button pButton class="item-command"
+				(click)="addProfile(profileName)"
+				[disabled]="!(isProfileNameValid$ | async)"
+				label="Add">
+		</button>
+	</div>
+</form>
+<ul class="profile-list">
+	<li *ngFor="let profile of profiles">
+		<div class="profile-name">{{profile.name}}</div>
+		<button pButton
+				class="item-command"
+				label="Remove"
+				[disabled]="!isRemoveEnabled"
+				(click)="removeProfile(profile.id)">
+		</button>
+	</li>
+</ul>
