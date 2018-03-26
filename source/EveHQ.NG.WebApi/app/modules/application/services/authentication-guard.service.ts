@@ -16,7 +16,7 @@ export class AuthenticationGuard implements CanActivate {
 		return this.store.pipe(
 			select(getUser),
 			map(user => {
-				if (user !== undefined) {
+				if (user === undefined) {
 					this.store.dispatch(new InitializeApplication());
 					return false;
 				}

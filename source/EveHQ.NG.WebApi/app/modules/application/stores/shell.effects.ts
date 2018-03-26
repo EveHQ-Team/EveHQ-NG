@@ -95,7 +95,7 @@ export class ShellEffects {
 	@Effect()
 	public selectProfileSuccess$ = this.actions$.pipe(
 		ofType(ShellActionTypes.SelectProfileSuccess),
-		tap(() => new OpenCharacterDashboard())
+		map(() => new OpenCharacterDashboard())
 	);
 
 	@Effect()

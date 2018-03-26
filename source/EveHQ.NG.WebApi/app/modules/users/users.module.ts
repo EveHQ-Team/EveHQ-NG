@@ -6,7 +6,6 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { usersRoutes } from 'modules/users/users-routing.module';
 import { CreateUserComponent } from 'modules/users/create-user/create-user.component';
-import { UserLoginComponent } from 'modules/users/user-login/user-login.component';
 import { UserDashboardComponent } from 'modules/users/user-dashboard/user-dashboard.component';
 import { MetaGameProfileManagerComponent } from 'modules/users/meta-game-profile-manager/meta-game-profile-manager.component';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -35,7 +34,6 @@ import { ProfilesEditorComponent } from './profiles-editor/profiles-editor.compo
 	declarations: [
 		UserDashboardComponent,
 		CreateUserComponent,
-		UserLoginComponent,
 		MetaGameProfileManagerComponent,
 		UserEditorComponent,
 		ProfilesEditorComponent
