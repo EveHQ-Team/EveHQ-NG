@@ -10,8 +10,9 @@ When application starts up we need to choose which screen should be shown to the
 4. User has a single profile. Select the profile as the current.
 5. Check if the profile has added characters.
 6. Profile has added characters. Select the current character in some way.
-7. Open the character dashboard screen.
-8. The use case ends.
+7. SUD clears the navigation history.
+8. SUD opens the character dashboard screen.
+9. The use case ends.
 
 ## Alternative scenarios
 
