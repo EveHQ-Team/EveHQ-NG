@@ -1,5 +1,5 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { NewUserPageState, usersReducer, NewUserSelectors } from 'modules/users/create-user/create-user.store';
+import { NewUserPageState, createUserReducer, NewUserSelectors } from 'modules/users/create-user/create-user.store';
 import { ApplicationState } from 'modules/application/stores/application-reducers.store';
 
 export interface UsersModuleState {
@@ -12,7 +12,7 @@ export interface State extends ApplicationState {
 
 export const usersModuleReducers =
 {
-	newUserPage: usersReducer
+	newUserPage: createUserReducer
 };
 
 export const selectUsersModuleState = createFeatureSelector<UsersModuleState>('users');

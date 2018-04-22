@@ -2,37 +2,56 @@
 
 When application starts up we need to choose which screen should be shown to the user first as well as prepare environment.
 
+## Pre-conditions
+
+- NONE
+
+## Post-conditions
+
+- The user data saved in the permanent store.
+- The authenticated user set in the session store.
+- The selected meta-game profile set as the current in the session store.
+- The current character from the current profile set in the session store.
+
 ## Normal scenario
 
-1. Check if the application user is created already.
-2. The user is created. Check is login for the user required and it isn't logged in.
-3. Login isn't required or the user is already authenticated. Check if the user has multiply profiles.
-4. User has a single profile. Select the profile as the current.
-5. Check if the profile has added characters.
-6. Profile has added characters. Select the current character in some way.
-7. SUD clears the navigation history.
-8. SUD opens the character dashboard screen.
-9. The use case ends.
+1. SUD checks is the application user already created.
+2. The user is created.
+3. SUD checks is the user authenticated.
+4. The user isn't authenticated. SUD calls the [UC002. User Login](user-login.use-case.md).
+5. The user successfully authenticated. SUD sets the authenticated user in the session store.
+6. SUD checks is the current profile selected.
+7. The current profile isn't selected. SUD calls the [UC008. Select user profile](select-user-profilie.use-case.md).
+8. The user successfully selected the current profile. SUD sets the selected profile as the current in the session store.
+9. SUD checks if the current profile has any characters.
+10. Profile has added characters.
+11. SUD selects the current character and sets it as the current in the session store.
+12. SUD clears the navigation history.
+13. SUD opens the Character dashboard screen.
+14. The use case ends.
 
 ## Alternative scenarios
 
-A2.1. The user isn't created.
+### A2.1. The user isn't created.
 
-1. Start [UC003. Create the Application User](create-user.use-case.md).
-2. The use case ends.
+1. SUD calls the [UC003. Create the Application User](create-user.use-case.md).
+2. The user successfully created and returned from the called use case. SUD stores the created user in the permanent store.
+3. The use case continues from the step 3.
 
-A3.1. Login for the user is required.
+### A4.1. The user is authenticated.
 
-1. Start [UC002. User Login](user-login.use-case.md).
-2. The use case ends.
+1. The use case continues from the step 6.
 
-A4.1. User has multiply profiles.
+### A7.1. The current profile selected.
 
-1. Open the Select profile screen to let the user choose the meta-game profile.
-2. The User choose some profile as the current profile.
-3. The use case continues from the step 5.
+1. The use case continues from the step 9.
 
-A5.1. The profile has no added characters.
+### A10.1. The profile has no added characters.
 
-1. Start [UC004. Manage profile characters](manage-profile-characters.use-case.md).
-2. The use case ends.
+1. SUD calls the [UC004. Manage profile characters](manage-profile-characters.use-case.md).
+2. The user successfully added some characters.
+3. The use case continues from the step 11.
+
+## Open questions
+
+- Specify the way of selecting the current character on the step 11.

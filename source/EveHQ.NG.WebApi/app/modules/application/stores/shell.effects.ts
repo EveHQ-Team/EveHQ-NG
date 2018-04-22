@@ -6,19 +6,10 @@ import { Effect, Actions, ofType } from '@ngrx/effects';
 import { UserService } from 'modules/backend/application/user.service';
 import {
 	ShellActionTypes,
-	CreateUser,
-	LoginUser,
-	LoginPageRedirect,
-	LoginUserSuccess,
-	SelectProfile,
-	SelectProfileSuccess,
-	SelectProfileRedirect,
-	OpenCharacterDashboard,
-	ApplicationError
+//	OpenCharacterDashboard,
+//	ApplicationError
 	} from 'modules/application/stores/shell.actions';
-import { User } from 'modules/application/models/user';
-import { AuthenticatedUser } from 'modules/application/models/authenticated-user';
-import { MetaGameProfile } from 'modules/application/models/meta-game-profile';
+//import { MetaGameProfile } from 'modules/application/models/meta-game-profile';
 
 @Injectable()
 export class ShellEffects {
@@ -27,7 +18,7 @@ export class ShellEffects {
 		private readonly userService: UserService,
 		private readonly router: Router) {
 	}
-
+/*
 	@Effect()
 	public initializeShell$ = this.actions$.pipe(
 		ofType(ShellActionTypes.InitializeApplication),
@@ -51,29 +42,9 @@ export class ShellEffects {
 	);
 
 	@Effect()
-	public loginUser$ = this.actions$.pipe(
-		ofType(ShellActionTypes.LoginUser),
-		map((action: LoginUser) => action.payload),
-		map((user: User) => {
-				const authenticatedUser = { name: user.name, email: user.email };
-				return user.isLogInRequired
-							? new LoginPageRedirect(authenticatedUser)
-							: new LoginUserSuccess(authenticatedUser);
-			}
-		)
-	);
-
-	@Effect({ dispatch: false })
-	public loginPageRedirect$ = this.actions$.pipe(
-		ofType(ShellActionTypes.LoginPageRedirect),
-		map((action: LoginPageRedirect) => action.payload),
-		tap((user: AuthenticatedUser) =>
-			this.router.navigate(['/authentication/login'], { queryParams: { name: user.name, email: user.email } }))
-	);
-
-	@Effect()
 	public loginUserSuccess$ = this.actions$.pipe(
-		ofType(ShellActionTypes.LoginUserSuccess),
+		ofType(ShellActionTypes.InitializeApplication),
+		//ofType(LoginActionTypes.LoginUserSuccess),
 		mergeMap(() =>
 			this.userService.getUserProfiles().pipe(
 				map((profiles: MetaGameProfile[]) => new SelectProfile(profiles)),
@@ -106,6 +77,7 @@ export class ShellEffects {
 			return this.router.navigate(['/authentication/select-profile'], { queryParams: { profiles: JSON.stringify(profiles) } });
 		})
 	);
+*/
 
 	@Effect({ dispatch: false })
 	public openCharacterDashboard$ = this.actions$.pipe(

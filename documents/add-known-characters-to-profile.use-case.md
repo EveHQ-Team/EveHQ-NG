@@ -5,13 +5,13 @@ Some of characters of the user could be shared between profiles. By the end a fl
 ## Pre-conditions
 
 * The user is authenticated.
-* The current profile is chosen.
+* The current profile is selected.
 * The user has multiple meta-game profiles.
 * Any other profile has any characters added.
 
 ## Post-conditions
 
-- Selected characters added to the current profile.
+- Selected known characters returned to the caller or an empty list returned if the user canceled the operation.
 - Selected characters not removed from the original profiles.
 
 ## Normal scenario
@@ -19,16 +19,13 @@ Some of characters of the user could be shared between profiles. By the end a fl
 1. SUD collects all the characters from all user profiles and displays this list to the user.
 2. The user selects characters he wants to add to the current profile from the list.
 3. The user commands to add them.
-4. SUD adds characters to the current profile.
-5. SUD navigates to the previous screen.
-6. The use case ends.
+4. SUD returns to the caller selected characters. The use case ends.
 
 ## Alternative scenarios
 
-A2-3.1. The user commands to cancel addition.
+### A2-3.1. The user commands to cancel addition.
 
-1. SUD throws away character information and tokens.
-2. The use case continues from the step 5.
+1. SUD returns to the caller an empty list. The use case ends.
 
 ## Further ideas
 

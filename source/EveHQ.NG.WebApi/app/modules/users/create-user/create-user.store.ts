@@ -7,45 +7,31 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 import { v4 as uuid } from 'node-uuid';
 import { UserService } from 'modules/backend/application/user.service';
 import { Action } from '@ngrx/store';
-import { User } from 'modules/application/models/user';
+import { ApplicationUser} from 'modules/application/models/application-user';
 import { MetaGameProfile } from 'modules/application/models/meta-game-profile';
 import { CreateUserModel } from 'modules/users/models/create-user-model';
 import { InitializeApplication } from 'modules/application/stores/shell.actions';
 
 export interface NewUserPageState {
-	user: User;
+	user: ApplicationUser;
 	profiles: MetaGameProfile[];
 	isLoading: boolean;
 	isLoaded: boolean;
 }
 
-export const initialState: NewUserPageState = {
-	user: new User(),
+const initialState: NewUserPageState = {
+	user: new ApplicationUser(),
 	profiles: [{ name: 'All Characters profile', id: uuid() }],
 	isLoading: false,
 	isLoaded: false
 };
 
 export enum UsersActionTypes {
-	AddProfile = '[NEW-USER-PAGE] Add Profile',
-	RemoveProfile = '[NEW-USER-PAGE] Remove Profile',
 	CreateUser = '[NEW-USER-PAGE] Create User',
 	CreateUserSuccess = '[NEW-USER-PAGE] Create User Success',
-	CreateUserFail = '[NEW-USER-PAGE] Create User Fail'
-}
-
-export class AddProfile implements Action {
-	constructor(public readonly payload: MetaGameProfile) {
-	}
-
-	public readonly type: string = UsersActionTypes.AddProfile;
-}
-
-export class RemoveProfile implements Action {
-	constructor(public readonly payload: string) {
-	}
-
-	public readonly type: string = UsersActionTypes.RemoveProfile;
+	CreateUserFail = '[NEW-USER-PAGE] Create User Fail',
+	AddProfile = '[NEW-USER-PAGE] Add Profile',
+	RemoveProfile = '[NEW-USER-PAGE] Remove Profile'
 }
 
 export class CreateUser implements Action {
@@ -69,15 +55,29 @@ export class CreateUserFail implements Action {
 	public readonly type: string = UsersActionTypes.CreateUserFail;
 }
 
+export class AddProfile implements Action {
+	constructor(public readonly payload: MetaGameProfile) {
+	}
+
+	public readonly type: string = UsersActionTypes.AddProfile;
+}
+
+export class RemoveProfile implements Action {
+	constructor(public readonly payload: string) {
+	}
+
+	public readonly type: string = UsersActionTypes.RemoveProfile;
+}
+
 export type UsersActions =
-	| AddProfile
-	| RemoveProfile
 	| CreateUser
 	| CreateUserSuccess
-	| CreateUserSuccess;
+	| CreateUserSuccess
+	| AddProfile
+	| RemoveProfile;
 
 
-export function usersReducer(state = initialState, action: UsersActions): NewUserPageState {
+export function createUserReducer(state = initialState, action: UsersActions): NewUserPageState {
 	switch (action.type) {
 		case UsersActionTypes.CreateUserSuccess:
 		{
@@ -130,7 +130,7 @@ export class CreateUserEffects {
 		map((action: CreateUser) => action.payload),
 		mergeMap((model: CreateUserModel) =>
 			forkJoin(
-				this.userService.setUser(model.user),
+				this.userService.setUser(model.user, model.password),
 				this.userService.setUserProfiles(model.profiles))
 			.pipe(
 				map(() => new CreateUserSuccess(model)),

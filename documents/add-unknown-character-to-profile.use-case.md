@@ -9,30 +9,28 @@ EVE Online characters is the crucial part of the application. Almost everything 
 
 ## Post-conditions
 
-* A new character added to the current profile with info and both tokens.
+* A new character information and both tokens returned to the caller.
+* If the user canceled the operation the caller notified about it.
 
 ## Normal scenario
 
 1. SUD opens the Add character screen.
-2. The user commands add a new unknown for SUD character.
-3. SUD informs the user what he should do on the CCP site and opens in the default web-browser link to [SSO authorization page](https://login.eveonline.com/oauth/authorize).
-4. The user on the SSO-page logins with the account containing the required character, selects character and gives SUD access to the scopes selected by SUD.
-5. SSO redirects the browser to the URI, provided by the SUD on the step 3.
-6. SUD intercepts redirection from SSO-page and extracts the authorization code from the redirection URL.
-7. SUD exchange the authorization code to access and refresh tokens from SSO.
-8. SSO verifies the authorization code and returns tokens.
-9. SUD retrieves character ID and basic character information, displays it to the user on the Add character screen.
-10. The user commands to add this character to the current profile.
-11. SUD stores character information and tokens.
-12. SUD navigates to the previous screen.
-13. The use case ends.
+2. SUD informs the user what he should do on the CCP site and opens in the default web-browser link to [SSO authorization page](https://login.eveonline.com/oauth/authorize).
+3. The user on the SSO-page logins with the account containing the required character, selects character and gives access to the scopes selected by SUD.
+4. SSO redirects the browser to the URI, provided by the SUD on the step 2.
+5. SUD intercepts redirection from SSO-page and extracts the authorization code from the redirection URL.
+6. SUD exchange the authorization code to access and refresh tokens from SSO.
+7. SSO verifies the authorization code and returns tokens.
+8. SUD retrieves character ID and basic character information, displays it to the user on the Add character screen.
+9. The user commands to add this character to the current profile.
+10. SUD returns character information and tokens to the caller. The use case ends.
 
 ## Alternative scenarios
 
-A10.1. The user commands to cancel addition.
+### A2.1, A9.1. The user commands to cancel addition.
 
 1. SUD throws away character information and tokens.
-2. The use case continues from the step 12.
+2. SUD informs the caller about cancelation of the operation. The use case ends.
 
 ## Further ideas
 

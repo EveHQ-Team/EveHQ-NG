@@ -1,7 +1,8 @@
-import { User } from 'modules/application/models/user';
+import { ApplicationUser} from 'modules/application/models/application-user';
 import { MetaGameProfile } from 'modules/application/models/meta-game-profile';
 
 export class CreateUserModel {
-	public user: User;
+	public user: ApplicationUser;
+	public password: string;
 	public profiles: MetaGameProfile[];
 }
