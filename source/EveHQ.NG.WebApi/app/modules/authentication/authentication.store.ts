@@ -1,4 +1,4 @@
-import { ApplicationState } from 'modules/application/stores/application-reducers.store';
+import { ApplicationState } from 'modules/application/application.state';
 import { LoginUseCaseState, loginUseCaseReducer } from 'modules/application/use-cases/login.use-case';
 
 export interface AuthenticationModuleState {

@@ -4,9 +4,8 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { map } from 'rxjs/operators';
-import { InitializeApplication } from 'modules/application/stores/shell.actions';
-import { ApplicationState } from 'modules/application/stores/application-reducers.store';
-import { getUser } from 'modules/users/stores/users-module.reducers';
+import { InitializeApplication } from 'modules/application/use-cases/startup.use-case';
+import { ApplicationState } from 'modules/application/application.state';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {

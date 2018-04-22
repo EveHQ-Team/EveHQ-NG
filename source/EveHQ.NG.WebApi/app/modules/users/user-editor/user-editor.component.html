@@ -8,10 +8,10 @@
 		<input type="text" pInputText [(ngModel)]="user.email" name="email" email/>
 	</div>
 	<div class="field-holder">
-		<p-checkbox [(ngModel)]="user.isLogInRequired" binary="true" name="isLogInRequired" label="Login required"></p-checkbox>
+		<p-checkbox [(ngModel)]="user.isAuthenticationRequired" binary="true" name="isLogInRequired" label="Login required"></p-checkbox>
 	</div>
 	<div class="field-holder">
 		<label class="field-name">Password:</label>
-		<input type="password" pPassword [(ngModel)]="user.password" name="password" [disabled]="!user.isLogInRequired" required/>
+		<input type="password" pInputText [(ngModel)]="password" name="password" [disabled]="!user.isAuthenticationRequired" required/>
 	</div>
 </form>

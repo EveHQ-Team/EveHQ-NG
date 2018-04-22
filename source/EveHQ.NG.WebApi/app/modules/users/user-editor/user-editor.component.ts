@@ -1,7 +1,7 @@
 import { Component, Input, ViewChild, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { User } from 'modules/application/models/user'
+import { ApplicationUser } from 'modules/application/models/application-user'
 
 @Component({
 	selector: 'evehq-user-editor',
@@ -11,7 +11,10 @@ import { User } from 'modules/application/models/user'
 export class UserEditorComponent implements OnInit {
 
 	@Input()
-	public user: User;
+	public user: ApplicationUser;
+
+	@Input()
+	public password: string;
 
 	@Input()
 	public isValid$: Observable<boolean>;

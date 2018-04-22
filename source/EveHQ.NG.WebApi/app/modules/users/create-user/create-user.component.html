@@ -1,6 +1,6 @@
 <section>
 	<div class="header">The application user data</div>
-	<evehq-user-editor class="editor" [user]="user$ | async" #userEditor></evehq-user-editor>
+	<evehq-user-editor class="editor" [user]="user$ | async" [password]="password$ | async" #userEditor></evehq-user-editor>
 	<div class="description">
 		<p>
 			The EveHQ application should know it's user. There is one and only one application user per OS user.

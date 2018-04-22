@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
-import * as fromRoot from 'modules/application/stores/application-reducers.store'
+import * as fromRoot from 'modules/application/application.state'
 
 
 @Component({

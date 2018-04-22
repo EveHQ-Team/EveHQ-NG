@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ApplicationState } from 'modules/application/stores/application-reducers.store';
-import { InitializeApplication } from 'modules/application/stores/shell.actions';
+import { ApplicationState } from 'modules/application/application.state';
+import { InitializeApplication } from 'modules/application/use-cases/startup.use-case';
 
 @Component({
 	selector: 'evehq-shell',

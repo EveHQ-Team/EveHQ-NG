@@ -12,15 +12,18 @@ import { BackendModule } from 'modules/backend/backend.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
-import { reducers, metaReducers } from 'modules/application/stores/application-reducers.store'
+import { applicationReducers, metaReducers } from 'modules/application/application.state'
 
 import { CommonServicesModule } from 'modules/common/common-services.module';
 import { ShellComponent } from 'modules/application/shell/shell.component';
 import { MenuBarComponent } from 'modules/application/shell-menu/shell-menu.component';
 import { ApplicationHeaderComponent } from 'modules/application/shell-header/shell-header.component';
 import { ApplicationFooterComponent } from 'modules/application/shell-footer/shell-footer.component';
-import { ShellEffects } from 'modules/application/stores/shell.effects';
+import { ShellEffects } from 'modules/application/stores/shell.state';
 import { AuthenticationGuard } from 'modules/application/services/authentication-guard.service';
+import { CreateUserUseCaseEffects } from 'modules/application/use-cases/create-user.use-case';
+import { LoginUseCaseEffects } from 'modules/application/use-cases/login.use-case';
+import { StartupUseCaseEffects } from 'modules/application/use-cases/startup.use-case';
 
 @NgModule({
 	imports: [
@@ -30,8 +33,8 @@ import { AuthenticationGuard } from 'modules/application/services/authentication
 		FormsModule,
 		HttpClientModule,
 		BackendModule,
-		StoreModule.forRoot(reducers, { metaReducers }),
-		EffectsModule.forRoot([ShellEffects]),
+		StoreModule.forRoot(applicationReducers, { metaReducers }),
+		EffectsModule.forRoot([ShellEffects, StartupUseCaseEffects, CreateUserUseCaseEffects, LoginUseCaseEffects]),
 		CommonServicesModule.forRoot(),
 		ApplicationRoutingModule
 	],

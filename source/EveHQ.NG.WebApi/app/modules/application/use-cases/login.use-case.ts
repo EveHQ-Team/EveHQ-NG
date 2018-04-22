@@ -1,21 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { map, catchError, tap, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { _throw } from 'rxjs/observable/throw';
 import { Action,
 	select,
 	Store,
-	createSelector,
-	createFeatureSelector
 	} from '@ngrx/store';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { ApplicationUser } from 'modules/application/models/application-user';
 import { StartupUseCaseActionTypes, LoginUser } from 'modules/application/use-cases/startup.use-case';
 import { AuthenticationService } from 'modules/backend/application/authentication.service';
-import { AuthenticationModuleState } from 'modules/authentication/authentication.store';
-import { ApplicationState } from 'modules/application/stores/application-reducers.store';
+import { ApplicationState, getUserToAuthenticate } from 'modules/application/application.state';
 
 export enum LoginUseCaseActionTypes {
 	SetUserToAuthenticate = '[LOGIN USE CASE] Set User To Authenticate',
@@ -46,9 +42,7 @@ export class AuthenticateWithPassword implements Action {
 
 export class LoginSuccess implements Action {
 	public readonly type: string = LoginUseCaseActionTypes.LoginSuccess;
-
-	constructor(public payload: ApplicationUser) {
-	}
+	public payload?: any;
 }
 
 export class LoginFail implements Action {
@@ -65,12 +59,24 @@ export type LoginUseCaseActions =
 	| LoginSuccess
 	| LoginFail;
 
+export interface LoginUseCaseState {
+	userToAuthenticate: ApplicationUser | undefined;
+	isUserAuthenticated: boolean;
+	error: string | undefined;
+}
+
+const initialState: LoginUseCaseState = {
+	userToAuthenticate: undefined,
+	isUserAuthenticated: false,
+	error: undefined
+};
+
 export function loginUseCaseReducer(state = initialState, action: LoginUseCaseActions): LoginUseCaseState {
 	switch (action.type) {
 		case LoginUseCaseActionTypes.SetUserToAuthenticate:
 		{
 			const user = action.payload as ApplicationUser;
-			return { ...state, user: user };
+			return { ...state, userToAuthenticate: user };
 		}
 
 		case LoginUseCaseActionTypes.LoginFail:
@@ -96,14 +102,10 @@ export class LoginUseCaseEffects {
 	@Effect()
 	public loginUser$ = this.actions$.pipe(
 		ofType(StartupUseCaseActionTypes.LoginUser),
-		map((action: LoginUser) => action.payload),
-		map((user: ApplicationUser) => {
-				return user.isAuthenticationRequired
-							? [new SetUserToAuthenticate(user), new LoginRedirect()]
-							: new LoginSuccess(user);
-			}
-		)
-	);
+		mergeMap(() => this.store.pipe(
+			select(getUserToAuthenticate),
+			map(user => user!.isAuthenticationRequired ? new LoginRedirect() : new LoginSuccess())
+		)));
 
 	@Effect({ dispatch: false })
 	public loginRedirect$ = this.actions$.pipe(
@@ -120,28 +122,9 @@ export class LoginUseCaseEffects {
 				map((isAuthenticated: boolean) =>
 					this.store.pipe(
 						select(getUserToAuthenticate),
-						map(user => isAuthenticated ? new LoginSuccess(user!) : _throw('Login failed. Password is incorrect.'))
+						map(user => isAuthenticated ? new LoginSuccess() : _throw('Login failed. Password is incorrect.'))
 					)),
 				catchError(error => of(new LoginFail(error)))
 			));
 		}));
 }
-
-export interface LoginUseCaseState {
-	user: ApplicationUser | undefined;
-	error: string | undefined;
-}
-
-const initialState: LoginUseCaseState = {
-	user: undefined,
-	error: undefined
-};
-
-export const selectAuthenticationModuleState = createFeatureSelector<AuthenticationModuleState>('users');
-export const selectLoginUseCaseState = createSelector(
-	selectAuthenticationModuleState,
-	(state: AuthenticationModuleState) => state.loginUseCaseState);
-
-export const getUserToAuthenticate = createSelector(
-	selectLoginUseCaseState,
-	(state: LoginUseCaseState) => state.user);
