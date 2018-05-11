@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ApplicationState } from 'modules/application/application.state';
+import { ApplicationStore } from 'modules/application/stores/application.state';
 import { InitializeApplication } from 'modules/application/use-cases/startup.use-case';
 
 @Component({
@@ -9,7 +9,7 @@ import { InitializeApplication } from 'modules/application/use-cases/startup.use
 	styleUrls: ['./shell.component.scss']
 })
 export class ShellComponent implements OnInit {
-	constructor(private readonly store: Store<ApplicationState>) {
+	constructor(private readonly store: Store<ApplicationStore>) {
 	}
 
 	public ngOnInit() {

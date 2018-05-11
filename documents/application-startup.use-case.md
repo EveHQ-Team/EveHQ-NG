@@ -44,4 +44,4 @@ When application starts up we need to choose which screen should be shown to the
 
 ## Open questions
 
-- Specify the way of selecting the current character on the step 9.
+- Specify the way of selecting the current character on the step 9[[[[.

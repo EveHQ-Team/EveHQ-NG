@@ -12,6 +12,8 @@ import { ButtonModule } from 'primeng/button';
 import { ListboxModule } from 'primeng/listbox';
 import { UserEditorComponent } from './user-editor/user-editor.component';
 import { ProfilesEditorComponent } from './profiles-editor/profiles-editor.component';
+import { StoreModule } from '@ngrx/store';
+import { createUserUseCaseReducers } from 'modules/application/use-cases/create-user.use-case';
 
 @NgModule({
 	imports: [
@@ -31,5 +33,4 @@ import { ProfilesEditorComponent } from './profiles-editor/profiles-editor.compo
 		ProfilesEditorComponent
 	]
 })
-export class UsersModule {
-}
+export class UsersModule {}

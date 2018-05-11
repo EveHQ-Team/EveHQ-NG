@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AuthenticationModuleState } from 'modules/authentication/authentication.store';
 import { AuthenticateWithPassword } from 'modules/application/use-cases/login.use-case';
+import {LoginUseCaseState} from 'modules/application/use-cases/login.use-case';
 
 @Component({
 	templateUrl: './login.component.html',
@@ -9,13 +9,11 @@ import { AuthenticateWithPassword } from 'modules/application/use-cases/login.us
 })
 export class LoginComponent implements OnInit {
 
-	constructor(private readonly store: Store<AuthenticationModuleState>) {
-	}
+	constructor(private readonly store: Store<LoginUseCaseState>) {}
 
-	public ngOnInit() {
-	}
+	public ngOnInit() {}
 
 	public login(): void {
-		this.store.dispatch(new AuthenticateWithPassword('1111'));
+		this.store.dispatch(new AuthenticateWithPassword({ password: '1111' }));
 	}
 }

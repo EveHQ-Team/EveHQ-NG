@@ -53,6 +53,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="app\modules\characters\models\" />
 	  <Folder Include="app\modules\common\pipes\" />
 	  <Folder Include="electron\build\" />
 	</ItemGroup>

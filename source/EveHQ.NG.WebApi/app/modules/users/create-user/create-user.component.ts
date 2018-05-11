@@ -5,9 +5,19 @@ import { Store, select } from '@ngrx/store';
 import { ApplicationUser} from 'modules/application/models/application-user';
 import { MetaGameProfile } from 'modules/application/models/meta-game-profile'
 import { v4 as uuid } from 'node-uuid';
-import { AddProfile, RemoveProfile, CreateUser } from 'modules/application/use-cases/create-user.use-case';
+import {
+	AddProfile,
+	RemoveProfile,
+	CreateUser,
+	getUser,
+	getPassword,
+	getProfiles,
+	getError}
+	from 'modules/application/use-cases/create-user.use-case';
 import { CreateUserUseCaseState } from 'modules/application/use-cases/create-user.use-case';
-import { getUser, getPassword, getProfiles, getError } from 'modules/application/application.state';
+//import { getUser, getPassword, getProfiles, getError } from 'modules/application/stores/main.state';
+import { ApplicationStore } from 'modules/application/stores/application.state';
+import { CreateUserModel } from 'modules/application/models/create-user-model';
 
 @Component({
 	templateUrl: './create-user.component.html',
@@ -26,15 +36,14 @@ export class CreateUserComponent implements OnInit, AfterViewInit {
 	public readonly profiles$: Observable<MetaGameProfile[]>;
 	public readonly error$: Observable<string | undefined>;
 
-	public ngOnInit(): void {
-	}
+	public ngOnInit(): void {}
 
 	public ngAfterViewInit(): void {
 		this.store.dispatch(new SetShellHeader('Create the user'));
 	}
 
 	private addProfile(profileName: string): void {
-		this.store.dispatch(new AddProfile({ id: uuid(), name: profileName }));
+		this.store.dispatch(new AddProfile({ profileToAdd: { id: uuid(), name: profileName } }));
 	}
 
 	private removeProfile(profileId: string): void {
@@ -51,8 +60,8 @@ export class CreateUserComponent implements OnInit, AfterViewInit {
 					password: password,
 					profiles: profiles
 				}))
-			.map((model) => {
-				this.store.dispatch(new CreateUser(model));
+			.map((model: CreateUserModel) => {
+				this.store.dispatch(new CreateUser({ userData: model }));
 			})
 			.subscribe();
 	}

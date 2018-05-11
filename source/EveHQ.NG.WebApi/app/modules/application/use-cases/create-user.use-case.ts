@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 import {
-	Action,
+	Action, createFeatureSelector, createSelector,
 	} from '@ngrx/store';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { v4 as uuid } from 'node-uuid';
 import { ApplicationUser } from 'modules/application/models/application-user';
 import { MetaGameProfile } from 'modules/application/models/meta-game-profile';
 import { CreateUserModel } from 'modules/application/models/create-user-model';
+import { ApplicationStore } from 'modules/application/stores/application.state';
 
 
 export enum CreateUserUseCaseActionTypes {
@@ -23,8 +24,7 @@ export enum CreateUserUseCaseActionTypes {
 export class CreateUser implements Action {
 	public readonly type: string = CreateUserUseCaseActionTypes.CreateUser;
 
-	constructor(public readonly payload: CreateUserModel) {
-	}
+	constructor(public readonly payload: { userData: CreateUserModel }) {}
 }
 
 export class CreateUserRedirect implements Action {
@@ -40,20 +40,17 @@ export class CreateUserSuccess implements Action {
 export class CreateUserFail implements Action {
 	public readonly type: string = CreateUserUseCaseActionTypes.CreateUserFail;
 
-	constructor(public readonly payload: { error: any }) {
-	}
+	constructor(public readonly payload: { error: any }) {}
 }
 
 export class AddProfile implements Action {
-	constructor(public readonly payload: MetaGameProfile) {
-	}
+	constructor(public readonly payload: { profileToAdd: MetaGameProfile }) {}
 
 	public readonly type: string = CreateUserUseCaseActionTypes.AddProfile;
 }
 
 export class RemoveProfile implements Action {
-	constructor(public readonly payload: { profileId: string }) {
-	}
+	constructor(public readonly payload: { profileId: string }) {}
 
 	public readonly type: string = CreateUserUseCaseActionTypes.RemoveProfile;
 }
@@ -80,28 +77,24 @@ const initialState: CreateUserUseCaseState = {
 	error: undefined
 };
 
-export function createUserUseCaseReducer(state = initialState, action: CreateUserUseCaseActions): CreateUserUseCaseState {
+function createUserUseCaseReducer(state = initialState, action: CreateUserUseCaseActions): CreateUserUseCaseState {
 	switch (action.type) {
 		case CreateUserUseCaseActionTypes.AddProfile:
-		{
-			const profile = action.payload as MetaGameProfile;
-			console.log('add profile ', profile);
 			return {
 				...state,
-				profiles: [...state.profiles, profile]
+				profiles: [...state.profiles, (action as AddProfile).payload.profileToAdd]
 			};
-		}
 
 		case CreateUserUseCaseActionTypes.RemoveProfile:
 			return {
 				...state,
-				profiles: state.profiles.filter(profile => profile.id !== action.payload.profileId)
+				profiles: state.profiles.filter(profile => profile.id !== (action as RemoveProfile).payload.profileId)
 			};
 
 		case CreateUserUseCaseActionTypes.CreateUserFail:
 			return {
 				...state,
-				error: action.payload.error
+				error: (action as CreateUserFail).payload.error
 			};
 
 		default:
@@ -109,12 +102,26 @@ export function createUserUseCaseReducer(state = initialState, action: CreateUse
 	}
 }
 
+export interface CreateUserUseCaseStore extends ApplicationStore {
+	useCase: CreateUserUseCaseState
+}
+
+export const createUserUseCaseReducers = {
+	useCase: createUserUseCaseReducer
+};
+
+const getCreateUserUseCaseState = createFeatureSelector<CreateUserUseCaseStore>('createUserUseCase');
+const getUseCaseState = createSelector(getCreateUserUseCaseState, state => state.useCase);
+export const getUser = createSelector(getUseCaseState, state => state.user);
+export const getPassword = createSelector(getUseCaseState, state => state.password);
+export const getProfiles = createSelector(getUseCaseState, state => state.profiles);
+export const getError = createSelector(getUseCaseState, state => state.error);
+
 @Injectable()
 export class CreateUserUseCaseEffects {
 	constructor(
 		private readonly actions$: Actions,
-		private readonly router: Router) {
-	}
+		private readonly router: Router) {}
 
 	@Effect({ dispatch: false })
 	public createUserRedirect$ = this.actions$.pipe(

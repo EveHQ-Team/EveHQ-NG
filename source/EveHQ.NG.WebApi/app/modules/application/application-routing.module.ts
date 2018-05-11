@@ -9,10 +9,6 @@ const routes: Routes = [
 	{
 		path: 'users',
 		loadChildren: 'modules/users/users.module#UsersModule'
-	},
-	{
-		path: 'characters',
-		loadChildren: 'modules/characters/characters.module#CharactersModule'
 	}
 ];
 

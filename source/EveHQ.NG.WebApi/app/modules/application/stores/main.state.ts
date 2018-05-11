@@ -1,3 +1,4 @@
+/*
 import {
 	ActionReducerMap,
 	ActionReducer,
@@ -6,24 +7,24 @@ import {
 	createFeatureSelector
 	} from '@ngrx/store';
 
-import { ShellState, shellReducer, ShellSelector } from 'modules/application/stores/shell.state';
+import { ShellState1 as ShellState, shellReducer, ShellSelector } from 'modules/application/stores/shell.state';
 import { CreateUserUseCaseState, createUserUseCaseReducer } from 'modules/application/use-cases/create-user.use-case';
 import { LoginUseCaseState, loginUseCaseReducer } from 'modules/application/use-cases/login.use-case';
 
-export interface ApplicationState {
+export interface MainState {
 	shell: ShellState;
 	createUserUseCase: CreateUserUseCaseState;
 	loginUseCase: LoginUseCaseState;
 }
 
-export const applicationReducers: ActionReducerMap<ApplicationState> = {
+export const applicationReducers: ActionReducerMap<MainState> = {
 	shell: shellReducer,
 	createUserUseCase: createUserUseCaseReducer,
 	loginUseCase: loginUseCaseReducer
 };
 
-export function logger(reducer: ActionReducer<ApplicationState>): ActionReducer<ApplicationState> {
-	return (state: ApplicationState, action: any): ApplicationState => {
+export function logger(reducer: ActionReducer<MainState>): ActionReducer<MainState> {
+	return (state: MainState, action: any): MainState => {
 		console.log('state', state);
 		console.log('action', action ? JSON.stringify(action) : action);
 
@@ -31,7 +32,7 @@ export function logger(reducer: ActionReducer<ApplicationState>): ActionReducer<
 	};
 }
 
-export const metaReducers: MetaReducer<ApplicationState>[] = [logger];
+export const metaReducers: MetaReducer<MainState>[] = [logger];
 
 export const getShellState = createFeatureSelector<ShellState>('shell');
 export const getCreateUserUseCaseState = createFeatureSelector<CreateUserUseCaseState>('createUserUseCase');
@@ -47,3 +48,5 @@ export const getError = createSelector(getCreateUserUseCaseState, (state: Create
 
 export const getUserToAuthenticate = createSelector(getLoginUseCaseState, (state: LoginUseCaseState) => state.userToAuthenticate);
 export const getIsUserAuthenticated = createSelector(getLoginUseCaseState, (state: LoginUseCaseState) => state.isUserAuthenticated);
+export const getUserProfiles = createSelector(getLoginUseCaseState, (state: LoginUseCaseState) => state.userProfiles);
+*/

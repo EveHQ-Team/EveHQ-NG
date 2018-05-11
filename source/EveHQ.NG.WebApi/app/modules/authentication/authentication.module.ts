@@ -24,9 +24,7 @@ export const authenticationRoutes: Routes = [
 @NgModule({
 	imports: [
 		CommonModule,
-		RouterModule.forChild(authenticationRoutes),
-		StoreModule.forFeature('authentication', authenticationModuleReducers),
-		EffectsModule.forFeature([LoginUseCaseEffects])
+		RouterModule.forChild(authenticationRoutes)
 	],
 	declarations: [
 		ProfileSelectorComponent,

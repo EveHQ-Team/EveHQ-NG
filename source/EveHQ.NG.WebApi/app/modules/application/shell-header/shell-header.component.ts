@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
-import * as fromRoot from 'modules/application/application.state'
+import { ApplicationStore } from 'modules/application/stores/application.state';
 
 
 @Component({
@@ -12,8 +12,8 @@ import * as fromRoot from 'modules/application/application.state'
 })
 export class ApplicationHeaderComponent {
 
-	constructor(private readonly store: Store<fromRoot.ApplicationState>) {
-		this.header$ = this.store.pipe(select(fromRoot.getHeader));
+	constructor(private readonly store: Store<ApplicationStore>) {
+		//this.header$ = this.store.pipe(select(fromRoot.getHeader));
 	}
 
 	private header$: Observable<string>;

@@ -5,13 +5,11 @@ import { CharacterDashboardComponent } from 'modules/characters/character-dashbo
 const dashboardPath = 'dashboard';
 export const routes: Routes = [
 	{
-		path: '',
-		pathMatch: 'full',
-		redirectTo: dashboardPath
-	},
-	{
-		path: dashboardPath,
-		canActivate: [AuthenticationGuard],
-		component: CharacterDashboardComponent
+		path: 'characters',
+		children: [
+			{
+				path: ':id/dashboard',
+				component: CharacterDashboardComponent
+			}]
 	}
 ];
