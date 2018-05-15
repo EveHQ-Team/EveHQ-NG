@@ -123,8 +123,10 @@ export class CreateUserUseCaseEffects {
 		private readonly actions$: Actions,
 		private readonly router: Router) {}
 
+/*
 	@Effect({ dispatch: false })
 	public createUserRedirect$ = this.actions$.pipe(
 		ofType(CreateUserUseCaseActionTypes.CreateUserRedirect),
 		tap(() => this.router.navigate(['/users/create'])));
+*/
 }

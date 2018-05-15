@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, catchError, tap, mergeMap } from 'rxjs/operators';
+import { map, catchError, tap, mergeMap, merge } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
+import { from } from 'rxjs/observable/from';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { Action, Store, select } from '@ngrx/store';
 import { Effect, Actions, ofType } from '@ngrx/effects';
@@ -24,7 +25,8 @@ import { SelectProfileUseCaseActionTypes, SelectProfileSuccess } from 'modules/a
 import { LoginUseCaseActionTypes, SetUserToAuthenticate } from 'modules/application/use-cases/login.use-case';
 import { ManageProfileCharactersRedirect } from 'modules/users/use-cases/manage-profile-characters.use-case';
 import {SetCurrentUserProfiles} from 'modules/application/stores/application.state';
-import {ApplicationStateActionTypes} from 'modules/application/stores/application.state';
+import { ApplicationStateActionTypes } from 'modules/application/stores/application.state';
+import { tag } from 'rxjs-spy/operators/tag';
 
 export enum StartupUseCaseActionTypes {
 	InitializeApplication = '[STARTUP USE CASE] Initialize Application',
@@ -70,17 +72,11 @@ export class StartupUseCaseEffects {
 	@Effect()
 	public initializeShell$ = this.actions$.pipe(
 		ofType(StartupUseCaseActionTypes.InitializeApplication),
-		mergeMap(() =>
-			this.userService.getUser().pipe(
-				map((user: ApplicationUser | undefined) =>
-					user === undefined
-					? new CreateUserRedirect()
-					: [new SetUserToAuthenticate({ userToAuthenticate: user }), new LoginUser()]),
-				// TODO: Define application error logic.
-				catchError(error => of(new ApplicationError({ error: error })))
-			)
-		)
-	);
+		mergeMap(() => this.userService.getUser().pipe(
+				mergeMap(user => user === undefined
+								? of(new CreateUserRedirect())
+								: of(new SetUserToAuthenticate({ userToAuthenticate: user }), new LoginUser())))
+		));
 
 	@Effect()
 	public createUser$ = this.actions$.pipe(
@@ -104,7 +100,6 @@ export class StartupUseCaseEffects {
 			mergeMap((profiles: MetaGameProfile[] | undefined) =>
 				[new SetCurrentUserProfiles({ profiles: profiles! }), new SelectProfile()])
 		)));
-
 /*
 	@Effect()
 	public loginUserSuccess$ = this.actions$.pipe(
@@ -119,8 +114,8 @@ export class StartupUseCaseEffects {
 	public selectProfileSuccess$ = this.actions$.pipe(
 		ofType(SelectProfileUseCaseActionTypes.SelectProfileSuccess),
 		map((action: SelectProfileSuccess) => action.payload.selectedProfileId),
-			mergeMap((selectedProfileId: string) => this.store.pipe(
-				tap(() => of(new OpenCharacterDashboard()))
+		mergeMap((selectedProfileId: string) => this.store.pipe(
+			tap(() => of(new OpenCharacterDashboard()))
 		))
 	);
 
