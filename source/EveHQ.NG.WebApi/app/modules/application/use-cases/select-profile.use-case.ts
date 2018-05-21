@@ -1,21 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, tap, mergeMap, switchMap } from 'rxjs/operators';
+import { map, tap, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
-import { Action, select, Store } from '@ngrx/store';
+import { Action, Store, createFeatureSelector, createSelector } from '@ngrx/store';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { MetaGameProfile } from 'modules/application/models/meta-game-profile';
-import { StartupUseCaseActionTypes } from 'modules/application/use-cases/startup.use-case';
-import { ApplicationState, getCurrentUserProfiles } from 'modules/application/stores/application.state';
+import { ApplicationState, ApplicationStore } from 'modules/application/stores/application.state';
 
 export enum SelectProfileUseCaseActionTypes {
+	SelectProfile = '[SELECT PROFILE USE CASE] Select Profile',
 	SelectProfileRedirect = '[SELECT PROFILE USE CASE] Select Profile Redirect',
 	SelectProfileSuccess = '[SELECT PROFILE USE CASE] Select Profile Success',
+	SetProfilesToSelectFrom = '[SELECT PROFILE USE CASE] Set Profiles To Select From',
+}
+
+export class SelectProfile implements Action {
+	public readonly type: string = SelectProfileUseCaseActionTypes.SelectProfile;
+
+	constructor(public readonly payload: { profilesToSelectFrom: MetaGameProfile[] }) {}
 }
 
 export class SelectProfileRedirect implements Action {
 	public readonly type: string = SelectProfileUseCaseActionTypes.SelectProfileRedirect;
-	public payload?: any;
 }
 
 export class SelectProfileSuccess implements Action {
@@ -24,9 +30,49 @@ export class SelectProfileSuccess implements Action {
 	constructor(public payload: { selectedProfileId: string }) {}
 }
 
+export class SetProfilesToSelectFrom implements Action {
+	public readonly type: string = SelectProfileUseCaseActionTypes.SetProfilesToSelectFrom;
+
+	constructor(public readonly payload: { profilesToSelectFrom: MetaGameProfile[] }) {}
+}
+
 export type SelectProfileUseCaseActions =
+	| SelectProfile
 	| SelectProfileRedirect
-	| SelectProfileSuccess;
+	| SelectProfileSuccess
+	| SetProfilesToSelectFrom;
+
+export interface SelectProfileUseCaseState {
+	profilesToSelectFrom: MetaGameProfile[]
+}
+
+const initialState: SelectProfileUseCaseState = {
+	profilesToSelectFrom: []
+};
+
+function selectProfileUseCaseReducer(state = initialState, action: SelectProfileUseCaseActions): SelectProfileUseCaseState {
+	switch (action.type) {
+		case SelectProfileUseCaseActionTypes.SelectProfile:
+			return {
+				...state,
+				profilesToSelectFrom: (action as SelectProfile).payload.profilesToSelectFrom
+			};
+		default:
+			return state;
+	}
+}
+
+export interface SelectProfileUseCaseStore extends ApplicationStore {
+	useCase: SelectProfileUseCaseState
+}
+
+export const selectProfileUseCaseReducers = {
+	useCase: selectProfileUseCaseReducer
+};
+
+const getStore = createFeatureSelector<SelectProfileUseCaseStore>('selectProfileUseCase');
+const getState = createSelector(getStore, state => state.useCase);
+export const getProfilesToSelectFrom = createSelector(getState, state => state.profilesToSelectFrom);
 
 @Injectable()
 export class SelectProfileUseCaseEffects {
@@ -35,49 +81,16 @@ export class SelectProfileUseCaseEffects {
 		private readonly store: Store<ApplicationState>,
 		private readonly router: Router) {}
 
-/*
-	@Effect()
-	public authenticateWithPassword$ = this.actions$.pipe(
-		ofType(LoginUseCaseActionTypes.AuthenticateWithPassword),
-		map((action: AuthenticateWithPassword) => action.payload.password),
-		switchMap(password => this.authenticationService.login(password).pipe(
-			switchMap((isAuthenticated: boolean) => this.useCaseStore.pipe(
-				select(getUserToAuthenticate),
-				switchMap(((authenticatedUser: ApplicationUser) =>
-					isAuthenticated
-					? [new SetCurrentUser({ user: authenticatedUser }), new LoginSuccess()]
-					: new LoginFail({ error: 'TODO: some error' })) as any)
-			))
-		)));
-*/
 	@Effect()
 	public selectProfile$ = this.actions$.pipe(
-		ofType(StartupUseCaseActionTypes.SelectProfile),
-		switchMap(() => this.store.pipe(
-			select(getCurrentUserProfiles),
-			switchMap(((profiles: MetaGameProfile[]) => profiles.length > 1
-												? of(new SelectProfileRedirect())
-												: of(new SelectProfileSuccess({ selectedProfileId: profiles[0].id }))) as any)
-		)));
-/*
-	@Effect()
-	public selectProfile$ = this.actions$.pipe(
-		ofType(StartupUseCaseActionTypes.SelectProfile),
-		mergeMap(() => this.store.pipe(
-			select(getCurrentUserProfiles),
-			map(((profiles: MetaGameProfile[]) => profiles.length > 1
-												? new SelectProfileRedirect()
-												: new SelectProfileSuccess({ selectedProfileId: profiles[0].id })) as any)
-		)));
-*/
+		ofType(SelectProfileUseCaseActionTypes.SelectProfile),
+		map((action: SelectProfile) => action.payload.profilesToSelectFrom),
+		mergeMap((profiles: MetaGameProfile[]) =>
+			of(profiles.length > 1 ? new SelectProfileRedirect() : new SelectProfileSuccess({ selectedProfileId: profiles[0].id }))));
 
 	@Effect({ dispatch: false })
 	public selectProfileRedirect$ = this.actions$.pipe(
 		ofType(SelectProfileUseCaseActionTypes.SelectProfileRedirect),
 		tap(() => this.router.navigate(['/authentication/select-profile']))
 	);
-
-	private getSelectProfileNextAction(profiles: MetaGameProfile[]): any {
-		return;
-	}
 }

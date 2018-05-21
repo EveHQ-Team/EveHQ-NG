@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import {ApplicationState, getCurrentCharacterId } from 'modules/application/stores/application.state';
+import { Store, select } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 @Component({
-	selector: 'evehq-character-dashboard',
 	templateUrl: './character-dashboard.component.html',
 	styleUrls: ['./character-dashboard.component.scss']
 })
-export class CharacterDashboardComponent implements OnInit {
-
-	constructor() {
+export class CharacterDashboardComponent {
+	constructor(private readonly store: Store<ApplicationState>) {
+		this.characterId$ = this.store.pipe(select(getCurrentCharacterId));
 	}
 
-	ngOnInit() {
-	}
-
+	public characterId$: Observable<string | undefined>;
 }

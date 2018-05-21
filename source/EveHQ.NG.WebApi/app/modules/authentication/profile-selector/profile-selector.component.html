@@ -1,3 +1,6 @@
-<p>
-  meta-game-profile-selector works!
-</p>
+<p>Profile selector</p>
+<ul *ngFor="let profile of profilesToSelectFrom$ | async">
+	<li>
+		<a href="#" (click)="selectProfile(profile.id)">{{profile.name}}</a>
+	</li>
+</ul>

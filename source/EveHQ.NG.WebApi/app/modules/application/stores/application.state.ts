@@ -8,6 +8,7 @@ import { Tool } from 'modules/application/models/tool';
 export enum ApplicationStateActionTypes {
 	SetCurrentUser = '[APPLICATION] Set Current User',
 	SetCurrentUserProfiles = '[APPLICATION] Set Current User Profiles',
+	SetIsUserAuthenticated = '[APPLICATION] Set User Authenticated',
 	SetCurrentProfile = '[APPLICATION] Set Current Profile',
 	SetCurrentProfileCharacters = '[APPLICATION] Set Current Profile Character',
 	SetCurrentCharacter = '[APPLICATION] Set Current Character',
@@ -29,6 +30,12 @@ export class SetCurrentUserProfiles implements Action {
 	public readonly type = ApplicationStateActionTypes.SetCurrentUserProfiles;
 
 	constructor(public readonly payload: { profiles: MetaGameProfile[] }) {}
+}
+
+export class SetIsUserAuthenticated implements Action {
+	public readonly type = ApplicationStateActionTypes.SetIsUserAuthenticated;
+
+	constructor(public readonly payload: { isUserAuthenticated: boolean }) {}
 }
 
 export class SetCurrentProfile implements Action {
@@ -88,6 +95,7 @@ export class SetAllTools implements Action {
 export type ApplicationStateActions =
 	| SetCurrentUser
 	| SetCurrentUserProfiles
+	| SetIsUserAuthenticated
 	| SetCurrentProfile
 	| SetCurrentProfileCharacters
 	| SetCurrentCharacter
@@ -211,3 +219,4 @@ const getApplicationState = createFeatureSelector<ApplicationStore>('application
 const getApplication = createSelector(getApplicationState, state => state.application);
 export const getCurrentUser = createSelector(getApplication, state => state.currentUser);
 export const getCurrentUserProfiles = createSelector(getApplication, state => state.currentUserProfiles);
+export const getCurrentCharacterId = createSelector(getApplication, state => state.currentCharacterId);

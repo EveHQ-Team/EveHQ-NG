@@ -1,13 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
 import { ProfileSelectorComponent } from 'modules/authentication/profile-selector/profile-selector.component';
 import { LoginComponent } from 'modules/authentication/login/login.component';
-import { AuthenticationGuard } from 'modules/application/services/authentication-guard.service';
-import { authenticationModuleReducers } from 'modules/authentication/authentication.store';
-import { LoginUseCaseEffects } from 'modules/application/use-cases/login.use-case';
 
 export const authenticationRoutes: Routes = [
 	{
@@ -16,7 +12,6 @@ export const authenticationRoutes: Routes = [
 	},
 	{
 		path: 'select-profile',
-		canActivate: [AuthenticationGuard],
 		component: ProfileSelectorComponent
 	}
 ];
@@ -24,6 +19,7 @@ export const authenticationRoutes: Routes = [
 @NgModule({
 	imports: [
 		CommonModule,
+		FormsModule,
 		RouterModule.forChild(authenticationRoutes)
 	],
 	declarations: [

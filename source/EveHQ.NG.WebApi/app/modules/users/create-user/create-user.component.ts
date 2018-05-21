@@ -8,16 +8,13 @@ import { v4 as uuid } from 'node-uuid';
 import {
 	AddProfile,
 	RemoveProfile,
-	CreateUser,
 	getUser,
 	getPassword,
-	getProfiles,
-	getError}
+	getProfiles }
 	from 'modules/application/use-cases/create-user.use-case';
 import { CreateUserUseCaseState } from 'modules/application/use-cases/create-user.use-case';
-//import { getUser, getPassword, getProfiles, getError } from 'modules/application/stores/main.state';
-import { ApplicationStore } from 'modules/application/stores/application.state';
 import { CreateUserModel } from 'modules/application/models/create-user-model';
+import { CreateUserSuccess } from 'modules/application/use-cases/create-user.use-case';
 
 @Component({
 	templateUrl: './create-user.component.html',
@@ -28,7 +25,6 @@ export class CreateUserComponent implements OnInit, AfterViewInit {
 		this.user$ = this.store.pipe(select(getUser));
 		this.password$ = this.store.pipe(select(getPassword));
 		this.profiles$ = this.store.pipe(select(getProfiles));
-		this.error$ = this.store.pipe(select(getError));
 	}
 
 	public readonly user$: Observable<ApplicationUser>;
@@ -61,7 +57,7 @@ export class CreateUserComponent implements OnInit, AfterViewInit {
 					profiles: profiles
 				}))
 			.map((model: CreateUserModel) => {
-				this.store.dispatch(new CreateUser({ userData: model }));
+				this.store.dispatch(new CreateUserSuccess({ userData: model }));
 			})
 			.subscribe();
 	}

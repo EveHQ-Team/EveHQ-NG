@@ -1,25 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, tap, mergeMap, switchMap } from 'rxjs/operators';
+import { map, tap, mergeMap } from 'rxjs/operators';
+import { from } from 'rxjs/observable/from';
 import { of } from 'rxjs/observable/of';
 import { Action, select, Store, createFeatureSelector, createSelector } from '@ngrx/store';
 import { Effect, Actions, ofType } from '@ngrx/effects';
-import { MetaGameProfile } from 'modules/application/models/meta-game-profile';
 import { ApplicationUser } from 'modules/application/models/application-user';
 import { AuthenticationService } from 'modules/backend/application/authentication.service';
-import { StartupUseCaseActionTypes } from 'modules/application/use-cases/startup.use-case';
-//import { MainState, getUserToAuthenticate } from 'modules/application/stores/main.state';
-import { ApplicationStore } from 'modules/application/stores/application.state';
-import {SetCurrentUser} from 'modules/application/stores/application.state';
-import {ApplicationState} from 'modules/application/stores/application.state';
+import { ApplicationState, SetCurrentUser, ApplicationStore } from 'modules/application/stores/application.state';
 
 export enum LoginUseCaseActionTypes {
+	LoginUser = '[LOGIN USE CASE] Login User',
 	SetUserToAuthenticate = '[LOGIN USE CASE] Set User To Authenticate',
 	LoginRedirect = '[LOGIN USE CASE] Login Redirect',
 	AuthenticateWithPassword = '[LOGIN USE CASE] Authenticate With Password',
-	//SetUserProfiles = '[LOGIN USE CASE] Set User Profiles',
 	LoginSuccess = '[LOGIN USE CASE] Login Success',
 	LoginFail = '[LOGIN USE CASE] Login Fail',
+}
+
+export class LoginUser implements Action {
+	public readonly type: string = LoginUseCaseActionTypes.LoginUser;
+
+	constructor(public payload: { userToAuthenticate: ApplicationUser }) {}
 }
 
 export class SetUserToAuthenticate implements Action {
@@ -30,7 +32,6 @@ export class SetUserToAuthenticate implements Action {
 
 export class LoginRedirect implements Action {
 	public readonly type: string = LoginUseCaseActionTypes.LoginRedirect;
-	public payload?: any;
 }
 
 export class AuthenticateWithPassword implements Action {
@@ -39,16 +40,8 @@ export class AuthenticateWithPassword implements Action {
 	constructor(public payload: { password: string }) {}
 }
 
-/*
-export class SetUserProfiles implements Action {
-	public readonly type: string = LoginUseCaseActionTypes.SetUserProfiles;
-
-	constructor(public payload: { userProfiles: MetaGameProfile[] }) {}
-}
-*/
 export class LoginSuccess implements Action {
 	public readonly type: string = LoginUseCaseActionTypes.LoginSuccess;
-	public payload?: any;
 }
 
 export class LoginFail implements Action {
@@ -58,24 +51,22 @@ export class LoginFail implements Action {
 }
 
 export type LoginUseCaseActions =
+	| LoginUser
 	| SetUserToAuthenticate
 	| LoginRedirect
 	| AuthenticateWithPassword
-	//| SetUserProfiles
 	| LoginSuccess
 	| LoginFail;
 
 export interface LoginUseCaseState {
 	userToAuthenticate: ApplicationUser | undefined;
 	isUserAuthenticated: boolean;
-	userProfiles: MetaGameProfile[];
 	error: string | undefined;
 }
 
 const initialState: LoginUseCaseState = {
 	userToAuthenticate: undefined,
 	isUserAuthenticated: false,
-	userProfiles: [],
 	error: undefined
 };
 
@@ -84,8 +75,8 @@ export function loginUseCaseReducer(state = initialState, action: LoginUseCaseAc
 		case LoginUseCaseActionTypes.SetUserToAuthenticate:
 			return { ...state, userToAuthenticate: (action as SetUserToAuthenticate).payload.userToAuthenticate };
 
-//		case LoginUseCaseActionTypes.SetUserProfiles:
-//			return { ...state, userProfiles: (action as SetUserProfiles).payload.userProfiles };
+		case LoginUseCaseActionTypes.LoginSuccess:
+			return { ...state, error: undefined };
 
 		case LoginUseCaseActionTypes.LoginFail:
 			return { ...state, error: (action as LoginFail).payload.error };
@@ -105,7 +96,8 @@ export const loginUseCaseReducers = {
 
 const getLoginUseCaseState = createFeatureSelector<LoginUseCaseStore>('loginUseCase');
 const getUseCaseState = createSelector(getLoginUseCaseState, state => state.useCase);
-export const getUserToAuthenticate = createSelector(getUseCaseState, state => state.userToAuthenticate);
+export const getUserToAuthenticate = createSelector(getUseCaseState, (state: LoginUseCaseState) => state.userToAuthenticate);
+export const getError = createSelector(getUseCaseState, (state: LoginUseCaseState) => state.error);
 
 @Injectable()
 export class LoginUseCaseEffects {
@@ -119,11 +111,14 @@ export class LoginUseCaseEffects {
 
 	@Effect()
 	public loginUser$ = this.actions$.pipe(
-		ofType(StartupUseCaseActionTypes.LoginUser),
-		mergeMap(() => this.useCaseStore.pipe(
-			select(getUserToAuthenticate),
-			map((user: ApplicationUser | undefined) => user!.isAuthenticationRequired ? new LoginRedirect() : new LoginSuccess())
-		)));
+		ofType(LoginUseCaseActionTypes.LoginUser),
+		map((action: LoginUser) => action.payload.userToAuthenticate),
+		mergeMap(userToAuthenticate => userToAuthenticate.isAuthenticationRequired
+										? from([
+											new SetUserToAuthenticate({ userToAuthenticate: userToAuthenticate }),
+											new LoginRedirect()
+										])
+										: of(new LoginSuccess())));
 
 	@Effect({ dispatch: false })
 	public loginRedirect$ = this.actions$.pipe(
@@ -135,26 +130,16 @@ export class LoginUseCaseEffects {
 	public authenticateWithPassword$ = this.actions$.pipe(
 		ofType(LoginUseCaseActionTypes.AuthenticateWithPassword),
 		map((action: AuthenticateWithPassword) => action.payload.password),
-		switchMap(password => this.authenticationService.login(password).pipe(
-			switchMap((isAuthenticated: boolean) => this.useCaseStore.pipe(
-				select(getUserToAuthenticate),
-				switchMap(((authenticatedUser: ApplicationUser) =>
-					isAuthenticated
-					? [new SetCurrentUser({ user: authenticatedUser }), new LoginSuccess()]
-					: new LoginFail({ error: 'TODO: some error' })) as any)
-			))
-		)));
-
-/*
-	@Effect()
-	public authenticateWithPassword$ = this.actions$.pipe(
-		ofType(LoginUseCaseActionTypes.AuthenticateWithPassword),
-		map((action: AuthenticateWithPassword) => action.payload.password),
 		mergeMap(password => this.authenticationService.login(password).pipe(
-			mergeMap((isAuthenticated: boolean) => this.selectAuthenticateWithPasswordAction(isAuthenticated))
-		)));
+			mergeMap((isAuthenticated: boolean) => this.useCaseStore.pipe(
+					select(getUserToAuthenticate),
+					mergeMap(((authenticatedUser: ApplicationUser) =>
+							isAuthenticated
+							? from([new SetCurrentUser({ user: authenticatedUser }), new LoginSuccess()])
+							: of(new LoginFail({ error: 'TODO: some error' })))
+					))
+			))));
 
-*/
 	private selectAuthenticateWithPasswordAction(isAuthenticated: boolean): any {
 		console.warn(`isAuthenticated: ${isAuthenticated}`);
 		if (!isAuthenticated) {
@@ -164,22 +149,4 @@ export class LoginUseCaseEffects {
 		return this.useCaseStore.select(getUserToAuthenticate).map(
 			(authenticatedUser: ApplicationUser) => new SetCurrentUser({ user: authenticatedUser }));
 	}
-/*
-	private selectAuthenticateWithPasswordAction(isAuthenticated: boolean): any {
-		console.warn(`isAuthenticated: ${isAuthenticated}`);
-		if (!isAuthenticated) {
-			return new LoginFail({ error: 'TODO: some error' });
-		}
-
-		return this.useCaseStore.select(getUserToAuthenticate).map(
-			(authenticatedUser: ApplicationUser) => [new SetCurrentUser({ user: authenticatedUser }), new LoginSuccess()]);
-	}
-*/
-
-//	private selectAuthenticateWithPasswordAction(isAuthenticated: boolean, authenticatedUser: ApplicationUser): any {
-//		console.warn(`user: ${authenticatedUser}, isAuthenticated: ${isAuthenticated}`);
-//		return isAuthenticated
-//					? [new SetCurrentUser({ user: authenticatedUser }), new LoginSuccess()]
-//					: new LoginFail({ error: 'TODO: some error' });
-//	}
 }

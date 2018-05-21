@@ -8,13 +8,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ApplicationRoutingModule } from 'modules/application/application-routing.module';
 import { BackendModule } from 'modules/backend/backend.module';
-import { CharactersModule } from 'modules/characters/characters.module';
-
-import { StoreModule, Action } from '@ngrx/store';
+import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-
 import { applicationReducers, metaReducers } from 'modules/application/stores/application.state'
-
 import { CommonServicesModule } from 'modules/common/common-services.module';
 import { ShellComponent } from 'modules/application/shell/shell.component';
 import { MenuBarComponent } from 'modules/application/shell-menu/shell-menu.component';
@@ -35,7 +31,6 @@ import { SelectProfileUseCaseEffects } from 'modules/application/use-cases/selec
 		FormsModule,
 		HttpClientModule,
 		BackendModule,
-		CharactersModule,
 		StoreModule.forRoot(applicationReducers, { metaReducers }),
 		StoreModule.forFeature('application', applicationReducers),
 		StoreModule.forFeature('shell', shellReducers),
@@ -47,15 +42,6 @@ import { SelectProfileUseCaseEffects } from 'modules/application/use-cases/selec
 			LoginUseCaseEffects,
 			SelectProfileUseCaseEffects
 		]),
-/*
-		EffectsModule.forRoot([
-			ShellEffects,
-			StartupUseCaseEffects,
-			CreateUserUseCaseEffects,
-			LoginUseCaseEffects,
-			SelectProfileUseCaseEffects
-		]),
-*/
 		CommonServicesModule.forRoot(),
 		ApplicationRoutingModule
 	],

@@ -1,1 +1,8 @@
-<button (click)="login()"></button>
+<form #form="ngForm">
+	<div>
+		<label>Password:</label>
+		<input type="password" name="password" [(ngModel)]="password" />
+	</div>
+	<div class="error-message">{{error$ | async}}</div>
+	<button (click)="login()">Login</button>
+</form>

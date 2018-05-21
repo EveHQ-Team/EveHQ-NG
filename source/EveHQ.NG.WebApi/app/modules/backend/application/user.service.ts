@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { of } from 'rxjs/observable/of';
 import { ApplicationUser } from 'modules/application/models/application-user';
 import { MetaGameProfile } from 'modules/application/models/meta-game-profile';
 
@@ -15,7 +16,7 @@ export class UserService {
 	public setUser(user: ApplicationUser, password: string): Observable<ApplicationUser> {
 		console.warn('storing to the permanent store the application user and its password...');
 		this.user = user;
-		return Observable.of(user);
+		return of(user);
 	}
 
 	public getUserProfiles(): Observable<MetaGameProfile[] | undefined> {
@@ -26,7 +27,7 @@ export class UserService {
 	public setUserProfiles(profiles: MetaGameProfile[]): Observable<MetaGameProfile[]> {
 		console.warn('storing to the permanent store user profiles...');
 		this.profiles = profiles;
-		return Observable.of(profiles);
+		return of(profiles);
 	}
 
 	private user: ApplicationUser | undefined = undefined;

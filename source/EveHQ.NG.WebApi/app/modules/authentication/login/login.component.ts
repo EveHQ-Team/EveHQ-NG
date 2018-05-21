@@ -1,19 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AuthenticateWithPassword } from 'modules/application/use-cases/login.use-case';
-import {LoginUseCaseState} from 'modules/application/use-cases/login.use-case';
+import { Component } from '@angular/core';
+import { Store, select } from '@ngrx/store';
+import { AuthenticateWithPassword, getError } from 'modules/application/use-cases/login.use-case';
+import { LoginUseCaseState } from 'modules/application/use-cases/login.use-case';
+import { Observable } from 'rxjs';
 
 @Component({
 	templateUrl: './login.component.html',
 	styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
+	constructor(private readonly store: Store<LoginUseCaseState>) {
+		this.error$ = this.store.pipe(select(getError));
+	}
 
-	constructor(private readonly store: Store<LoginUseCaseState>) {}
-
-	public ngOnInit() {}
+	public error$: Observable<string | undefined>;
+	public password: string = '';
 
 	public login(): void {
-		this.store.dispatch(new AuthenticateWithPassword({ password: '1111' }));
+		this.store.dispatch(new AuthenticateWithPassword({ password: this.password }));
+
 	}
 }
