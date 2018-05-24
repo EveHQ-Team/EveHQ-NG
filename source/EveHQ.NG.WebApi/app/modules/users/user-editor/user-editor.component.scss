@@ -1,6 +1,10 @@
 @import "~assets/styles/sizes";
 
 :host {
+	mat-card-title {
+		margin-bottom: 40px;
+	}
+
 	.form {
 		display: grid;
 		grid-template-columns: 1fr;

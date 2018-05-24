@@ -1,5 +1,4 @@
 <section>
-	<div class="header">The application user data</div>
 	<evehq-user-editor class="editor" [user]="user$ | async" [password]="password$ | async" #userEditor></evehq-user-editor>
 	<div class="description">
 		<p>
@@ -9,7 +8,6 @@
 	</div>
 </section>
 <section>
-	<div class="header">The user meta-game profiles</div>
 	<evehq-profiles-editor
 		class="editor"
 		[profiles]="profiles$ | async"

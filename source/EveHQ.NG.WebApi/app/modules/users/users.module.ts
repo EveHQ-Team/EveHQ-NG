@@ -11,6 +11,7 @@ import { ButtonModule } from 'primeng/button';
 import { ListboxModule } from 'primeng/listbox';
 import { UserEditorComponent } from './user-editor/user-editor.component';
 import { ProfilesEditorComponent } from './profiles-editor/profiles-editor.component';
+import { MatButtonModule, MatCheckboxModule, MatInputModule, MatListModule, MatCardModule } from '@angular/material';
 
 export const usersRoutes: Routes = [
 	{
@@ -37,6 +38,11 @@ export const usersRoutes: Routes = [
 		PasswordModule,
 		ButtonModule,
 		ListboxModule,
+		MatButtonModule,
+		MatCheckboxModule,
+		MatInputModule,
+		MatListModule,
+		MatCardModule,
 		RouterModule.forChild(usersRoutes)
 	],
 	declarations: [

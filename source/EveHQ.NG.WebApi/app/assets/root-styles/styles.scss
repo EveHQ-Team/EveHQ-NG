@@ -1,8 +1,18 @@
 @import "_reset.scss";
 @import "../styles/colors.scss";
 @import "_primeng-theme.scss";
+@import "_typography.scss";
+
+@import "~@angular/material/theming";
+@include mat-core($theme-typography);
+
+@import "dark-orange-theme.scss";
 
 html, body {
 	height: 100%;
 	color: $general-text-color;
+}
+
+.dark-orange-theme {
+	@include angular-material-theme($dark-orange-theme1);
 }

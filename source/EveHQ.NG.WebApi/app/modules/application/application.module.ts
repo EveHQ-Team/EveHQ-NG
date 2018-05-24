@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
+import { OverlayModule } from '@angular/cdk/overlay';
 import { ApplicationRoutingModule } from 'modules/application/application-routing.module';
 import { BackendModule } from 'modules/backend/backend.module';
 import { StoreModule } from '@ngrx/store';
@@ -22,6 +23,7 @@ import { CreateUserUseCaseEffects, createUserUseCaseReducers } from 'modules/app
 import { LoginUseCaseEffects, loginUseCaseReducers } from 'modules/application/use-cases/login.use-case';
 import { StartupUseCaseEffects } from 'modules/application/use-cases/startup.use-case';
 import { SelectProfileUseCaseEffects } from 'modules/application/use-cases/select-profile.use-case';
+import { MAT_LABEL_GLOBAL_OPTIONS } from '@angular/material';
 
 @NgModule({
 	imports: [
@@ -30,6 +32,7 @@ import { SelectProfileUseCaseEffects } from 'modules/application/use-cases/selec
 		BrowserAnimationsModule,
 		FormsModule,
 		HttpClientModule,
+		OverlayModule,
 		BackendModule,
 		StoreModule.forRoot(applicationReducers, { metaReducers }),
 		StoreModule.forFeature('application', applicationReducers),
@@ -52,6 +55,7 @@ import { SelectProfileUseCaseEffects } from 'modules/application/use-cases/selec
 		ApplicationFooterComponent
 	],
 	providers: [
+		{ provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } },
 		AuthenticationGuard
 	],
 	bootstrap: [ShellComponent]

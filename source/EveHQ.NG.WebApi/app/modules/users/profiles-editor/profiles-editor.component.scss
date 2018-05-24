@@ -6,6 +6,10 @@
 	align-content: stretch;
 	align-items: stretch;
 
+	mat-card-title {
+		margin-bottom: 24px;
+	}
+
 	.profile-name {
 		flex-grow: 1;
 		margin-right: $grid-step * 2;
@@ -13,6 +17,11 @@
 
 	.item-command {
 		flex-grow: 0;
+	}
+
+	.add-command {
+		margin-top: 20px;
+		margin-bottom: 20px;
 	}
 
 	.profile-name-subsection {

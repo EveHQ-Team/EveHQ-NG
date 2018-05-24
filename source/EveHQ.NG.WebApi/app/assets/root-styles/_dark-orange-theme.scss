@@ -1,0 +1,63 @@
+@import "~@angular/material/theming";
+
+$grey-000: hsl(0, 0, 0);
+$grey-100: hsl(0, 0, 10%);
+$grey-200: hsl(0, 0, 20%);
+$grey-300: hsl(0, 0, 30%);
+$grey-400: hsl(0, 0, 40%);
+$grey-500: hsl(0, 0, 50%);
+$grey-600: hsl(0, 0, 60%);
+$grey-700: hsl(0, 0, 70%);
+$grey-800: hsl(0, 0, 80%);
+$grey-900: hsl(0, 0, 90%);
+$grey-1000: hsl(0, 0, 100%);
+
+$light-secondary-text: $grey-800;
+
+$mat-dark-theme-background: (
+  status-bar: black,
+  app-bar:    $grey-200, // map_get($mat-grey, 900),
+  background: $grey-100,
+  hover:      rgba(white, 0.04), // TODO(kara): check style with Material Design UX
+  card:       $grey-200, // map_get($mat-grey, 800),
+  dialog:     $grey-200, // map_get($mat-grey, 800),
+  disabled-button: rgba(white, 0.12),
+  raised-button: $grey-200, // map-get($mat-grey, 800),
+  focused-button: $light-focused,
+  selected-button: $grey-200, // map_get($mat-grey, 900),
+  selected-disabled-button: $grey-200, // map_get($mat-grey, 800),
+  disabled-button-toggle: black,
+  unselected-chip: map_get($mat-grey, 700),
+  disabled-list-option: black,
+);
+
+$mat-dark-theme-foreground: (
+  base:              white,
+  divider:           $light-dividers,
+  dividers:          $light-dividers,
+  disabled:          $light-disabled-text,
+  disabled-button:   $grey-700, // rgba(white, 0.3),
+  disabled-text:     $light-disabled-text,
+  hint-text:         $light-disabled-text,
+  secondary-text:    $light-secondary-text,
+  icon:              white,
+  icons:             white,
+  text:              white,
+  slider-min:        white,
+  slider-off:        rgba(white, 0.3),
+  slider-off-active: rgba(white, 0.3),
+);
+
+
+$dark-orange-primary: mat-palette($mat-grey, 300);
+$dark-orange-accent: mat-palette($mat-deep-orange, A400); // stylelint-disable-line value-keyword-case
+$dark-orange-warn: mat-palette($mat-pink, A400); // stylelint-disable-line value-keyword-case
+$dark-orange-theme: mat-dark-theme($dark-orange-primary, $dark-orange-accent, $dark-orange-warn);
+$dark-orange-theme1: (
+    primary: $dark-orange-primary,
+    accent: $dark-orange-accent,
+    warn: $dark-orange-warn,
+    is-dark: true,
+    foreground: $mat-dark-theme-foreground,
+    background: $mat-dark-theme-background,
+  );

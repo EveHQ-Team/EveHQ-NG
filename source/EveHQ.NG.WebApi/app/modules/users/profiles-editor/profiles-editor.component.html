@@ -1,27 +1,53 @@
-<form class="form" #profileNameForm="ngForm">
-	<div class="profile-name-subsection">
-		<input pInputText
-				name="profileName"
-				class="profile-name"
-				[(ngModel)]="profileName"
-				type="text"
-				placeholder="Enter profile name"
-				required minlength="4"/>
-		<button pButton class="item-command"
-				(click)="addProfile(profileName)"
-				[disabled]="!(isProfileNameValid$ | async)"
-				label="Add">
-		</button>
-	</div>
-</form>
-<ul class="profile-list">
-	<li *ngFor="let profile of profiles">
-		<div class="profile-name">{{profile.name}}</div>
-		<button pButton
-				class="item-command"
-				label="Remove"
-				[disabled]="!isRemoveEnabled"
-				(click)="removeProfile(profile.id)">
-		</button>
-	</li>
-</ul>
+<mat-card>
+	<mat-card-title>The user meta-game profiles</mat-card-title>
+	<mat-card-content>
+		<form class="form" #profileNameForm="ngForm">
+			<div class="profile-name-subsection">
+				<mat-form-field appearance="legacy" hideRequiredMarker class="profile-name">
+					<mat-label></mat-label>
+					<input type="text" matInput [(ngModel)]="profileName" name="profileName" placeholder="Enter profile name" required minlength="4"/>
+					<mat-error *ngIf="profileName.errors?.required">required</mat-error>
+					<mat-error *ngIf="profileName.errors?.minlength">minlength</mat-error>
+				</mat-form-field>
+				<button mat-raised-button class="item-command add-command"
+						(click)="addProfile(profileName)"
+						[disabled]="!(isProfileNameValid$ | async)">
+					Add
+				</button>
+				<!--
+				<input pInputText
+						name="profileName"
+						class="profile-name"
+						[(ngModel)]="profileName"
+						type="text"
+						placeholder="Enter profile name"
+						required minlength="4"/>
+				<button pButton class="item-command"
+						(click)="addProfile(profileName)"
+						[disabled]="!(isProfileNameValid$ | async)"
+						label="Add">
+				</button>
+			-->
+			</div>
+		</form>
+		<ul class="profile-list">
+			<li *ngFor="let profile of profiles">
+				<div class="profile-name">{{profile.name}}</div>
+				<button mat-raised-button
+						class="item-command"
+						[disabled]="!isRemoveEnabled"
+						(click)="removeProfile(profile.id)">
+					Remove
+				</button>
+				<!--
+				<button pButton
+						class="item-command"
+						label="Remove"
+						[disabled]="!isRemoveEnabled"
+						(click)="removeProfile(profile.id)">
+				</button>
+			-->
+			</li>
+		</ul>
+	</mat-card-content>
+</mat-card>

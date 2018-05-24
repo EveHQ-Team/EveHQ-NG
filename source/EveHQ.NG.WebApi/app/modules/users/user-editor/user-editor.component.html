@@ -1,17 +1,28 @@
-<form class="form" #form="ngForm">
-	<div class="field-holder">
-		<label class="field-name">Name:</label>
-		<input type="text" pInputText [(ngModel)]="user.name" name="name" required minlength="4"/>
-	</div>
-	<div class="field-holder">
-		<label class="field-name">E-Mail address:</label>
-		<input type="text" pInputText [(ngModel)]="user.email" name="email" email/>
-	</div>
-	<div class="field-holder">
-		<p-checkbox [(ngModel)]="user.isAuthenticationRequired" binary="true" name="isLogInRequired" label="Login required"></p-checkbox>
-	</div>
-	<div class="field-holder">
-		<label class="field-name">Password:</label>
-		<input type="password" pInputText [(ngModel)]="password" name="password" [disabled]="!user.isAuthenticationRequired" required/>
-	</div>
-</form>
+<mat-card>
+	<mat-card-title>The application user data</mat-card-title>
+	<mat-card-content>
+		<form class="form" #form="ngForm">
+			<mat-form-field appearance="standard">
+				<mat-label>Name:</mat-label>
+				<input type="text" matInput [(ngModel)]="user.name" #name="ngModel" name="name" required minlength="4"/>
+				<mat-error *ngIf="name.errors?.required">required</mat-error>
+				<mat-error *ngIf="name.errors?.minlength">minlength</mat-error>
+			</mat-form-field>
+			<mat-form-field appearance="standard">
+				<mat-label>E-Mail address:</mat-label>
+				<input type="email" matInput [(ngModel)]="user.email" #email="ngModel" name="email" required email/>
+				<mat-error *ngIf="email.errors?.required">required</mat-error>
+				<mat-error *ngIf="!email.errors?.required && email.errors?.email">email</mat-error>
+			</mat-form-field>
+			<mat-checkbox color="primary" [(ngModel)]="user.isAuthenticationRequired" name="isLogInRequired" #isLogInRequired="ngModel">
+				Login required
+			</mat-checkbox>
+			<mat-form-field appearance="standard">
+				<mat-label>Password:</mat-label>
+				<input type="password" matInput [(ngModel)]="user.password" #password="ngModel" name="password"
+						[disabled]="!user.isAuthenticationRequired" required/>
+				<mat-error *ngIf="password.errors?.required">required</mat-error>
+			</mat-form-field>
+		</form>
+	</mat-card-content>
+</mat-card>
