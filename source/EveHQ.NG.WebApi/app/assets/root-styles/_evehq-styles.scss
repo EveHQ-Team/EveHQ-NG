@@ -1,0 +1,45 @@
+@import "../styles/sizes.scss";
+@import "../styles/colors.scss";
+
+.ui-inputtext:focus {
+	box-shadow: none;
+}
+
+.ui-card-title {
+	margin-bottom: $grid-step * 4;
+	font-weight: normal;
+	font-family: "Montserrat-Light";
+}
+
+.ui-card /*.ui-widget-content*/ {
+	border: none;
+}
+
+.ui-inputtext {
+	border-width: 0;
+	border-bottom: 2px solid;
+	//clip-path: polygon(0% 0%, 100% 0%, 100% calc(100% - 1px), 0 calc(100% - 1px));
+	clip-path: polygon(0% 0%, 100% 0%, 100% calc(100% - 1px), 50% calc(100% - 1px), 50% 100%, 100% 100%, 0% 100%, 50% 100%, 50% calc(100% - 1px), 0% calc(100% - 1px));
+	transition: clip-path 400ms ease, border-color 200ms ease;
+
+	&:focus {
+		//clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+		clip-path: polygon(0% 0%, 100% 0%, 100% calc(100% - 1px), 100% calc(100% - 1px), 100% 100%, 100% 100%, 0% 100%, 0% 100%, 0% calc(100% - 1px), 0% calc(100% - 1px));
+	}
+
+	&[disabled] {
+		border-bottom-style: dotted;
+	}
+}
+
+.ui-button {
+	margin: 0;
+	border-width: 0;
+	border-bottom: 2px solid;
+	clip-path: polygon(0% 0%, 100% 0%, 100% calc(100% - 1px), 0 calc(100% - 1px));
+	transition: clip-path 400ms ease, border-color 200ms ease, color 200ms ease;
+
+	&:focus {
+		clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+	}
+}

@@ -29,5 +29,34 @@ $base-line-height: 24px !default;
 	src: url("~assets/fonts/Jura-Bold.ttf");
 }
 
-$base-font-family: "jura-regular";
+@font-face {
+	font-family: "Montserrat-Thin";
+	src: url("~assets/fonts/Montserrat-Thin.ttf");
+}
 
+@font-face {
+	font-family: "Montserrat-Light";
+	src: url("~assets/fonts/Montserrat-Light.ttf");
+}
+
+@font-face {
+	font-family: "Montserrat-Regular";
+	src: url("~assets/fonts/Montserrat-Regular.ttf");
+}
+
+@font-face {
+	font-family: "Montserrat-Medium";
+	src: url("~assets/fonts/Montserrat-Medium.ttf");
+}
+
+@font-face {
+	font-family: "Montserrat-SemiBold";
+	src: url("~assets/fonts/Montserrat-SemiBold.ttf");
+}
+
+@font-face {
+	font-family: "Montserrat-Bold";
+	src: url("~assets/fonts/Montserrat-Bold.ttf");
+}
+
+$base-font-family: "Montserrat-Regular";

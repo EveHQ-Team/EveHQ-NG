@@ -6,6 +6,10 @@
 	align-content: stretch;
 	align-items: stretch;
 
+	.form {
+		margin-bottom: $grid-step * 2;
+	}
+
 	.profile-name {
 		flex-grow: 1;
 		margin-right: $grid-step * 2;
@@ -13,11 +17,14 @@
 
 	.item-command {
 		flex-grow: 0;
+		height: $grid-step * 4;
 	}
 
 	.profile-name-subsection {
 		display: flex;
 		flex-flow: row nowrap;
+		align-items: stretch;
+		height: $grid-step * 4;
 		margin-bottom: $grid-step * 2;
 	}
 
@@ -28,7 +35,12 @@
 		li {
 			display: flex;
 			flex-flow: row nowrap;
-			margin-bottom: $grid-step * 2;
+			align-items: center;
+			height: $grid-step * 4;
+
+			&:not(:last-child) {
+				margin-bottom: $grid-step * 2;
+			}
 		}
 	}
 }

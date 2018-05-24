@@ -9,6 +9,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { ListboxModule } from 'primeng/listbox';
+import { CardModule } from 'primeng/card';
 import { UserEditorComponent } from './user-editor/user-editor.component';
 import { ProfilesEditorComponent } from './profiles-editor/profiles-editor.component';
 
@@ -37,6 +38,7 @@ export const usersRoutes: Routes = [
 		PasswordModule,
 		ButtonModule,
 		ListboxModule,
+		CardModule,
 		RouterModule.forChild(usersRoutes)
 	],
 	declarations: [

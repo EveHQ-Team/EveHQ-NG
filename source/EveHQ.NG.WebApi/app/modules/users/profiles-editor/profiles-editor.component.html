@@ -10,18 +10,17 @@
 		<button pButton class="item-command"
 				(click)="addProfile(profileName)"
 				[disabled]="!(isProfileNameValid$ | async)"
-				label="Add">
+				icon="fa fa-fw fa-plus">
 		</button>
 	</div>
 </form>
 <ul class="profile-list">
 	<li *ngFor="let profile of profiles">
 		<div class="profile-name">{{profile.name}}</div>
-		<button pButton
-				class="item-command"
-				label="Remove"
+		<button pButton class="item-command"
 				[disabled]="!isRemoveEnabled"
-				(click)="removeProfile(profile.id)">
+				(click)="removeProfile(profile.id)"
+				icon="fa fa-minus">
 		</button>
 	</li>
 </ul>

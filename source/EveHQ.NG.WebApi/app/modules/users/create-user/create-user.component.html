@@ -1,6 +1,7 @@
 <section>
-	<div class="header">The application user data</div>
-	<evehq-user-editor class="editor" [user]="user$ | async" [password]="password$ | async" #userEditor></evehq-user-editor>
+	<p-card class="editor" title="The application user data">
+		<evehq-user-editor [user]="user$ | async" [password]="password$ | async" #userEditor></evehq-user-editor>
+	</p-card>
 	<div class="description">
 		<p>
 			The EveHQ application should know it's user. There is one and only one application user per OS user.
@@ -9,12 +10,12 @@
 	</div>
 </section>
 <section>
-	<div class="header">The user meta-game profiles</div>
-	<evehq-profiles-editor
-		class="editor"
-		[profiles]="profiles$ | async"
-		(addProfile)="addProfile($event)"
-		(removeProfile)="removeProfile($event)"></evehq-profiles-editor>
+	<p-card class="editor" title="The application user data">
+		<evehq-profiles-editor [profiles]="profiles$ | async"
+								(addProfile)="addProfile($event)"
+								(removeProfile)="removeProfile($event)">
+		</evehq-profiles-editor>
+	</p-card>
 	<div class="description">
 		<p>
 			Most of the EVE players have no need for a few different meta-game profiles. You need more than one if you, for example,

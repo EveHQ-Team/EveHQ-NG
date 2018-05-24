@@ -1,6 +1,6 @@
 @import "~assets/styles/colors";
 
-$fontFamily: "jura-regular";
+$fontFamily: "Montserrat-Light";
 $fontSize: 1em; /* stylelint-disable-line unit-blacklist */
 $borderRadius: 0;
 $disabledOpacity: 0.35;
@@ -57,7 +57,4 @@ $invalidInputBorderColor: $error-color;
 $inputGroupTextColor: #2779aa;
 
 @import "~primeng/resources/themes/theme";
-
-.ui-inputtext:focus {
-	box-shadow: none;
-}
+@import "evehq-styles.scss";
