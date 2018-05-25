@@ -1,4 +1,5 @@
 @import "~assets/styles/sizes";
+@import "~assets/styles/colors";
 
 :host {
 	display: flex;
@@ -37,6 +38,8 @@
 			flex-flow: row nowrap;
 			align-items: center;
 			height: $grid-step * 4;
+			padding-left: $grid-step;
+			border-left: 4px solid $general-border-color;
 
 			&:not(:last-child) {
 				margin-bottom: $grid-step * 2;

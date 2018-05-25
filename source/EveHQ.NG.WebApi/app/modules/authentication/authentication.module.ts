@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { ProfileSelectorComponent } from 'modules/authentication/profile-selector/profile-selector.component';
 import { LoginComponent } from 'modules/authentication/login/login.component';
+import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 
 export const authenticationRoutes: Routes = [
 	{
@@ -20,6 +23,9 @@ export const authenticationRoutes: Routes = [
 	imports: [
 		CommonModule,
 		FormsModule,
+		CardModule,
+		ButtonModule,
+		InputTextModule,
 		RouterModule.forChild(authenticationRoutes)
 	],
 	declarations: [

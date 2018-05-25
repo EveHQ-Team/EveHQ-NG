@@ -1,3 +1,29 @@
+@import "~assets/styles/sizes";
+@import "~assets/styles/colors";
+
 :host {
-	color: forestgreen;
+	.field-holder {
+		display: flex;
+		flex-flow: column nowrap;
+		margin-bottom: $grid-step * 4;
+
+		.field-name {
+			margin-bottom: $half-grid-step;
+		}
+	}
+
+	.password {
+		width: $grid-step * 50;
+		margin-bottom: $grid-step;
+	}
+
+	.error-message {
+		height: $grid-step * 2;
+		color: $error-color;
+	}
+
+	button {
+		height: $grid-step * 6;
+		width: $grid-step * 20;
+	}
 }

@@ -1,3 +1,18 @@
+@import "~assets/styles/sizes";
+
 :host {
-	color: white;
+	.profile-list {
+		li {
+			padding-bottom: $grid-step * 2;
+
+			button {
+				height: $grid-step * 8;
+				width: $grid-step * 50;
+
+				&::ng-deep .ui-button-text {
+					text-align: start;
+				}
+			}
+		}
+	}
 }

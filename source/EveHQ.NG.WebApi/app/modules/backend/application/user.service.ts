@@ -30,6 +30,6 @@ export class UserService {
 		return of(profiles);
 	}
 
-	private user: ApplicationUser | undefined = undefined;
-	private profiles: MetaGameProfile[] | undefined = undefined;
+	private user: ApplicationUser | undefined = { name: 'Vasya', isAuthenticationRequired: true, email: 'a@a' };
+	private profiles: MetaGameProfile[] | undefined = [{ id: '1', name: 'Solo player' }/*, { id: '2', name: 'The USSR Fleet commander' }*/];
 }

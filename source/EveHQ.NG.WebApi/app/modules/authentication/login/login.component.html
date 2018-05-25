@@ -1,8 +1,10 @@
-<form #form="ngForm">
-	<div>
-		<label>Password:</label>
-		<input type="password" name="password" [(ngModel)]="password" />
-	</div>
-	<div class="error-message">{{error$ | async}}</div>
-	<button (click)="login()">Login</button>
-</form>
+<p-card title="Authenticate yourself">
+	<form #form="ngForm">
+		<div class="field-holder">
+			<label class="field-name">Password:</label>
+			<input class="password" type="password" pInputText name="password" [(ngModel)]="password" />
+			<div class="error-message">{{error$ | async}}</div>
+		</div>
+		<button pButton (click)="login()" label="Login"></button>
+	</form>
+</p-card>

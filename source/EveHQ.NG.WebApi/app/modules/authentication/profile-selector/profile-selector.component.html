@@ -1,6 +1,7 @@
-<p>Profile selector</p>
-<ul *ngFor="let profile of profilesToSelectFrom$ | async">
-	<li>
-		<a href="#" (click)="selectProfile(profile.id)">{{profile.name}}</a>
-	</li>
-</ul>
+<p-card title="Select profile">
+	<ul class="profile-list" *ngFor="let profile of profilesToSelectFrom$ | async">
+		<li>
+			<button pButton (click)="selectProfile(profile.id)" [label]="profile.name"></button>
+		</li>
+	</ul>
+</p-card>
