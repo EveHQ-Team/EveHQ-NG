@@ -1,0 +1,72 @@
+# UC010. Gather the application configuration information
+
+Application need to know where it should store the application configuration and characters related data. The user should choose the location for them: the application data folder. This folder should be created and path to it should be stored in a well-known place the default application data folder because it is the common denominator for all supported operation systems.
+
+**TBD: Is there any other configuration information that should be gathered and stored before the application can work as expected?** 
+
+## Pre-conditions
+
+1. The application configuration information isn't gathered and stored yet.
+
+## Post-conditions
+
+1. The application data folder path gathered from the user and stored in the default application data folder.
+2. The application data folder created in the persisted storage.
+
+## Normal scenario
+
+1. SUD opens the Specify application data folder screen. The screen contains a text field to enter path to the application data folder (prepopulated with the path to the default application data folder) and a button to display default operation system folder selection dialog.
+2. The user provides the path to the application data folder using direct input.
+3. SUD checks that the path provided is valid.
+4. The path provided is valid.
+5. SUD checks that the path provided isn't exists yet.
+6. The path provided isn't exists yet.
+7. SUD creates the application data folder with the provided path.
+8. SUD stores the path to the application data folder in the application-configuration.config file in the default application data folder.
+
+## Alternative scenarios
+
+### A2.1 The user commands to select the folder using default operation system folder selection dialog
+
+1. SUD opens default operation system folder selection dialog.
+2. The user selects the data folder using this dialog.
+3. The use case continues from the step 3.
+
+### A2.2. The user decides to use the default application data folder
+
+1. The use case continues from the step 3.
+
+### A4.1. The path provided is invalid
+
+1. SUD displays error message "The path provided is invalid."
+2. The use case continues from the step 2.
+
+### A6.1. The path provided exists and the folder is empty
+
+The use case continues from the step 8.
+
+### A6.2. The path provided exists and the folder isn't empty
+
+1. SUD checks if the folder contains the application data files.
+2. The folder doesn't contain the application data files.
+3. SUD informs the user that the selected data folder isn't empty and should be cleaned to continue and requires confirmation from the user to clean the folder.
+4. The user confirms folder cleaning.
+5. SUD cleans the folder.
+6. The use case continues from the step 8.
+
+### A6.2.2. The folder seams like contains the application data files
+
+1. SUD calls UC014. Import present application data files.
+2. The use case ends.
+
+### A6.2.4. The user rejects folder cleaning.
+
+1. SUD displays error message "The data folder should be empty before to proceed."
+2. The use case continues from the step 2.
+
+## Exceptional scenarios
+
+### E7.1. Error occurred during creating the application data folder
+
+1. SUD displays error message "The data folder can't be created."
+2. The use case continues from the step 2.

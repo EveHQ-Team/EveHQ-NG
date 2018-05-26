@@ -4,7 +4,7 @@ When application starts up we need to choose which screen should be shown to the
 
 ## Pre-conditions
 
-- NONE
+- The application set up in operation system using the setup package.
 
 ## Post-conditions
 
@@ -15,6 +15,7 @@ When application starts up we need to choose which screen should be shown to the
 
 ## Normal scenario
 
+0. SUD calls [UC009. Application installation](uc009-application-installation.md).
 1. SUD checks is the application user already created.
 2. The user is created.
 3. SUD calls the [UC002. User Login](user-login.use-case.md).
