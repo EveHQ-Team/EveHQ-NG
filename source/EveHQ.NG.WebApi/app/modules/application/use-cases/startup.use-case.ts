@@ -27,10 +27,17 @@ import {
 	SetCurrentProfile
 	} from 'modules/application/stores/application.state';
 import { tag } from 'rxjs-spy/operators/tag';
+import { InstallationService } from 'modules/backend/application/installation.service';
+import { InstallApplication } from 'modules/application/use-cases/install-application.use-case';
 
 export enum StartupUseCaseActionTypes {
+	StartApplication = '[STARTUP USE CASE] Start Application',
 	InitializeApplication = '[STARTUP USE CASE] Initialize Application',
 	CharacterDashboardRedirect = '[STARTUP USE CASE] Character Dashboard Redirect',
+}
+
+export class StartApplication implements Action {
+	public readonly type: string = StartupUseCaseActionTypes.StartApplication;
 }
 
 export class InitializeApplication implements Action {
@@ -42,6 +49,7 @@ export class CharacterDashboardRedirect implements Action {
 }
 
 export type StartupUseCaseActions =
+	| StartApplication
 	| InitializeApplication
 	| CharacterDashboardRedirect;
 
@@ -50,17 +58,25 @@ export class StartupUseCaseEffects {
 	constructor(
 		private readonly actions$: Actions,
 		private readonly store: Store<ApplicationStore>,
+		private readonly installationService: InstallationService,
 		private readonly userService: UserService,
 		private readonly router: Router) {}
 
 	@Effect()
-	public initializeShell$ = this.actions$.pipe(
+	public startApplication$ = this.actions$.pipe(
+		ofType(StartupUseCaseActionTypes.StartApplication),
+		mergeMap(() => this.installationService.isApplicationInstalled().pipe(
+			mergeMap(isApplicationInstalled => isApplicationInstalled
+												? of(new InitializeApplication())
+												: of(new InstallApplication())))));
+
+	@Effect()
+	public initializeApplication$ = this.actions$.pipe(
 		ofType(StartupUseCaseActionTypes.InitializeApplication),
 		mergeMap(() => this.userService.getUser().pipe(
 			mergeMap(user => user === undefined
 							? of(new CreateUser())
-							: of(new LoginUser({ userToAuthenticate: user }))))),
-		tag('a1'));
+							: of(new LoginUser({ userToAuthenticate: user }))))));
 
 	@Effect()
 	public createUserSuccess$ = this.actions$.pipe(

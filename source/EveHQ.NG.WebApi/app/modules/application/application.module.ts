@@ -22,6 +22,8 @@ import { CreateUserUseCaseEffects, createUserUseCaseReducers } from 'modules/app
 import { LoginUseCaseEffects, loginUseCaseReducers } from 'modules/application/use-cases/login.use-case';
 import { StartupUseCaseEffects } from 'modules/application/use-cases/startup.use-case';
 import { SelectProfileUseCaseEffects } from 'modules/application/use-cases/select-profile.use-case';
+import { installApplicationUseCaseReducers } from 'modules/application/use-cases/install-application.use-case';
+import { InstallApplicationUseCaseEffects } from 'modules/application/use-cases/install-application.use-case';
 
 @NgModule({
 	imports: [
@@ -36,11 +38,13 @@ import { SelectProfileUseCaseEffects } from 'modules/application/use-cases/selec
 		StoreModule.forFeature('shell', shellReducers),
 		StoreModule.forFeature('createUserUseCase', createUserUseCaseReducers),
 		StoreModule.forFeature('loginUseCase', loginUseCaseReducers),
+		StoreModule.forFeature('installApplicationUseCase', installApplicationUseCaseReducers),
 		EffectsModule.forRoot([
 			StartupUseCaseEffects,
 			CreateUserUseCaseEffects,
 			LoginUseCaseEffects,
-			SelectProfileUseCaseEffects
+			SelectProfileUseCaseEffects,
+			InstallApplicationUseCaseEffects
 		]),
 		CommonServicesModule.forRoot(),
 		ApplicationRoutingModule

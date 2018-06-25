@@ -2,6 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { ApiService } from 'modules/common/services/api.service';
 import { LogService } from 'modules/common/services/log.service';
 import { ApiEndpointsService } from 'modules/common/services/api-endpoints.service';
+import { InstallationService } from 'modules/backend/application/installation.service';
 
 @NgModule({})
 export class CommonServicesModule {
@@ -11,7 +12,8 @@ export class CommonServicesModule {
 			providers: [
 				ApiService,
 				LogService,
-				ApiEndpointsService
+				ApiEndpointsService,
+				InstallationService
 			]
 		};
 	}

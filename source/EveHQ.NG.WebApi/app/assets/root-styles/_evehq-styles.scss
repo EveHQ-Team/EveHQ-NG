@@ -1,10 +1,6 @@
 @import "../styles/sizes.scss";
 @import "../styles/colors.scss";
 
-.ui-inputtext:focus {
-	box-shadow: none;
-}
-
 .ui-card-title {
 	margin-bottom: $grid-step * 4;
 	font-weight: normal;
@@ -24,6 +20,7 @@
 
 	&:focus {
 		//clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+		box-shadow: none;
 		clip-path: polygon(0% 0%, 100% 0%, 100% calc(100% - 1px), 100% calc(100% - 1px), 100% 100%, 100% 100%, 0% 100%, 0% 100%, 0% calc(100% - 1px), 0% calc(100% - 1px));
 	}
 
@@ -41,5 +38,19 @@
 
 	&:focus {
 		clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+	}
+}
+
+.field-holder {
+	display: flex;
+	flex-flow: column nowrap;
+	margin-bottom: $grid-step * 2;
+
+	.field-name, .field-editor {
+		margin-bottom: $half-grid-step;
+	}
+
+	.field-error {
+		color: $error-color;
 	}
 }
