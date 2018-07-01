@@ -24,7 +24,7 @@
   "private": true,
   "scripts": {
     "start": "npm run electrontsc && npm-run-all --parallel webpack:watch serve",
-    "electrontsc": "tsc -p ./electron/ && ncp ./electron/package.json ../../bin/dist/package.json && cd ../../bin/dist/ && npm install",
+    "electrontsc": "tsc -p ./electron/tsconfig.json -outDir ../../bin/dist/ && ncp ./electron/package.json ../../bin/dist/package.json && cd ../../bin/dist/ && npm install",
     "webpack:watch": "webpack --watch",
     "serve": "electron ../../bin/dist --serve --enable-logging",
     "build:ui:dev": "webpack --display-error-details",

@@ -1,4 +1,5 @@
 import { app, BrowserWindow, screen, net } from 'electron';
+import { InstallationService } from './installation.service';
 import { ApiService } from './api-service';
 
 let apiService: ApiService;
@@ -14,6 +15,7 @@ if (isDevelopment) {
 }
 
 let mainWindow: Electron.BrowserWindow | null;
+let installationService: InstallationService;
 try {
 	let isItSecondInstance = app.makeSingleInstance(
 		(otherInstanceArguments: string[], workingDirectory: string) => {
@@ -37,18 +39,21 @@ try {
 	app.on(
 		'ready',
 		() => {
+			installationService = new InstallationService();
 			let splashWindow = createSplashWindow();
 			apiService = new ApiService(isDevelopment);
 			apiService.isServiceStartedEvent.subscribe((isStarted: boolean) => {
-				if (isStarted) {
-					if (mainWindow == null) {
-						console.log(`Main window opening: ${isStarted}`);
-						createMainWindow();
-						mainWindow.webContents.openDevTools();
-					}
+				if (mainWindow == null) {
+					console.log(`Main window opening: ${isStarted}`);
+					createMainWindow();
+					mainWindow.webContents.openDevTools();
+				}
 
-					splashWindow.close();
-					splashWindow = null;
+				splashWindow.close();
+				splashWindow = null;
+
+				if (isStarted) {
+					console.warn('Service can not be started.');
 				}
 			});
 

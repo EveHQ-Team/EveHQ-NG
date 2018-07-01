@@ -23,6 +23,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const projectRoot = path.resolve(__dirname, '.');
 const nodeModulesDirectory = path.resolve(projectRoot, 'node_modules');
 const applicationRootDirectory = path.resolve(projectRoot, 'app');
+const ipcSharedDirectory = path.resolve(projectRoot, 'electron', 'ipc-shared');
 
 const environmentPathAlias = {
 	// WORKAROUND See. angular-cli/issues/5433
@@ -299,7 +300,8 @@ module.exports = {
 		,
 		"modules": [
 			nodeModulesDirectory,
-			applicationRootDirectory
+			applicationRootDirectory,
+			ipcSharedDirectory
 		]
 	},
 	"resolveLoader": {

@@ -11,6 +11,8 @@ import { ApplicationStore } from 'modules/application/stores/application.state';
 
 export enum InstallApplicationUseCaseActionTypes {
 	InstallApplication = '[INSTALL APPLICATION USE CASE] Install Application',
+	GetApplicationConfiguration = '[INSTALL APPLICATION USE CASE] Get Application Configuration',
+	GetApplicationConfigurationSuccessful = '[INSTALL APPLICATION USE CASE] Get Application Configuration Successful',
 	GatherApplicationConfiguration = '[INSTALL APPLICATION USE CASE] Gather Application Configuration',
 	OpenApplicationConfigurationScreen = '[INSTALL APPLICATION USE CASE] Open Application Configuration Screen',
 	GetherApplicationConfiguration = '[INSTALL APPLICATION USE CASE] Gether Application Configuration',
@@ -29,6 +31,16 @@ export enum InstallApplicationUseCaseActionTypes {
 
 export class InstallApplication implements Action {
 	public readonly type: string = InstallApplicationUseCaseActionTypes.InstallApplication;
+}
+
+export class GetApplicationConfiguration implements Action {
+	public readonly type: string = InstallApplicationUseCaseActionTypes.GetApplicationConfiguration;
+}
+
+export class GetApplicationConfigurationSuccessful implements Action {
+	constructor(public readonly payload: { applicationConfiguration: ApplicationConfiguration }) {}
+
+	public readonly type: string = InstallApplicationUseCaseActionTypes.GetApplicationConfigurationSuccessful;
 }
 
 export class GatherApplicationConfiguration implements Action {
@@ -103,6 +115,8 @@ export class OpenDownloadSdeScreen implements Action {
 
 export type InstallApplicationUseCaseActions =
 	| InstallApplication
+	| GetApplicationConfiguration
+	| GetApplicationConfigurationSuccessful
 	| GatherApplicationConfiguration
 	| OpenApplicationConfigurationScreen
 	| GatherApplicationConfigurationSuccess
@@ -128,7 +142,7 @@ export interface InstallApplicationUseCaseState {
 }
 
 const initialState: InstallApplicationUseCaseState = {
-	applicationConfiguration: {dataFolderPath: '', backendServicePortNumber: 4000},
+	applicationConfiguration: { dataFolderPath: '', backendServicePortNumber: 4000 },
 	setApplicationConfigurationError: undefined,
 	installCustomUrlSchemaError: undefined,
 	createApplicationDatabaseError: undefined,
@@ -138,6 +152,11 @@ const initialState: InstallApplicationUseCaseState = {
 
 function installApplicationUseCaseReducer(state = initialState, action: InstallApplicationUseCaseActions): InstallApplicationUseCaseState {
 	switch (action.type) {
+		case InstallApplicationUseCaseActionTypes.GetApplicationConfigurationSuccessful:
+			return {
+				...state,
+				applicationConfiguration: (action as GetApplicationConfigurationSuccessful).payload.applicationConfiguration
+			};
 		case InstallApplicationUseCaseActionTypes.SetApplicationConfiguration:
 			return {
 				...state,
@@ -205,6 +224,19 @@ export class InstallApplicationUseCaseEffects {
 	@Effect()
 	public installApplication$ = this.actions$.pipe(
 		ofType(InstallApplicationUseCaseActionTypes.InstallApplication),
+		map(() => new GetApplicationConfiguration()));
+
+	@Effect()
+	public getApplicationConfiguration$ = this.actions$.pipe(
+		ofType(InstallApplicationUseCaseActionTypes.GetApplicationConfiguration),
+		mergeMap(() => this.installationService.getApplicationConfiguration().pipe(
+			map((applicationConfiguration: ApplicationConfiguration) =>
+				new GetApplicationConfigurationSuccessful({ applicationConfiguration: applicationConfiguration }))
+		)));
+
+	@Effect()
+	public getApplicationConfigurationSuccessful$ = this.actions$.pipe(
+		ofType(InstallApplicationUseCaseActionTypes.GetApplicationConfigurationSuccessful),
 		map(() => new GatherApplicationConfiguration()));
 
 	@Effect()
