@@ -27,6 +27,10 @@
 	&[disabled] {
 		border-bottom-style: dotted;
 	}
+
+	&.ng-invalid {
+		border-color: $error-color;
+	}
 }
 
 .ui-button {
@@ -41,16 +45,27 @@
 	}
 }
 
+.main-action {
+	padding: $grid-step;
+	min-width: $grid-step * 15;
+	height: $grid-step * 5;
+}
+
 .field-holder {
 	display: flex;
 	flex-flow: column nowrap;
 	margin-bottom: $grid-step * 2;
 
 	.field-name, .field-editor {
-		margin-bottom: $half-grid-step;
+		margin-bottom: $grid-step;
 	}
 
 	.field-error {
 		color: $error-color;
+		min-height: $grid-step * 4;
 	}
+}
+
+.error-message {
+	color: $error-color;
 }

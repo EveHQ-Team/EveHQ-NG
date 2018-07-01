@@ -1,3 +1,4 @@
-export class ApplicationConfiguration {
-	public dataFolder: string;
+export interface ApplicationConfiguration {
+	dataFolderPath: string;
+	backendServicePortNumber: number;
 }

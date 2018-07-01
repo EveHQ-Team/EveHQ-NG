@@ -1,0 +1,5 @@
+@import "~assets/styles/common-mixins";
+
+:host {
+	@include editor-with-description;
+}

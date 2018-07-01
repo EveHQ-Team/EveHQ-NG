@@ -1,5 +1,14 @@
 @import "~assets/styles/common-mixins";
+@import "~assets/styles/sizes";
 
 :host {
+	display: flex;
+	flex-direction: column;
+
 	@include editor-with-description;
+
+	.commands {
+		display: flex;
+		margin-bottom: $grid-step * 2;
+	}
 }

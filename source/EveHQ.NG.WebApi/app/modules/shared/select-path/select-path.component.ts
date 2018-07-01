@@ -1,11 +1,24 @@
-import { Component, EventEmitter, Output, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl } from '@angular/forms';
 
 @Component({
 	selector: 'evehq-select-path',
 	templateUrl: './select-path.component.html',
-	styleUrls: ['./select-path.component.scss']
+	styleUrls: ['./select-path.component.scss'],
+	providers: [
+		{
+			provide: NG_VALUE_ACCESSOR,
+			useExisting: forwardRef(() => SelectPathComponent),
+			multi: true
+		},
+		{
+			provide: NG_VALIDATORS,
+			useExisting: forwardRef(() => SelectPathComponent),
+			multi: true
+		}
+	]
 })
-export class SelectPathComponent {
+export class SelectPathComponent implements ControlValueAccessor {
 	@Input()
 	public path: string = '';
 
@@ -13,16 +26,33 @@ export class SelectPathComponent {
 	public doSelectFolder: boolean = false;
 
 	@Input()
-	public fieldLabel: string = 'Select path:';
-
-	@Input()
 	public openSelectPathDialogButtonLabel: string = 'Select';
 
 	@Input()
-	public error: string = '';
+	public isRequired: boolean = true;
 
-	@Output()
-	public pathSelected = new EventEmitter<string>();
+	public writeValue(value: string): void {
+		if (value == undefined) {
+			return;
+		}
+
+		this.path = value;
+	}
+
+	public registerOnChange(fn: any): void {
+		this.propagateChange = fn;
+	}
+
+	public registerOnTouched(fn: any): void {}
+
+	public validate(control: FormControl): any {
+		console.warn('control: ', !this.path);
+		return this.isRequired && !this.path
+					? {
+						requiredError: { given: control.value }
+					}
+					: undefined;
+	}
 
 	private openSelectPathDialog(): void {
 		this.systemOpenDialogButton.nativeElement.click();
@@ -31,9 +61,11 @@ export class SelectPathComponent {
 	private onPathSelected(): void {
 		console.warn('###: ', this.systemOpenDialogButton.nativeElement.files[0].path);
 		this.path = this.systemOpenDialogButton.nativeElement.files[0].path;
-		//console.warn('###: ', this.systemOpenDialogButton.nativeElement.files.map((item: File) => item.name).join('; '));
+		this.propagateChange(this.path);
 	}
 
 	@ViewChild('systemOpenDialogButton')
 	private systemOpenDialogButton: ElementRef;
+
+	private propagateChange = (_: string) => {};
 }

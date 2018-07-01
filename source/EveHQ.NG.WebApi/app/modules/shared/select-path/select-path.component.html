@@ -1,13 +1,7 @@
-<div class="field-holder">
-	<label class="field-name">{{fieldLabel}}</label>
-	<div class="field-editor">
-		<input class="path-edit" type="text" pInputText [(ngModel)]="path" name="path"/>
-		<button class="open-dialog" pButton (click)="openSelectPathDialog()" label="{{openSelectPathDialogButtonLabel}}"></button>
-		<input #systemOpenDialogButton type="file"
-				[attr.webkitdirectory]="[doSelectFolder]"
-				[attr.webkitRelativePath]="[path]"
-				style="display: none"
-				(change)="onPathSelected()"/>
-	</div>
-	<p class="field-error">Fffdfd sfsd{{error}}</p>
-</div>
+<input class="path-edit" type="text" pInputText [(ngModel)]="path" name="path" readonly [required]="isRequired"/>
+<button class="open-dialog" pButton (click)="openSelectPathDialog()" label="{{openSelectPathDialogButtonLabel}}"></button>
+<input #systemOpenDialogButton type="file"
+		[attr.webkitdirectory]="[doSelectFolder]"
+		[attr.webkitRelativePath]="[path]"
+		style="display: none"
+		(change)="onPathSelected()"/>

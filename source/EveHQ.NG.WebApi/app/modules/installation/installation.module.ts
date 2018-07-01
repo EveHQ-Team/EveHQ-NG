@@ -5,6 +5,7 @@ import { ApplicationConfigurationEditorComponent } from
 import { CustomUrlSchemaEditorComponent } from 'modules/installation/custom-url-schema-editor/custom-url-schema-editor.component';
 import { SdeDownloaderComponent } from 'modules/installation/sde-downloader/sde-downloader.component';
 import { SharedModule } from 'modules/shared/shared.module';
+import { ApplicationConfigurationFormComponent } from './application-configuration-form/application-configuration-form.component';
 
 const installationRoutes: Routes = [
 	{
@@ -29,7 +30,8 @@ const installationRoutes: Routes = [
 	declarations: [
 		ApplicationConfigurationEditorComponent,
 		CustomUrlSchemaEditorComponent,
-		SdeDownloaderComponent
+		SdeDownloaderComponent,
+		ApplicationConfigurationFormComponent
 	]
 })
 export class InstallationModule {}

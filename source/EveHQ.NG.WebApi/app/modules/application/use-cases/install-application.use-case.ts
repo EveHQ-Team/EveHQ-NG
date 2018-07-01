@@ -13,7 +13,8 @@ export enum InstallApplicationUseCaseActionTypes {
 	InstallApplication = '[INSTALL APPLICATION USE CASE] Install Application',
 	GatherApplicationConfiguration = '[INSTALL APPLICATION USE CASE] Gather Application Configuration',
 	OpenApplicationConfigurationScreen = '[INSTALL APPLICATION USE CASE] Open Application Configuration Screen',
-	SetApplicationConfiguration = '[INSTALL APPLICATION USE CASE] Gather Application Configuration Success',
+	GetherApplicationConfiguration = '[INSTALL APPLICATION USE CASE] Gether Application Configuration',
+	SetApplicationConfiguration = '[INSTALL APPLICATION USE CASE] Set Application Configuration',
 	SetApplicationConfigurationError = '[INSTALL APPLICATION USE CASE] Set Application Configuration Error',
 	GetherCustomUrlSchemaData = '[INSTALL APPLICATION USE CASE] Gether Custom Url Schema Data',
 	OpenCustomUrlSchemaScreen = '[INSTALL APPLICATION USE CASE] Open Custom Url Schema Screen',
@@ -34,11 +35,15 @@ export class GatherApplicationConfiguration implements Action {
 	public readonly type: string = InstallApplicationUseCaseActionTypes.GatherApplicationConfiguration;
 }
 
-export class GatherApplicationConfigurationRedirect implements Action {
+export class OpenApplicationConfigurationScreen implements Action {
 	public readonly type: string = InstallApplicationUseCaseActionTypes.OpenApplicationConfigurationScreen;
 }
 
 export class GatherApplicationConfigurationSuccess implements Action {
+	public readonly type: string = InstallApplicationUseCaseActionTypes.GetherApplicationConfiguration;
+}
+
+export class SetApplicationConfiguration implements Action {
 	constructor(public readonly payload: { applicationConfiguration: ApplicationConfiguration }) {}
 
 	public readonly type: string = InstallApplicationUseCaseActionTypes.SetApplicationConfiguration;
@@ -99,8 +104,9 @@ export class OpenDownloadSdeScreen implements Action {
 export type InstallApplicationUseCaseActions =
 	| InstallApplication
 	| GatherApplicationConfiguration
-	| GatherApplicationConfigurationRedirect
+	| OpenApplicationConfigurationScreen
 	| GatherApplicationConfigurationSuccess
+	| SetApplicationConfiguration
 	| SetApplicationConfigurationError
 	| GetherCustomUrlSchemaData
 	| OpenCustomUrlSchemaScreen
@@ -113,6 +119,7 @@ export type InstallApplicationUseCaseActions =
 	| OpenDownloadSdeScreen;
 
 export interface InstallApplicationUseCaseState {
+	applicationConfiguration: ApplicationConfiguration,
 	setApplicationConfigurationError: any;
 	installCustomUrlSchemaError: any;
 	createApplicationDatabaseError: any;
@@ -121,6 +128,7 @@ export interface InstallApplicationUseCaseState {
 }
 
 const initialState: InstallApplicationUseCaseState = {
+	applicationConfiguration: {dataFolderPath: '', backendServicePortNumber: 4000},
 	setApplicationConfigurationError: undefined,
 	installCustomUrlSchemaError: undefined,
 	createApplicationDatabaseError: undefined,
@@ -130,10 +138,20 @@ const initialState: InstallApplicationUseCaseState = {
 
 function installApplicationUseCaseReducer(state = initialState, action: InstallApplicationUseCaseActions): InstallApplicationUseCaseState {
 	switch (action.type) {
+		case InstallApplicationUseCaseActionTypes.SetApplicationConfiguration:
+			return {
+				...state,
+				applicationConfiguration: (action as SetApplicationConfiguration).payload.applicationConfiguration
+			};
 		case InstallApplicationUseCaseActionTypes.SetApplicationConfigurationError:
 			return {
 				...state,
 				setApplicationConfigurationError: (action as SetApplicationConfigurationError).payload.error
+			};
+		case InstallApplicationUseCaseActionTypes.GetherApplicationConfiguration:
+			return {
+				...state,
+				setApplicationConfigurationError: ''
 			};
 		case InstallApplicationUseCaseActionTypes.InstallCustomUrlSchemaError:
 			return {
@@ -170,6 +188,7 @@ export const installApplicationUseCaseReducers = {
 
 const getStore = createFeatureSelector<InstallApplicationUseCaseStore>('installApplicationUseCase');
 const getState = createSelector(getStore, state => state.useCase);
+export const getApplicationConfiguration = createSelector(getState, state => state.applicationConfiguration);
 export const getSetApplicationConfigurationError = createSelector(getState, state => state.setApplicationConfigurationError);
 export const getInstallCustomUrlSchemaError = createSelector(getState, state => state.installCustomUrlSchemaError);
 export const getCreateApplicationDatabaseError = createSelector(getState, state => state.createApplicationDatabaseError);
@@ -191,7 +210,7 @@ export class InstallApplicationUseCaseEffects {
 	@Effect()
 	public gatherApplicationConfiguration$ = this.actions$.pipe(
 		ofType(InstallApplicationUseCaseActionTypes.GatherApplicationConfiguration),
-		map(() => new GatherApplicationConfigurationRedirect()));
+		map(() => new OpenApplicationConfigurationScreen()));
 
 	@Effect({ dispatch: false })
 	public openApplicationConfigurationScreen$ = this.actions$.pipe(
@@ -201,7 +220,7 @@ export class InstallApplicationUseCaseEffects {
 	@Effect()
 	public setApplicationConfiguration$ = this.actions$.pipe(
 		ofType(InstallApplicationUseCaseActionTypes.SetApplicationConfiguration),
-		map((action: GatherApplicationConfigurationSuccess) => action.payload.applicationConfiguration),
+		map((action: SetApplicationConfiguration) => action.payload.applicationConfiguration),
 		mergeMap(applicationConfiguration => this.installationService.setApplicationConfiguration(applicationConfiguration).pipe(
 			map(() => new GetherCustomUrlSchemaData()),
 			catchError(error => of(new SetApplicationConfigurationError({ error: error })))

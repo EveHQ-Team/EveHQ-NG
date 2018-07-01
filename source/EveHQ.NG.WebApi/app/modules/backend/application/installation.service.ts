@@ -12,6 +12,7 @@ export class InstallationService {
 	}
 
 	public setApplicationConfiguration(applicationConfiguration: ApplicationConfiguration): Observable<any> {
+		console.warn('App conf API', applicationConfiguration);
 		return empty();
 		//return _throw('TODO: Error message');
 	}
