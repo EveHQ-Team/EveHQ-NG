@@ -1,7 +1,7 @@
 import { Component, Input, Output, OnInit, OnChanges, OnDestroy, EventEmitter, SimpleChanges } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
-import { ApplicationConfiguration } from 'modules/application/models/application-configuration';
-import { takeUntil, debounceTime } from 'rxjs/operators';
+import { ApplicationConfiguration } from 'application-configuration';
+import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -56,11 +56,8 @@ export class ApplicationConfigurationFormComponent implements OnInit, OnChanges,
 	}
 
 	private buildErrorMessages(): void {
-		console.warn('this.dataFolderPathControl.errors: ', this.dataFolderPathControl.errors);
 		if (this.dataFolderPathControl.errors) {
-			this.dataFolderPathErrors = this.dataFolderPathControl.errors['required']
-										? 'Specify the data folder path.'
-										: '';
+			this.dataFolderPathErrors = this.dataFolderPathControl.errors['required'] ? 'Specify the data folder path.' : '';
 		}
 		else {
 			this.dataFolderPathErrors = '';

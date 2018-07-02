@@ -4,7 +4,7 @@ import { tap, map, mergeMap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action, createFeatureSelector, createSelector } from '@ngrx/store';
 import { Effect, Actions, ofType } from '@ngrx/effects';
-import { ApplicationConfiguration } from 'modules/application/models/application-configuration';
+import { ApplicationConfiguration } from 'application-configuration';
 import { InstallationService } from 'modules/backend/application/installation.service';
 import { CustomUrlSchema } from 'modules/application/models/custom-url-schema';
 import { ApplicationStore } from 'modules/application/stores/application.state';

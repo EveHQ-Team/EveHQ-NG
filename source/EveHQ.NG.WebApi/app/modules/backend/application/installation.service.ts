@@ -6,7 +6,7 @@ import { CustomUrlSchema } from 'modules/application/models/custom-url-schema';
 import { ipcRenderer } from 'electron';
 import { Subject } from 'rxjs';
 import { InstallationIpc } from 'installation-ipc';
-import { ApplicationConfiguration } from 'modules/application/models/application-configuration';
+import { ApplicationConfiguration } from 'application-configuration';
 
 export class InstallationService {
 	public isApplicationInstalled(): Observable<boolean> {
@@ -26,8 +26,8 @@ export class InstallationService {
 		const subject = new Subject<ApplicationConfiguration>();
 		ipcRenderer.once(
 			InstallationIpc.getApplicationConfiguration,
-			(event: any, argument: ApplicationConfiguration) => {
-				subject.next(argument);
+			(event: any, args: ApplicationConfiguration) => {
+				subject.next(args);
 				subject.complete();
 			});
 
@@ -35,10 +35,17 @@ export class InstallationService {
 		return subject.asObservable();
 	}
 
-	public setApplicationConfiguration(applicationConfiguration: ApplicationConfiguration): Observable<any> {
-		console.warn('App conf API', applicationConfiguration);
-		return empty();
-		//return _throw('TODO: Error message');
+	public setApplicationConfiguration(applicationConfiguration: ApplicationConfiguration): Observable<void> {
+		const subject = new Subject<void>();
+		ipcRenderer.once(
+			InstallationIpc.setApplicationConfiguration,
+			(event: any, args: any) => {
+				subject.next();
+				subject.complete();
+			});
+
+		ipcRenderer.send(InstallationIpc.setApplicationConfiguration, applicationConfiguration);
+		return subject.asObservable();
 	}
 
 	public installCustomUrlSchema(customUrlSchema: CustomUrlSchema): Observable<any> {

@@ -7,7 +7,7 @@ import {
 	SetApplicationConfiguration
 	} from 'modules/application/use-cases/install-application.use-case';
 import { Observable } from 'rxjs/Observable';
-import { ApplicationConfiguration } from 'modules/application/models/application-configuration';
+import { ApplicationConfiguration } from 'application-configuration';
 
 @Component({
 	templateUrl: './application-configuration-editor.component.html',

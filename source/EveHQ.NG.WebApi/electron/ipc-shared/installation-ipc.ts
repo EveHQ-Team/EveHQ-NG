@@ -7,6 +7,10 @@ export class InstallationIpc {
 		return this.getChannelFor('getApplicationConfiguration');
 	}
 
+	public static get setApplicationConfiguration(): string {
+		return this.getChannelFor('setApplicationConfiguration');
+	}
+
 	private static getChannelFor(message: string): string {
 		return `InstallationService.${message}`;
 	}
