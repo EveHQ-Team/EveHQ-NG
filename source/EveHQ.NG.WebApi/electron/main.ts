@@ -1,6 +1,10 @@
 import { app, BrowserWindow, screen, net } from 'electron';
 import { InstallationService } from './installation.service';
 import { ApiService } from './api-service';
+import { SystemErrorDescriber } from './system-error-describer';
+import { TcpPort } from './tcp-port';
+import { ApplicationConfigurationHandler } from './application-configuration-handler';
+import { InstallationChecker } from './installation-checker';
 
 let apiService: ApiService;
 
@@ -15,7 +19,6 @@ if (isDevelopment) {
 }
 
 let mainWindow: Electron.BrowserWindow | null;
-let installationService: InstallationService;
 try {
 	let isItSecondInstance = app.makeSingleInstance(
 		(otherInstanceArguments: string[], workingDirectory: string) => {
@@ -39,7 +42,16 @@ try {
 	app.on(
 		'ready',
 		() => {
-			installationService = new InstallationService();
+			const tcpPort = new TcpPort();
+			const systemErrorDescriber = new SystemErrorDescriber();
+			const applicationConfigurationHandler = new ApplicationConfigurationHandler(tcpPort, systemErrorDescriber);
+			const installationChecker = new InstallationChecker(applicationConfigurationHandler);
+			// ReSharper disable once UnusedLocals Event handler.
+			const installationService = new InstallationService(
+				systemErrorDescriber,
+				installationChecker,
+				applicationConfigurationHandler);
+
 			let splashWindow = createSplashWindow();
 			apiService = new ApiService(isDevelopment);
 			apiService.isServiceStartedEvent.subscribe((isStarted: boolean) => {
