@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
 	<RuntimeIdentifiers>win10-x64;osx-x64;linux-x64</RuntimeIdentifiers>
 	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
@@ -15,34 +15,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0-preview1-final" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.0.4" />
-    <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.1.0" />
+    <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.10" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\EveHQ.NG.Domain.Core\EveHQ.NG.Domain.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Autofac">
-      <HintPath>C:\Users\mike.eshva\.nuget\packages\autofac\4.6.2\lib\netstandard1.1\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac.Extensions.DependencyInjection">
-      <HintPath>C:\Users\mike.eshva\.nuget\packages\autofac.extensions.dependencyinjection\4.2.1\lib\netstandard1.1\Autofac.Extensions.DependencyInjection.dll</HintPath>
-    </Reference>
-    <Reference Include="Core.SimpleRepository">
-      <HintPath>..\..\..\..\Eshva\EveHQ-NG.Prototype\source\EveHQ.NG.WebApi\libs\Core.SimpleRepository.dll</HintPath>
-    </Reference>
-    <Reference Include="Core.SimpleRepository.Core">
-      <HintPath>..\..\..\..\Eshva\EveHQ-NG.Prototype\source\EveHQ.NG.WebApi\libs\Core.SimpleRepository.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Core.SimpleRepository.FileSystem">
-      <HintPath>..\..\..\..\Eshva\EveHQ-NG.Prototype\source\EveHQ.NG.WebApi\libs\Core.SimpleRepository.FileSystem.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
