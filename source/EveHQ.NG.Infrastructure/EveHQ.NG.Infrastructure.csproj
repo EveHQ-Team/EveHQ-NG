@@ -27,4 +27,19 @@
     <ProjectReference Include="..\EveHQ.NG.Domain.Core\EveHQ.NG.Domain.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Core.SimpleRepository">
+      <HintPath>..\..\..\..\Eshva\EveHQ-NG.Prototype\source\EveHQ.NG.WebApi\libs\Core.SimpleRepository.dll</HintPath>
+    </Reference>
+    <Reference Include="Core.SimpleRepository.Core">
+      <HintPath>..\..\..\..\Eshva\EveHQ-NG.Prototype\source\EveHQ.NG.WebApi\libs\Core.SimpleRepository.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Core.SimpleRepository.FileSystem">
+      <HintPath>..\..\..\..\Eshva\EveHQ-NG.Prototype\source\EveHQ.NG.WebApi\libs\Core.SimpleRepository.FileSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SqlServerCe">
+      <HintPath>..\..\..\EveHQ\Ref\SQLCE\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

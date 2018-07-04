@@ -1,9 +1,11 @@
 #region Usings
 
 using System;
+using System.IO;
 using EveHQ.NG.Infrastructure;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
@@ -53,11 +55,20 @@ namespace EveHQ.NG.WebApi
 					retainedFileCountLimit : 4)
 				.CreateLogger();
 
-		private static IWebHost BuildWebHost(string[] args) =>
-			WebHost.CreateDefaultBuilder(args)
-					.UseKestrel()
-					.UseStartup<Startup>()
-					.UseSerilog()
-					.Build();
+		private static IWebHost BuildWebHost(string[] args)
+		{
+			var config = new ConfigurationBuilder()
+						.SetBasePath(Directory.GetCurrentDirectory())
+						.AddCommandLine(args)
+						.Build();
+
+			return WebHost.CreateDefaultBuilder(args)
+						.UseKestrel()
+						.UseUrls("http://localhost:5000")
+						.UseConfiguration(config)
+						.UseStartup<Startup>()
+						.UseSerilog()
+						.Build();
+		}
 	}
 }
