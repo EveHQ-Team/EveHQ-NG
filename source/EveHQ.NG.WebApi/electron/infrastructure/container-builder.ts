@@ -4,6 +4,8 @@ import { SystemErrorDescriber } from './system-error-describer';
 import { ApplicationConfigurationHandler } from './application-configuration-handler';
 import { InstallationChecker } from './installation-checker';
 import { InstallationService } from './installation.service';
+import { LogBase } from './log-base';
+import { ConsoleLog } from './console-log';
 
 export class ContainerBuilder {
 	constructor() {
@@ -19,5 +21,6 @@ export class ContainerBuilder {
 		this.container.registerSingleton(ApplicationConfigurationHandler);
 		this.container.registerSingleton(InstallationChecker);
 		this.container.registerSingleton(InstallationService);
+		this.container.registerSingleton(LogBase, ConsoleLog);
 	}
 }

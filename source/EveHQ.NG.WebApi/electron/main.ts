@@ -10,11 +10,4 @@ if (isDevelopment) {
 	require('electron-reload')(__dirname, { electron: require(`${__dirname}/../../source/EveHQ.NG.WebApi/node_modules/electron`) });
 }
 
-let application: EveHqApplication;
-
-try {
-	application = new EveHqApplication(isDevelopment);
-}
-finally {
-	application.stop();
-}
+let application = new EveHqApplication(isDevelopment);
