@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { ApplicationConfigurationHandler } from './application-configuration-handler';
 
+import { SupportsInjection } from 'good-injector';
+
+@SupportsInjection
 export class InstallationChecker {
 	constructor(private readonly applicationConfigurationHandler: ApplicationConfigurationHandler) {}
 
@@ -32,25 +35,9 @@ export class InstallationChecker {
 				resolve(true);
 			}
 			catch (error) {
-				console.error('#### is alive error: ', error);
+				console.error('#### is alive error:');
 				return resolve(false);
 			}
-
-/*
-			axios.get(`http://localhost:${portNumber}/isalive`)
-				.then((response: AxiosResponse) => {
-					console.warn('#### is alive response: ', response);
-					if (response.status !== 200) {
-						return resolve(false);
-					}
-
-					resolve(true);
-				})
-				.catch((error) => {
-					console.warn('#### is alive error: ', error);
-					return resolve(false);
-				});
-*/
 		});
 	}
 }

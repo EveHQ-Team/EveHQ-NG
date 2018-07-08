@@ -1,5 +1,7 @@
 import { ErrorCode } from './error-code';
+import { SupportsInjection } from 'good-injector';
 
+@SupportsInjection
 export class SystemErrorDescriber {
 	public describeError(errorCode: string | number): string {
 		switch (errorCode) {

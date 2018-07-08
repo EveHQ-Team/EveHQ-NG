@@ -6,6 +6,9 @@ import { TcpPort } from './tcp-port';
 import { ErrorCode } from './error-code';
 import { SystemErrorDescriber } from './system-error-describer';
 
+import { SupportsInjection } from 'good-injector';
+
+@SupportsInjection
 export class ApplicationConfigurationHandler {
 	constructor(
 		private readonly tcpPort: TcpPort,

@@ -5,7 +5,9 @@ import { SystemErrorDescriber } from './system-error-describer';
 import { IpcResult } from './ipc-shared/ipc-result';
 import { ApplicationConfigurationHandler } from './application-configuration-handler';
 import { InstallationChecker} from './installation-checker';
+import { SupportsInjection } from 'good-injector';
 
+@SupportsInjection
 export class InstallationService {
 	constructor(
 		private readonly systemErrorDescriber: SystemErrorDescriber,

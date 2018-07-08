@@ -1,14 +1,14 @@
-import { app, BrowserWindow, screen, net } from 'electron';
+import { app } from 'electron';
 import * as path from 'path';
-//const os = require('os');
 import * as os from 'os';
 import * as childProcess from 'child_process';
 import { Subject, Observable } from 'rxjs';
-import * as http from 'http';
 const findProcess = require('find-process');
 
-export class ApiService {
-	constructor(private readonly isDevelopment: boolean) {
+export class BackendService {
+	constructor(
+		private readonly portNumber: number,
+		private readonly isDevelopment: boolean) {
 		this.platform = os.platform();
 	}
 
@@ -20,20 +20,20 @@ export class ApiService {
 		this.isServiceStarted().subscribe(
 			(isStarted: boolean) => {
 				if (isStarted) {
-					console.log('The API-service already started.');
+					console.log('The Backend-service already started.');
 					this.isServiceStartedSubject.next(isStarted);
 				}
 				else {
+					const command = `${this.buildPathToWebApi()} ${`--urls=http://localhost:${this.portNumber}`}`;
 					console.log('Try to start the API-service.');
-					const webApiPath = this.buildPathToWebApi();
-					console.log(`Path to API-service: ${webApiPath}`);
-					this.apiServiceChildProcess = childProcess.spawn(webApiPath);
+					console.log(`Backend-service spawn command-line: ${command}`);
+					this.apiServiceChildProcess = childProcess.exec(command);
 
 					Observable.interval(2000).take(10).takeUntil(this.isServiceStartedEvent)
 						.subscribe(_ => {
-							this.isServiceStarted().subscribe(isStarted => {
-								if (isStarted) {
-									this.isServiceStartedSubject.next(isStarted);
+							this.isServiceStarted().subscribe(isServiceStarted => {
+								if (isServiceStarted) {
+									this.isServiceStartedSubject.next(isServiceStarted);
 								}
 							});
 						});
@@ -52,7 +52,7 @@ export class ApiService {
 	}
 
 	private isServiceStarted(): Observable<boolean> {
-		return Observable.fromPromise(findProcess('port', 5000))
+		return Observable.fromPromise(findProcess('port', this.portNumber))
 			.map((processes: any[]) => !!processes.find((value: any) => value.cmd.indexOf('EveHQ.NG.WebApi') !== -1));
 	}
 

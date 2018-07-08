@@ -1,5 +1,7 @@
 import * as net from 'net';
+import { SupportsInjection } from 'good-injector';
 
+@SupportsInjection
 export class TcpPort {
 	public async getRandomFreePort(
 		minPortNumber: number = TcpPort.dynamicPortNumberRangeStart,
