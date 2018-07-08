@@ -7,7 +7,7 @@
 	"directories": {
 		"output": "../../bin/release",
 		"app": "../../bin/dist",
-		"buildResources": "./electron/build"
+		"buildResources": "./electron/build-resources"
 	},
 	"artifactName": "${name}-${version}.${ext}",
 	"files": [

@@ -54,7 +54,7 @@
 
 	<ItemGroup>
 	  <Folder Include="app\modules\common\pipes\" />
-	  <Folder Include="electron\build\" />
+	  <Folder Include="electron\build-resources\" />
 	</ItemGroup>
 
 	<ItemGroup>
