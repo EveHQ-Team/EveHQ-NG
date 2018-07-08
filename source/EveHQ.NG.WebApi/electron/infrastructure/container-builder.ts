@@ -1,9 +1,9 @@
 import { Container } from 'good-injector';
-import { TcpPort } from '../tcp-port';
-import { SystemErrorDescriber } from '../system-error-describer';
-import { ApplicationConfigurationHandler } from '../application-configuration-handler';
-import { InstallationChecker } from '../installation-checker';
-import { InstallationService } from '../installation.service';
+import { TcpPort } from './tcp-port';
+import { SystemErrorDescriber } from './system-error-describer';
+import { ApplicationConfigurationHandler } from './application-configuration-handler';
+import { InstallationChecker } from './installation-checker';
+import { InstallationService } from './installation.service';
 
 export class ContainerBuilder {
 	constructor() {

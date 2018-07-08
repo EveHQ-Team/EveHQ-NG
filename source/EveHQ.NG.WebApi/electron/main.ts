@@ -1,4 +1,4 @@
-import { EveHqApplication } from './evehq-application';
+import { EveHqApplication } from './infrastructure/evehq-application';
 
 const args = process.argv.slice(1);
 let isDevelopment = args.some(val => val === '--serve');
@@ -16,6 +16,5 @@ try {
 	application = new EveHqApplication(isDevelopment);
 }
 finally {
-	//mainWindow = null;
 	application.stop();
 }

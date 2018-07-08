@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import { app } from 'electron';
-import { ApplicationConfiguration } from './ipc-shared/application-configuration';
+import { ApplicationConfiguration } from '../ipc-shared/application-configuration';
 import { TcpPort } from './tcp-port';
 import { ErrorCode } from './error-code';
 import { SystemErrorDescriber } from './system-error-describer';

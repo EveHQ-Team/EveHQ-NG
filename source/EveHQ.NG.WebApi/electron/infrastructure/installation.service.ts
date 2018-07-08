@@ -1,8 +1,8 @@
 import { ipcMain } from 'electron';
-import { InstallationIpc } from './ipc-shared/installation-ipc';
-import { ApplicationConfiguration } from './ipc-shared/application-configuration';
+import { InstallationIpc } from '../ipc-shared/installation-ipc';
+import { ApplicationConfiguration } from '../ipc-shared/application-configuration';
 import { SystemErrorDescriber } from './system-error-describer';
-import { IpcResult } from './ipc-shared/ipc-result';
+import { IpcResult } from '../ipc-shared/ipc-result';
 import { ApplicationConfigurationHandler } from './application-configuration-handler';
 import { InstallationChecker} from './installation-checker';
 import { SupportsInjection } from 'good-injector';

@@ -1,5 +1,5 @@
 import { app, BrowserWindow, screen, net } from 'electron';
-import { ContainerBuilder } from './infrastructure/container-builder';
+import { ContainerBuilder } from './container-builder';
 import { Container } from 'good-injector';
 import {BackendService} from './backend-service';
 import {InstallationService} from './installation.service';
