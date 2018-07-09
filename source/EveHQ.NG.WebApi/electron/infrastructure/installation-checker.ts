@@ -26,8 +26,7 @@ export class InstallationChecker {
 	private async isBackendServiceAvailableOnPort(portNumber: number): Promise<boolean> {
 		return new Promise<boolean>(async (resolve, reject) => {
 			try {
-				const response = await axios.get(`http://localhost:${portNumber}/isalive`);
-				console.warn('#### is alive response: ', response);
+				const response = await axios.get(`http://localhost:${portNumber}/api/isalive`);
 				if (response.status !== 200) {
 					return resolve(false);
 				}
@@ -35,7 +34,6 @@ export class InstallationChecker {
 				resolve(true);
 			}
 			catch (error) {
-				console.error('#### is alive error:');
 				return resolve(false);
 			}
 		});

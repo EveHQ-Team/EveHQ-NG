@@ -1,6 +1,8 @@
 import { LogBase } from './log-base';
 import { LogLevel } from './log-level';
+import { SupportsInjection } from 'good-injector';
 
+@SupportsInjection
 export class ConsoleLog extends LogBase {
 	public log(message: string, level: LogLevel): void {
 		switch (level) {

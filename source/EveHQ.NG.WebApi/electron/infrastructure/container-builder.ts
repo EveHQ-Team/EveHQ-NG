@@ -6,6 +6,7 @@ import { InstallationChecker } from './installation-checker';
 import { InstallationService } from './installation.service';
 import { LogBase } from './log-base';
 import { ConsoleLog } from './console-log';
+import { BackendService } from './backend-service';
 
 export class ContainerBuilder {
 	constructor() {
@@ -22,5 +23,6 @@ export class ContainerBuilder {
 		this.container.registerSingleton(InstallationChecker);
 		this.container.registerSingleton(InstallationService);
 		this.container.registerSingleton(LogBase, ConsoleLog);
+		this.container.registerSingleton(BackendService);
 	}
 }

@@ -7,6 +7,7 @@ import { InstallationService } from './installation.service';
 import { SplashWindow } from './splash-window';
 import { LogBase } from './log-base';
 import { MainWindow } from './main-window';
+import { ApplicationConfigurationHandler } from './application-configuration-handler';
 
 export class EveHqApplication {
 	constructor(private readonly isDevelopment: boolean) {
@@ -29,6 +30,7 @@ export class EveHqApplication {
 		const isItSecondInstance = app.makeSingleInstance(
 			(otherInstanceArguments: string[], workingDirectory: string) => {
 				if (this.mainWindow.isOpen) {
+					this.log.logInformation('Another instance of the application already started.');
 					this.mainWindow.restoreIfMinimized();
 					this.authenticateWithCode(otherInstanceArguments);
 				}
@@ -46,34 +48,42 @@ export class EveHqApplication {
 		app.on('open-url', () => this.onOpenUrl());
 	}
 
-	private onReady(): void {
+	private async onReady(): Promise<void> {
 		// TODO: Move registration into separate method with a single time guard.
 		const installationService = this.container.resolve(InstallationService);
+		const applicationConfigurationHandler = this.container.resolve(ApplicationConfigurationHandler);
+		this.backendService = this.container.resolve(BackendService);
 
-		const splashWindow = new SplashWindow(this.contentFolder);
 		this.mainWindow = new MainWindow(this.isDevelopment, this.contentFolder, this.log);
+		this.mainWindow.create();
+		const splashWindow = new SplashWindow(this.contentFolder);
 		splashWindow.open();
 
-		const backendServicePortNumber = 55555;
-		this.backendService = new BackendService(backendServicePortNumber, this.isDevelopment);
-		this.backendService.isServiceStartedEvent.subscribe((isStarted: boolean) => {
-			this.mainWindow.open();
-
-			splashWindow.close();
-
-			if (isStarted) {
-				console.warn('Service can not be started.');
+		try {
+			if (await applicationConfigurationHandler.isApplicationConfigurationCreated()) {
+				const applicationConfiguration = await applicationConfigurationHandler.readApplicationConfiguration();
+				const portNumber = applicationConfiguration.backendServicePortNumber;
+				await this.backendService.ensureStarted(this.isDevelopment)
+					? this.log.logInformation(`Backend service started on port: ${portNumber}.`)
+					: this.log.logError(`Service can not be started on ${portNumber}.`);
 			}
-		});
+		}
+		catch (error) {
+			this.log.logException(error);
+			this.backendService.stop();
+		}
+		finally {
+			splashWindow.close();
+		}
 
-		this.backendService.ensureStarted();
+		this.mainWindow.show();
 	}
 
 	private onActivate(): void {
 		// On OS X it's common to re-create a window in the app when the
 		// dock icon is clicked and there are no other windows open.
 		// TODO: Check on Mac if it does work.
-		this.mainWindow.open();
+		this.mainWindow.create();
 	}
 
 	private onWindowAllClosed(): void {

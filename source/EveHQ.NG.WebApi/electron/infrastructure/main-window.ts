@@ -11,8 +11,11 @@ export class MainWindow {
 		return this.window !== undefined;
 	}
 
-	public open(): void {
+	public create(): void {
+		this.log.logInformation('Open the main window.');
+
 		if (this.isOpen) {
+			this.log.logInformation('The main window is already open.');
 			return;
 		}
 
@@ -24,16 +27,9 @@ export class MainWindow {
 			x: 0,
 			y: 0,
 			width: size.width,
-			height: size.height
+			height: size.height,
+			show: false
 		});
-
-		// and load the index.html of the app.
-		this.window.loadURL(`file://${this.contentFolder}/index.html`);
-
-		// Open the DevTools.
-		if (this.isDevelopment) {
-			this.window.webContents.openDevTools();
-		}
 
 		// Emitted when the window is closed.
 		this.window.on(
@@ -42,26 +38,44 @@ export class MainWindow {
 				// Dereference the window object, usually you would store window
 				// in an array if your app supports multi windows, this is the time
 				// when you should delete the corresponding element.
+				this.log.logInformation('### on window closed.');
 				this.window = undefined;
 			});
 
 		this.window.on(
 			'unresponsive',
-			() => this.log.logException(new Error('Main window is unresponsive.')));
+			() => this.log.logError('Main window is unresponsive.'));
+
 		this.window.webContents.on(
 			'crashed',
-			(event: any, killed: boolean) => this.log.logException(new Error(`Renderer process crashed. Killed: ${killed}.`)));
+			(event: any, killed: boolean) => this.log.logError(`Renderer process crashed. Killed: ${killed}.`));
 
 		if (this.isDevelopment) {
 			this.window.webContents.openDevTools();
 		}
 	}
 
+	public show(): void {
+		// and load the index.html of the app.
+		this.window.loadURL(`file://${this.contentFolder}/index.html`);
+		this.log.logInformation('### after load HTML');
+
+		// Open the DevTools.
+		if (this.isDevelopment) {
+			this.window.webContents.openDevTools();
+		}
+		this.log.logInformation('### after open dev tools');
+
+		this.window.show();
+	}
+
 	public close(): void {
+		this.log.logInformation('Closing the main window.');
 		this.window = undefined;
 	}
 
 	public restoreIfMinimized(): void {
+		this.log.logInformation('Restoring minimized main window.');
 		if (this.window.isMinimized()) {
 			this.window.restore();
 		}

@@ -3,12 +3,17 @@ import * as path from 'path';
 import * as os from 'os';
 import * as childProcess from 'child_process';
 import { Subject, Observable } from 'rxjs';
-const findProcess = require('find-process');
+import {ApplicationConfigurationHandler} from './application-configuration-handler';
+import { InstallationChecker } from './installation-checker';
+const findProcess = require('find-process'); // TODO: Remove package.
+import { SupportsInjection } from 'good-injector';
 
+@SupportsInjection
 export class BackendService {
 	constructor(
-		private readonly portNumber: number,
-		private readonly isDevelopment: boolean) {
+		//private readonly isDevelopment: boolean,
+		private readonly applicationConfigurationHandler: ApplicationConfigurationHandler,
+		private readonly installationChecker: InstallationChecker) {
 		this.platform = os.platform();
 	}
 
@@ -16,33 +21,47 @@ export class BackendService {
 		return this.isServiceStartedSubject.asObservable();
 	}
 
-	public ensureStarted(): void {
-		this.isServiceStarted().subscribe(
-			(isStarted: boolean) => {
-				if (isStarted) {
-					console.log('The Backend-service already started.');
-					this.isServiceStartedSubject.next(isStarted);
-				}
-				else {
-					const command = `${this.buildPathToWebApi()} ${`--urls=http://localhost:${this.portNumber}`}`;
-					console.log('Try to start the API-service.');
-					console.log(`Backend-service spawn command-line: ${command}`);
-					this.apiServiceChildProcess = childProcess.exec(command);
+	public async ensureStarted(isDevelopment: boolean): Promise<boolean> {
+		if (await this.installationChecker.isApplicationInstalled()) {
+			console.log('The Backend-service already started.');
+			return Promise.resolve(true);
+		}
 
-					Observable.interval(2000).take(10).takeUntil(this.isServiceStartedEvent)
-						.subscribe(_ => {
-							this.isServiceStarted().subscribe(isServiceStarted => {
-								if (isServiceStarted) {
-									this.isServiceStartedSubject.next(isServiceStarted);
-								}
-							});
-						});
-				}
-			},
-			error => console.error(`An error occured during initial checking is API-service started: ${error}`));
+		return new Promise<boolean>(async (resolve, reject) => {
+			const command = `${this.buildPathToWebApi(isDevelopment)} ${`--urls=http://localhost:${await this.getPortNumber()}`}`;
+			console.log('Try to start the API-service.');
+			console.log(`Backend-service spawn command-line: ${command}`);
+			this.apiServiceChildProcess = childProcess.exec(command);
+
+			let turn = 1;
+			const timeoutBetweenTurns = 2000;
+			const checkInterval = setInterval(
+				async () => {
+					try {
+						if (await this.installationChecker.isApplicationInstalled()) {
+							clearInterval(checkInterval);
+							resolve(true);
+						}
+					}
+					catch (error) {
+						clearInterval(checkInterval);
+						reject(`An error occured during initial checking is API-service started: ${error}`);
+					}
+
+					if (turn > 10) {
+						clearInterval(checkInterval);
+						resolve(false);
+					}
+					else {
+						turn++;
+					}
+				},
+				timeoutBetweenTurns);
+		});
 	}
 
 	public stop() {
+		// TODO: Kill process even if it's started by the prior instance of the Electron application.
 		if (!this.apiServiceChildProcess) {
 			return;
 		}
@@ -51,13 +70,16 @@ export class BackendService {
 		this.apiServiceChildProcess = undefined;
 	}
 
-	private isServiceStarted(): Observable<boolean> {
-		return Observable.fromPromise(findProcess('port', this.portNumber))
-			.map((processes: any[]) => !!processes.find((value: any) => value.cmd.indexOf('EveHQ.NG.WebApi') !== -1));
+	private async getPortNumber(): Promise<number> {
+		return new Promise<number>(async (resolve, reject) => {
+			this.applicationConfigurationHandler.readApplicationConfiguration()
+				.then(applicationConfiguration => resolve(applicationConfiguration.backendServicePortNumber))
+				.catch(error => reject(error));
+		});
 	}
 
-	private buildPathToWebApi(): string {
-		return this.isDevelopment ? this.getDevelopmentPath() : this.getProductionPath();
+	private buildPathToWebApi(isDevelopment: boolean): string {
+		return isDevelopment ? this.getDevelopmentPath() : this.getProductionPath();
 	}
 
 	private getDevelopmentPath(): string {

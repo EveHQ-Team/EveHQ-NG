@@ -1,7 +1,9 @@
 import { net } from 'electron';
 import { LogBase } from './log-base';
 import { LogLevel } from './log-level';
+import { SupportsInjection } from 'good-injector';
 
+@SupportsInjection
 export class BackendLog extends LogBase {
 	public log(message: string, level: LogLevel): void {
 		const clientLoggingUrl = `${this.serviceBaseUrl}/clientlogging/${level}`;
