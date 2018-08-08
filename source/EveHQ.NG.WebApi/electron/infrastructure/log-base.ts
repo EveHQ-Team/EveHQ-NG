@@ -1,22 +1,22 @@
 import { LogLevel } from './log-level';
 
 export abstract class LogBase {
-	public logInformation(message: string): void {
+	public info(message: string): void {
 		// TODO: Prepare structural log message.
 		this.log(message, LogLevel.Information);
 	}
 
-	public logWarning(message: string): void {
+	public warning(message: string): void {
 		// TODO: Prepare structural log message.
 		this.log(message, LogLevel.Warning);
 	}
 
-	public logError(message: string): void {
+	public error(message: string): void {
 		// TODO: Prepare structural log message.
 		this.log(message, LogLevel.Error);
 	}
 
-	public logException(error: Error): void {
+	public exception(error: Error): void {
 		const message = this.prepareExceptionMessage(error);
 		this.log(message, LogLevel.Error);
 	}

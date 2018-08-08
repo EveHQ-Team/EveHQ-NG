@@ -33,7 +33,7 @@ export class EveHqApplication {
 		const isSecondInstance = app.makeSingleInstance(
 			(otherInstanceArguments: string[]) => {
 				if (this.mainWindow.isOpen) {
-					this.log.logInformation('Another instance of the application already started.');
+					this.log.info('Another instance of the application already started.');
 					this.mainWindow.restoreIfMinimized();
 					this.authenticateWithCode(otherInstanceArguments);
 				}
@@ -66,12 +66,12 @@ export class EveHqApplication {
 				const applicationConfiguration = await applicationConfigurationHandler.readApplicationConfiguration();
 				const portNumber = applicationConfiguration.backendServicePortNumber;
 				await this.backendService.ensureStarted(this.isDevelopment)
-					? this.log.logInformation(`Backend service started on port: ${portNumber}.`)
-					: this.log.logError(`Service can not be started on ${portNumber}.`);
+					? this.log.info(`Backend service started on port: ${portNumber}.`)
+					: this.log.error(`Service can not be started on ${portNumber}.`);
 			}
 		}
 		catch (error) {
-			this.log.logException(error);
+			this.log.exception(error);
 			this.backendService.stop();
 		}
 		finally {
@@ -103,20 +103,20 @@ export class EveHqApplication {
 			app.quit();
 		}
 
-		this.log.logInformation('Exit...');
+		this.log.info('Exit...');
 		this.backendService.stop();
 	}
 
 	private onOpenUrl(): void {
 		(event: Event, url: string) => {
-			this.log.logInformation(`open-url event with url: ${url}`);
+			this.log.info(`open-url event with url: ${url}`);
 			this.authenticateWithCode(['todo', url]);
 		};
 	}
 
 	// TODO: Extract it into separate class.
 	private authenticateWithCode(otherInstanceArguments: string[]): void {
-		this.log.logInformation(`authenticateWithCode: ${otherInstanceArguments.join(', ')}`);
+		this.log.info(`authenticateWithCode: ${otherInstanceArguments.join(', ')}`);
 		if (otherInstanceArguments.length !== 2) {
 			throw new Error('Number of arguments is invalid.');
 		}
@@ -135,7 +135,7 @@ export class EveHqApplication {
 			authenticationRequest.on(
 				'response',
 				response => {
-					this.log.logWarning(`Status of authentication call: ${response.statusCode}`);
+					this.log.warning(`Status of authentication call: ${response.statusCode}`);
 				});
 			authenticationRequest.end();
 		}

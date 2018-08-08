@@ -21,7 +21,7 @@ export class InstallationService {
 	private registerIsApplicationInstalled(): void {
 		ipcMain.on(
 			InstallationIpc.isApplicationInstalled,
-			async (event: any, args: any) => {
+			async (event: any) => {
 				let result: IpcResult;
 				try {
 					result = IpcResult.success(await this.installationChecker.isApplicationInstalled());
@@ -39,7 +39,7 @@ export class InstallationService {
 	private registerGetApplicationConfiguration(): void {
 		ipcMain.on(
 			InstallationIpc.getApplicationConfiguration,
-			async (event: any, args: any) => {
+			async (event: any) => {
 				let result: IpcResult;
 				try {
 					result = IpcResult.success(

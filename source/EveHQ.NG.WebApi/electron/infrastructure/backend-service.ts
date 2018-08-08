@@ -30,8 +30,8 @@ export class BackendService {
 			await this.killExcessBackendServices();
 
 			const command = `${this.buildPathToWebApi(isDevelopment)} ${`--urls=http://localhost:${await this.getPortNumber()}`}`;
-			this.log.logInformation('Try to start the Backend-service.');
-			this.log.logInformation(`Backend-service spawn command-line: ${command}`);
+			this.log.info('Try to start the Backend-service.');
+			this.log.info(`Backend-service spawn command-line: ${command}`);
 			this.apiServiceChildProcessId = exec(command).pid;
 
 			let turn = 1;
@@ -71,7 +71,7 @@ export class BackendService {
 			this.killProcess(this.apiServiceChildProcessId);
 		}
 		catch (error) {
-			this.log.logError(`Can not stop the Backend-service process. ${this.systemErrorDescriber.describeError(error)}`);
+			this.log.error(`Can not stop the Backend-service process. ${this.systemErrorDescriber.describeError(error)}`);
 		}
 		finally {
 			this.apiServiceChildProcessId = undefined;
@@ -125,22 +125,22 @@ export class BackendService {
 	private async killExcessBackendServices(): Promise<void> {
 		const foundbackendServices: Partial<{ pid: number, ppid: number }>[] = await findProcess('name', this.getExecutableName());
 		if (foundbackendServices.length > 0) {
-			this.log.logWarning(`Found ${foundbackendServices.length} previously started Backend-services. They will be killed.`);
+			this.log.warning(`Found ${foundbackendServices.length} previously started Backend-services. They will be killed.`);
 		}
 
 		foundbackendServices.forEach((backendService: Partial<{ pid: number, ppid: number }>) => this.killProcess(backendService.pid));
 	}
 
 	private killProcess(processId: number): void {
-		this.log.logInformation(`Try to kill the Backend-service process with PID ${processId}.`);
+		this.log.info(`Try to kill the Backend-service process with PID ${processId}.`);
 		try {
 			process.kill(processId);
 		}
 		catch (error) {
-			this.log.logError(`Can not stop the Backend-service process. ${this.systemErrorDescriber.describeError(error)}`);
+			this.log.error(`Can not stop the Backend-service process. ${this.systemErrorDescriber.describeError(error)}`);
 		}
 
-		this.log.logInformation(`The Backend-service process with PID ${processId} killed successfully.`);
+		this.log.info(`The Backend-service process with PID ${processId} killed successfully.`);
 	}
 
 	private apiServiceChildProcessId: number | undefined = undefined;
