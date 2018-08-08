@@ -14,11 +14,14 @@ export class EveHqApplication {
 		this.containerBuilder = new ContainerBuilder();
 		this.contentFolder = path.resolve(__dirname, '..');
 		this.log = this.container.resolve(LogBase);
+	}
+
+	public start(): void {
 		this.ensureSingleInstance();
 		this.registerEventHandlers();
 	}
 
-	public stop() {
+	public stop(): void {
 		this.mainWindow.close();;
 	}
 
@@ -27,8 +30,8 @@ export class EveHqApplication {
 	}
 
 	private ensureSingleInstance(): void {
-		const isItSecondInstance = app.makeSingleInstance(
-			(otherInstanceArguments: string[], workingDirectory: string) => {
+		const isSecondInstance = app.makeSingleInstance(
+			(otherInstanceArguments: string[]) => {
 				if (this.mainWindow.isOpen) {
 					this.log.logInformation('Another instance of the application already started.');
 					this.mainWindow.restoreIfMinimized();
@@ -36,7 +39,7 @@ export class EveHqApplication {
 				}
 			});
 
-		if (isItSecondInstance) {
+		if (isSecondInstance) {
 			app.exit();
 		}
 	}
@@ -100,7 +103,7 @@ export class EveHqApplication {
 			app.quit();
 		}
 
-		console.log('exit...');
+		this.log.logInformation('Exit...');
 		this.backendService.stop();
 	}
 
@@ -132,7 +135,7 @@ export class EveHqApplication {
 			authenticationRequest.on(
 				'response',
 				response => {
-					console.warn(`Status of authentication call: ${response.statusCode}`);
+					this.log.logWarning(`Status of authentication call: ${response.statusCode}`);
 				});
 			authenticationRequest.end();
 		}
