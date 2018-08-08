@@ -71,6 +71,11 @@ The use case continues from the step 10.
 1. SUD displays error message "The port specified is occupied by some other service. Please choose another one."
 2. The use case continues from the step 4.
 
+### A10.2. The port specified is out of range ```1-65535```.
+
+1. SUD displays error message "The port number ${portNumber} not in valid range."
+2. The use case continues from the step 4.
+
 ## Exceptional scenarios
 
 ### E2.1.1. The  file ```application-configuration.json``` format is wrong.
