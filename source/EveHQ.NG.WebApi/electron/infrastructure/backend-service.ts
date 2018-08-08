@@ -1,20 +1,24 @@
 import { app } from 'electron';
 import * as path from 'path';
 import * as os from 'os';
-import * as childProcess from 'child_process';
+import { exec } from 'child_process';
 import { Subject, Observable } from 'rxjs';
-import {ApplicationConfigurationHandler} from './application-configuration-handler';
+import { ApplicationConfigurationHandler } from './application-configuration-handler';
 import { InstallationChecker } from './installation-checker';
-const findProcess = require('find-process'); // TODO: Remove package.
+import { SystemErrorDescriber } from './system-error-describer';
+import { LogBase } from './log-base';
 import { SupportsInjection } from 'good-injector';
+import * as findProcess from 'find-process';
 
 @SupportsInjection
 export class BackendService {
 	constructor(
-		//private readonly isDevelopment: boolean,
 		private readonly applicationConfigurationHandler: ApplicationConfigurationHandler,
-		private readonly installationChecker: InstallationChecker) {
+		private readonly installationChecker: InstallationChecker,
+		private readonly systemErrorDescriber: SystemErrorDescriber,
+		private readonly log: LogBase) {
 		this.platform = os.platform();
+		this.validatePlatform();
 	}
 
 	public get isServiceStartedEvent(): Observable<boolean> {
@@ -22,19 +26,17 @@ export class BackendService {
 	}
 
 	public async ensureStarted(isDevelopment: boolean): Promise<boolean> {
-		if (await this.installationChecker.isApplicationInstalled()) {
-			console.log('The Backend-service already started.');
-			return Promise.resolve(true);
-		}
-
 		return new Promise<boolean>(async (resolve, reject) => {
+			await this.killExcessBackendServices();
+
 			const command = `${this.buildPathToWebApi(isDevelopment)} ${`--urls=http://localhost:${await this.getPortNumber()}`}`;
-			console.log('Try to start the API-service.');
-			console.log(`Backend-service spawn command-line: ${command}`);
-			this.apiServiceChildProcess = childProcess.exec(command);
+			this.log.logInformation('Try to start the Backend-service.');
+			this.log.logInformation(`Backend-service spawn command-line: ${command}`);
+			this.apiServiceChildProcessId = exec(command).pid;
 
 			let turn = 1;
-			const timeoutBetweenTurns = 2000;
+			const numberOfTries = 40;
+			const timeoutBetweenTurns = 500;
 			const checkInterval = setInterval(
 				async () => {
 					try {
@@ -45,10 +47,10 @@ export class BackendService {
 					}
 					catch (error) {
 						clearInterval(checkInterval);
-						reject(`An error occured during initial checking is API-service started: ${error}`);
+						reject(`An error occured during initial checking is Backend-service started: ${error}`);
 					}
 
-					if (turn > 10) {
+					if (turn > numberOfTries) {
 						clearInterval(checkInterval);
 						resolve(false);
 					}
@@ -61,13 +63,19 @@ export class BackendService {
 	}
 
 	public stop() {
-		// TODO: Kill process even if it's started by the prior instance of the Electron application.
-		if (!this.apiServiceChildProcess) {
+		if (this.apiServiceChildProcessId === undefined) {
 			return;
 		}
 
-		this.apiServiceChildProcess.kill();
-		this.apiServiceChildProcess = undefined;
+		try {
+			this.killProcess(this.apiServiceChildProcessId);
+		}
+		catch (error) {
+			this.log.logError(`Can not stop the Backend-service process. ${this.systemErrorDescriber.describeError(error)}`);
+		}
+		finally {
+			this.apiServiceChildProcessId = undefined;
+		}
 	}
 
 	private async getPortNumber(): Promise<number> {
@@ -95,18 +103,47 @@ export class BackendService {
 	}
 
 	private getExecutablePath(): string {
-		switch (this.platform) {
-			case 'win32':
-				return 'publish//EveHQ.NG.WebApi.exe';
-			case 'linux':
-			case 'darwin':
-				return 'publish//EveHQ.NG.WebApi';
-			default:
-				throw Error(`Unsupported platform: ${this.platform}.`);
+		return `publish//${this.getExecutableName()}`;
+	}
+
+	private getExecutableName(): string {
+		let fileName = 'EveHQ.NG.WebApi';
+		if (this.platform === 'win32') {
+			fileName += '.exe';
+		}
+
+		return fileName;
+	}
+
+	private validatePlatform(): void {
+		const supportedPlatforms = ['win32', 'linux', 'darwin'];
+		if (supportedPlatforms.indexOf(this.platform) < 0) {
+			throw new Error(`Unsupported platform: ${this.platform}.`);
 		}
 	}
 
-	private apiServiceChildProcess: childProcess.ChildProcess;
-	private readonly platform: NodeJS.Platform;
+	private async killExcessBackendServices(): Promise<void> {
+		const foundbackendServices: Partial<{ pid: number, ppid: number }>[] = await findProcess('name', this.getExecutableName());
+		if (foundbackendServices.length > 0) {
+			this.log.logWarning(`Found ${foundbackendServices.length} previously started Backend-services. They will be killed.`);
+		}
+
+		foundbackendServices.forEach((backendService: Partial<{ pid: number, ppid: number }>) => this.killProcess(backendService.pid));
+	}
+
+	private killProcess(processId: number): void {
+		this.log.logInformation(`Try to kill the Backend-service process with PID ${processId}.`);
+		try {
+			process.kill(processId);
+		}
+		catch (error) {
+			this.log.logError(`Can not stop the Backend-service process. ${this.systemErrorDescriber.describeError(error)}`);
+		}
+
+		this.log.logInformation(`The Backend-service process with PID ${processId} killed successfully.`);
+	}
+
+	private apiServiceChildProcessId: number | undefined = undefined;
 	private isServiceStartedSubject = new Subject<boolean>();
+	private readonly platform: NodeJS.Platform;
 }

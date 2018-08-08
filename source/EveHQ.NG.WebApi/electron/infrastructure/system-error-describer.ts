@@ -9,6 +9,8 @@ export class SystemErrorDescriber {
 				return 'Operation not permitted.';
 			case ErrorCode.PermissionDenide:
 				return 'Permission denied.';
+			case ErrorCode.ProcessDoesNotExists:
+				return 'The process or process group does not exist.';
 			default:
 				return `Unknown error code: '${errorCode}'.`;
 		}

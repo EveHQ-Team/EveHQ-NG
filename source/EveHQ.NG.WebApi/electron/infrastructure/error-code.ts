@@ -1,5 +1,6 @@
 export enum ErrorCode {
 	OperationNotPermited = 'EPERM',
 	PermissionDenide = 'EACCES',
-	NoSuchFileOrDirectory = 'ENOENT'
+	NoSuchFileOrDirectory = 'ENOENT',
+	ProcessDoesNotExists = 'ESRCH'
 }
