@@ -10,22 +10,10 @@ export class InstallationChecker {
 		private readonly log: LogBase) {}
 
 	public async isApplicationInstalled(): Promise<boolean> {
-		return new Promise<boolean>(async (resolve, reject) => {
-			try {
-				if (!await this.applicationConfigurationHandler.isApplicationConfigurationCreated()) {
-					return resolve(false);
-				}
-
-				const applicationConfiguration = await this.applicationConfigurationHandler.readApplicationConfiguration();
-				resolve(await this.isBackendServiceAvailableOnPort(applicationConfiguration.backendServicePortNumber));
-			}
-			catch (error) {
-				reject(`Can not validate application installation. The error was: '${error}'`);
-			}
-		});
+		return this.applicationConfigurationHandler.isApplicationConfigurationCreated();
 	}
 
-	private async isBackendServiceAvailableOnPort(portNumber: number): Promise<boolean> {
+	public async isBackendServiceAvailableOnPort(portNumber: number): Promise<boolean> {
 		return new Promise<boolean>(async (resolve) => {
 			try {
 				const requestDoneSuccessfully = 200;

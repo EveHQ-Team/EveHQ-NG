@@ -6,12 +6,14 @@ import { IpcResult } from '../ipc-shared/ipc-result';
 import { ApplicationConfigurationHandler } from './application-configuration-handler';
 import { InstallationChecker} from './installation-checker';
 import { SupportsInjection } from 'good-injector';
+import { BackendService } from './backend-service';
 
 @SupportsInjection
 export class InstallationService {
 	constructor(
 		private readonly systemErrorDescriber: SystemErrorDescriber,
 		private readonly installationChecker: InstallationChecker,
+		private readonly backendService: BackendService,
 		private readonly applicationConfigurationHandler: ApplicationConfigurationHandler) {
 		this.registerIsApplicationInstalled();
 		this.registerGetApplicationConfiguration();
@@ -62,6 +64,7 @@ export class InstallationService {
 				let result: IpcResult;
 				try {
 					await this.applicationConfigurationHandler.writeApplicationConfiguration(args);
+					await this.backendService.restart();
 					result = IpcResult.success();
 				}
 				catch (error) {

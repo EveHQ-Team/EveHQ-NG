@@ -1,7 +1,7 @@
 import { app } from 'electron';
 import * as path from 'path';
 import * as os from 'os';
-import { exec } from 'child_process';
+import { spawn } from 'child_process';
 import { Subject, Observable } from 'rxjs';
 import { ApplicationConfigurationHandler } from './application-configuration-handler';
 import { InstallationChecker } from './installation-checker';
@@ -25,14 +25,48 @@ export class BackendService {
 		return this.isServiceStartedSubject.asObservable();
 	}
 
-	public async ensureStarted(isDevelopment: boolean): Promise<boolean> {
+	public isDevelopment: boolean;
+
+	public async start(): Promise<void> {
+		await this.getPortNumber().then(portNumber => {
+				this.ensureStarted(portNumber)
+					? this.log.info(`Backend-service started on port ${portNumber}.`)
+					: this.log.error(`Backend-service can not be started on port ${portNumber}.`);
+			})
+			.catch(error => this.log.error(`Can not start the Backend-service. The error was: ${error}.`));
+	}
+
+	public stop(): void {
+		if (this.apiServiceChildProcessId === undefined) {
+			return;
+		}
+
+		try {
+			this.killProcess(this.apiServiceChildProcessId);
+		}
+		catch (error) {
+			this.log.error(`Can not stop the Backend-service process. ${this.systemErrorDescriber.describeError(error)}`);
+		}
+		finally {
+			this.apiServiceChildProcessId = undefined;
+		}
+	}
+
+	public async restart(): Promise<void> {
+		this.stop();
+		await this.start();
+	}
+
+	private async ensureStarted(portNumber: number): Promise<boolean> {
 		return new Promise<boolean>(async (resolve, reject) => {
 			await this.killExcessBackendServices();
 
-			const command = `${this.buildPathToWebApi(isDevelopment)} ${`--urls=http://localhost:${await this.getPortNumber()}`}`;
+			const command = `${this.buildPathToWebApi(this.isDevelopment)} ${`--urls=http://localhost:${portNumber}`}`;
 			this.log.info('Try to start the Backend-service.');
 			this.log.info(`Backend-service spawn command-line: ${command}`);
-			this.apiServiceChildProcessId = exec(command).pid;
+			this.apiServiceChildProcessId = spawn(
+				`${this.buildPathToWebApi(this.isDevelopment)}`,
+				[`--urls=http://localhost:${portNumber}`]).pid;
 
 			let turn = 1;
 			const numberOfTries = 40;
@@ -40,7 +74,7 @@ export class BackendService {
 			const checkInterval = setInterval(
 				async () => {
 					try {
-						if (await this.installationChecker.isApplicationInstalled()) {
+						if (await this.installationChecker.isBackendServiceAvailableOnPort(portNumber)) {
 							clearInterval(checkInterval);
 							resolve(true);
 						}
@@ -60,22 +94,6 @@ export class BackendService {
 				},
 				timeoutBetweenTurns);
 		});
-	}
-
-	public stop() {
-		if (this.apiServiceChildProcessId === undefined) {
-			return;
-		}
-
-		try {
-			this.killProcess(this.apiServiceChildProcessId);
-		}
-		catch (error) {
-			this.log.error(`Can not stop the Backend-service process. ${this.systemErrorDescriber.describeError(error)}`);
-		}
-		finally {
-			this.apiServiceChildProcessId = undefined;
-		}
 	}
 
 	private async getPortNumber(): Promise<number> {

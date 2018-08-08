@@ -3,31 +3,32 @@ import * as fs from 'fs';
 import { app } from 'electron';
 import { ApplicationConfiguration } from '../ipc-shared/application-configuration';
 import { TcpPort } from './tcp-port';
-import { ErrorCode } from './error-code';
 import { SystemErrorDescriber } from './system-error-describer';
 import { SupportsInjection } from 'good-injector';
+import { LogBase } from './log-base';
 
 @SupportsInjection
 export class ApplicationConfigurationHandler {
 	constructor(
 		private readonly tcpPort: TcpPort,
-		private readonly systemErrorDescriber: SystemErrorDescriber) {
+		private readonly systemErrorDescriber: SystemErrorDescriber,
+		private readonly log: LogBase) {
 		this.userDataFolderPath = app.getPath('userData');
 		this.applicationConfigurationFilePath = path.join(this.userDataFolderPath, 'application-configuration.json');
 	}
 
 	public async isApplicationConfigurationCreated(): Promise<boolean> {
-		return new Promise<boolean>((resolve, reject) => {
-			fs.access(this.applicationConfigurationFilePath,
+		return new Promise<boolean>((resolve) => {
+			fs.access(
+				this.applicationConfigurationFilePath,
 				error => {
-					if (!error || error.code === ErrorCode.NoSuchFileOrDirectory) {
-						resolve(true);
-					}
-					else {
-						reject(
+					if (error) {
+						this.log.error(
 							`An error occured on access to the file '${this.applicationConfigurationFilePath}'. ` +
 							`The error was: ${this.systemErrorDescriber.describeError(error.code)}`);
 					}
+
+					resolve(!error);
 				});
 		});
 	}

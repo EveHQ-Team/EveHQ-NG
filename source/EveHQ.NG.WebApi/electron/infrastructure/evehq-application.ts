@@ -55,6 +55,7 @@ export class EveHqApplication {
 		this.createInstallationService();
 		const applicationConfigurationHandler = this.container.resolve(ApplicationConfigurationHandler);
 		this.backendService = this.container.resolve(BackendService);
+		this.backendService.isDevelopment = this.isDevelopment;
 
 		this.mainWindow = new MainWindow(this.isDevelopment, this.contentFolder, this.log);
 		this.mainWindow.create();
@@ -63,11 +64,8 @@ export class EveHqApplication {
 
 		try {
 			if (await applicationConfigurationHandler.isApplicationConfigurationCreated()) {
-				const applicationConfiguration = await applicationConfigurationHandler.readApplicationConfiguration();
-				const portNumber = applicationConfiguration.backendServicePortNumber;
-				await this.backendService.ensureStarted(this.isDevelopment)
-					? this.log.info(`Backend service started on port: ${portNumber}.`)
-					: this.log.error(`Service can not be started on ${portNumber}.`);
+				this.log.info('#################');
+				await this.backendService.start();
 			}
 		}
 		catch (error) {
