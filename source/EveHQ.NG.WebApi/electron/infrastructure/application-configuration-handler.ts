@@ -6,13 +6,15 @@ import { TcpPort } from './tcp-port';
 import { SystemErrorDescriber } from './system-error-describer';
 import { SupportsInjection } from 'good-injector';
 import { LogBase } from './log-base';
+import { DataFolderManager } from './data-folder-manager';
 
 @SupportsInjection
 export class ApplicationConfigurationHandler {
 	constructor(
 		private readonly tcpPort: TcpPort,
 		private readonly systemErrorDescriber: SystemErrorDescriber,
-		private readonly log: LogBase) {
+		private readonly log: LogBase,
+		private readonly dataFolderManager: DataFolderManager) {
 		this.userDataFolderPath = app.getPath('userData');
 		this.applicationConfigurationFilePath = path.join(this.userDataFolderPath, 'application-configuration.json');
 	}
@@ -59,8 +61,19 @@ export class ApplicationConfigurationHandler {
 	}
 
 	public async writeApplicationConfiguration(applicationaConfiguration: ApplicationConfiguration): Promise<void> {
-		return new Promise<void>((resolve, reject) => {
+		return new Promise<void>(async (resolve, reject) => {
+
+			this.validateAndCoerceApplicationConfiguration(applicationaConfiguration)
+				.catch(error => reject(error));
+
 			const content = JSON.stringify(applicationaConfiguration);
+			const previousDataFolderPath = await this.isApplicationConfigurationCreated()
+												? (await this.readApplicationConfiguration()).dataFolderPath
+												: this.userDataFolderPath;
+
+			this.dataFolderManager.moveDataIfRequired(previousDataFolderPath, applicationaConfiguration.dataFolderPath)
+				.catch(error => reject(error));
+
 			fs.writeFile(this.applicationConfigurationFilePath,
 				content,
 				{ encoding: 'utf8' },
@@ -74,6 +87,28 @@ export class ApplicationConfigurationHandler {
 					}
 				});
 		});
+	}
+
+	private async validateAndCoerceApplicationConfiguration(applicationaConfiguration: ApplicationConfiguration): Promise<void> {
+		const portNumber = applicationaConfiguration.backendServicePortNumber;
+		if (portNumber < TcpPort.minPortNumber || portNumber > TcpPort.maxPortNumber) {
+			return Promise.reject(`The port number ${portNumber} not in valid range.`);
+		}
+
+		if (!(await this.tcpPort.isPortFree(portNumber))) {
+			return Promise.reject(`The port specified is occupied by some other service. Please choose another one.`);
+		}
+
+		applicationaConfiguration.dataFolderPath = applicationaConfiguration.dataFolderPath.trim();
+		fs.exists(
+			applicationaConfiguration.dataFolderPath,
+			doesExist => {
+				if (!doesExist) {
+					return Promise.reject(`Data folder path ${applicationaConfiguration.dataFolderPath} does not exists.`);
+				}
+			});
+
+		return Promise.resolve();
 	}
 
 	private readonly applicationConfigurationFilePath: string;

@@ -64,7 +64,6 @@ export class EveHqApplication {
 
 		try {
 			if (await applicationConfigurationHandler.isApplicationConfigurationCreated()) {
-				this.log.info('#################');
 				await this.backendService.start();
 			}
 		}

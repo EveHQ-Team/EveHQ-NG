@@ -68,7 +68,7 @@ export class InstallationService {
 					result = IpcResult.success();
 				}
 				catch (error) {
-					result = IpcResult.error('Can not write to the application configuration.', error);
+					result = IpcResult.error('Can not change to the application configuration.', error);
 				}
 
 				event.sender.send(InstallationIpc.setApplicationConfiguration, result);

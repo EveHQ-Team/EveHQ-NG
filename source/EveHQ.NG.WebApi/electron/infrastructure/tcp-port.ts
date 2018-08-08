@@ -32,7 +32,7 @@ export class TcpPort {
 	}
 
 	public async isPortFree(portNumber: number, hostAddress: string = TcpPort.localhost): Promise<boolean> {
-		return new Promise<boolean>((resolve, reject) => {
+		return new Promise<boolean>((resolve) => {
 			const server = net.createServer((socket: net.Socket) => socket.write('echo\r\n'));
 			server.listen(portNumber, hostAddress);
 			server.on('error', () => resolve(false));
@@ -48,8 +48,8 @@ export class TcpPort {
 		return Math.round(min - 0.5 + Math.random() * (max - min + 1));
 	}
 
-	private static readonly minPortNumber = 1;
-	private static readonly maxPortNumber = 65535;
+	public static readonly minPortNumber = 1;
+	public static readonly maxPortNumber = 65535;
 	private static readonly dynamicPortNumberRangeStart = 49152;
 	private static readonly dynamicPortNumberRangeEnd = TcpPort.maxPortNumber;
 	private static readonly localhost = '127.0.0.1';

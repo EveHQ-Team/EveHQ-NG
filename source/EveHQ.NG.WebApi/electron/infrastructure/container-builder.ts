@@ -7,6 +7,7 @@ import { InstallationService } from './installation.service';
 import { LogBase } from './log-base';
 import { ConsoleLog } from './console-log';
 import { BackendService } from './backend-service';
+import { DataFolderManager } from './data-folder-manager';
 
 export class ContainerBuilder {
 	constructor() {
@@ -24,5 +25,6 @@ export class ContainerBuilder {
 		this.container.registerSingleton(InstallationService);
 		this.container.registerSingleton(LogBase, ConsoleLog);
 		this.container.registerSingleton(BackendService);
+		this.container.registerSingleton(DataFolderManager);
 	}
 }

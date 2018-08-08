@@ -2,7 +2,7 @@
 
 The application need to know where to store the application configuration and characters related data. The user should choose the location for them: the application data folder. This folder should be created and path to it should be stored in a well-known place the default application data folder because it is the common denominator for all supported operation systems.
 
-Same like the backend service TCP port should be chosen and set because on different machines different ports are free or occupied by other network services. This information shared between frontend and backend service and should be stored in the application data folder.
+Same like the backend service TCP port should be chosen and set because on different machines different ports are free or occupied by other network services.
 
 **TBD: Is there any other configuration information that should be gathered and stored before the application can work as expected?** 
 
@@ -18,12 +18,12 @@ Same like the backend service TCP port should be chosen and set because on diffe
 
 ## Normal scenario
 
-1. SUD tries to open application-configuration.json file placed in the default application data folder.
+1. SUD tries to open ```application-configuration.json``` file placed in the default application data folder.
 2. This file can not be open.
 3. SUD constructs application configuration using path to the default application data folder and a random not occupied port number and puts it into session storage.
 4. SUD opens the Specify application configuration screen. The screen contains a input to enter path to the application data folder, input to enter backend service port number and a button to display default operation system folder selection dialog. Inputs are populated with data from application configuration object from session storage.
 5. The user provides the path to the application data folder using select folder system dialog and backend service port number and commands to save data.
-6. SUD stores provided data into application-configuration.json file placed in the default application data folder.
+6. SUD stores provided data into ```application-configuration.json``` file, placed in the default application data folder.
 7. SUD checks that the path provided isn't exists yet.
 8. The path provided isn't exists yet.
 9. SUD creates the application data folder with the provided path.
@@ -34,7 +34,7 @@ Same like the backend service TCP port should be chosen and set because on diffe
 
 ## Alternative scenarios
 
-### A2.1. The application-configuration.json open. 
+### A2.1. The ```application-configuration.json``` open. 
 
 1. SUD reads its contents and constructs application configuration using data from this file.
 2. The use case continues from the step 4.
@@ -47,7 +47,7 @@ Same like the backend service TCP port should be chosen and set because on diffe
 
 The use case continues from the step 10.
 
-### 7.2. The path provided exists and the folder isn't empty (application-configuration.json file in the default application folder doesn't count).
+### 7.2. The path provided exists and the folder isn't empty (```application-configuration.json``` file in the default application folder doesn't count).
 
 1. SUD checks if the folder contains the application data files.
 2. The folder doesn't contain the application data files.
@@ -73,9 +73,9 @@ The use case continues from the step 10.
 
 ## Exceptional scenarios
 
-### E2.1.1. The  file application-configuration.json format is wrong.
+### E2.1.1. The  file ```application-configuration.json``` format is wrong.
 
-1. SUD removes the file application-configuration.json from disk.
+1. SUD removes the file ```application-configuration.json``` from disk.
 2. The use case continues from the step 3.
 
 ### E2.1.2. The file contents can not be read.
