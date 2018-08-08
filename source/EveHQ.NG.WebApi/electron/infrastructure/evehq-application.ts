@@ -49,8 +49,7 @@ export class EveHqApplication {
 	}
 
 	private async onReady(): Promise<void> {
-		// TODO: Move registration into separate method with a single time guard.
-		const installationService = this.container.resolve(InstallationService);
+		this.createInstallationService();
 		const applicationConfigurationHandler = this.container.resolve(ApplicationConfigurationHandler);
 		this.backendService = this.container.resolve(BackendService);
 
@@ -77,6 +76,14 @@ export class EveHqApplication {
 		}
 
 		this.mainWindow.show();
+	}
+
+	private createInstallationService(): void {
+		if (this.installationService !== undefined) {
+			return;
+		}
+
+		this.installationService = this.container.resolve(InstallationService);
 	}
 
 	private onActivate(): void {
@@ -137,6 +144,7 @@ export class EveHqApplication {
 	private backendService: BackendService;
 	private mainWindow: MainWindow;
 	private serviceBaseUrl = 'http://localhost:55555/api';
+	private installationService: InstallationService;
 	private readonly log: LogBase;
 	private readonly containerBuilder: ContainerBuilder;
 	private readonly contentFolder: string;
