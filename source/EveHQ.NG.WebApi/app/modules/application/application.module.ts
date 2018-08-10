@@ -24,6 +24,7 @@ import { StartupUseCaseEffects } from 'modules/application/use-cases/startup.use
 import { SelectProfileUseCaseEffects } from 'modules/application/use-cases/select-profile.use-case';
 import { installApplicationUseCaseReducers } from 'modules/application/use-cases/install-application.use-case';
 import { InstallApplicationUseCaseEffects } from 'modules/application/use-cases/install-application.use-case';
+import { SsoConfigurationStateEffects } from 'modules/application/stores/sso-configuration.state';
 
 @NgModule({
 	imports: [
@@ -44,7 +45,8 @@ import { InstallApplicationUseCaseEffects } from 'modules/application/use-cases/
 			CreateUserUseCaseEffects,
 			LoginUseCaseEffects,
 			SelectProfileUseCaseEffects,
-			InstallApplicationUseCaseEffects
+			InstallApplicationUseCaseEffects,
+			SsoConfigurationStateEffects
 		]),
 		CommonServicesModule.forRoot(),
 		ApplicationRoutingModule

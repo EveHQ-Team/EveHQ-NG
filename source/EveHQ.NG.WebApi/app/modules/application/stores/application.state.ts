@@ -4,6 +4,7 @@ import { MetaGameProfile } from 'modules/application/models/meta-game-profile';
 import { Character } from 'modules/application/models/character';
 import { Role } from 'modules/application/models/role';
 import { Tool } from 'modules/application/models/tool';
+import { SsoConfigurationState, ssoConfigurationStateReducer } from 'modules/application/stores/sso-configuration.state';
 
 export enum ApplicationStateActionTypes {
 	SetCurrentUser = '[APPLICATION] Set Current User',
@@ -198,10 +199,12 @@ function applicationStateReducer(state = initialState, action: ApplicationStateA
 
 export interface ApplicationStore {
 	application: ApplicationState;
+	ssoConfiguration: SsoConfigurationState;
 }
 
 export const applicationReducers = {
-	application: applicationStateReducer
+	application: applicationStateReducer,
+	ssoConfiguration: ssoConfigurationStateReducer
 };
 
 export function logger(reducer: ActionReducer<ApplicationStore>): ActionReducer<ApplicationStore> {

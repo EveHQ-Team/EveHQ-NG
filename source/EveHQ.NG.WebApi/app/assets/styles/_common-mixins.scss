@@ -1,27 +1,2 @@
 @import "~assets/styles/sizes";
 @import "~assets/styles/typography";
-
-@mixin editor-with-description {
-	section {
-		display: grid;
-		margin-bottom: $grid-step * 4;
-		grid-template-columns: 1fr 1fr;
-		grid-template-areas: "form description";
-		grid-column-gap: $grid-step * 4;
-		grid-row-gap: $grid-step * 2;
-
-		.editor {
-			grid-area: form;
-		}
-
-		.description {
-			grid-area: description;
-
-			@include base-font(m, light);
-
-			p {
-				margin-bottom: $base-line-height-m;
-			}
-		}
-	}
-}

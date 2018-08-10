@@ -1,13 +1,15 @@
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { empty } from 'rxjs/observable/empty';
-import { CustomUrlSchema } from 'modules/application/models/custom-url-schema';
 import { ipcRenderer } from 'electron';
 import { Subject } from 'rxjs';
 import { InstallationIpc } from 'installation-ipc';
 import { ApplicationConfiguration } from 'application-configuration';
 import { IpcResult } from 'ipc-result';
+import { SsoConfiguration} from 'sso-configuration';
 
+@Injectable()
 export class InstallationService {
 	public isApplicationInstalled(): Observable<boolean> {
 		const subject = new Subject<boolean>();
@@ -39,8 +41,9 @@ export class InstallationService {
 		return subject.asObservable();
 	}
 
-	public installCustomUrlSchema(customUrlSchema: CustomUrlSchema): Observable<any> {
-		return empty();
+	public installCustomUrlSchema(ssoConfiguration: SsoConfiguration): Observable<void> {
+		console.warn('####installCustomUrlSchema');
+		return of();
 		//return _throw('TODO: Error message');
 	}
 

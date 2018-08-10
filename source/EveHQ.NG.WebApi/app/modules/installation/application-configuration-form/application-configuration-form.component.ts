@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnInit, OnChanges, OnDestroy, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, OnChanges, OnDestroy, EventEmitter, SimpleChanges } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { ApplicationConfiguration } from 'application-configuration';
 import { takeUntil } from 'rxjs/operators';
@@ -9,7 +9,7 @@ import { Subject } from 'rxjs';
 	templateUrl: './application-configuration-form.component.html',
 	styleUrls: ['./application-configuration-form.component.scss']
 })
-export class ApplicationConfigurationFormComponent implements OnInit, OnChanges, OnDestroy {
+export class ApplicationConfigurationFormComponent implements OnChanges, OnDestroy {
 
 	constructor() {
 		this.buildForm();
@@ -23,7 +23,9 @@ export class ApplicationConfigurationFormComponent implements OnInit, OnChanges,
 
 	public formGroup: FormGroup;
 
-	public ngOnInit(): void {}
+	public dataFolderPathErrors: string = '';
+
+	public backendServicePortNumberErrors: string = '';
 
 	public ngOnChanges(changes: SimpleChanges): void {
 		if (changes['applicationConfiguration'] && changes['applicationConfiguration'].currentValue) {
@@ -80,8 +82,6 @@ export class ApplicationConfigurationFormComponent implements OnInit, OnChanges,
 		}
 	}
 
-	private dataFolderPathErrors: string = '';
-	private backendServicePortNumberErrors: string = '';
 	private dataFolderPathControl: FormControl;
 	private backendServicePortNumberControl: FormControl;
 	private destroyed$ = new Subject<void>();

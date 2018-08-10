@@ -14,7 +14,6 @@ import { ApplicationConfiguration } from 'application-configuration';
 	styleUrls: ['./application-configuration-editor.component.scss']
 })
 export class ApplicationConfigurationEditorComponent implements OnInit {
-
 	constructor(private readonly store: Store<InstallApplicationUseCaseStore>) {}
 
 	public applicationConfiguration$: Observable<ApplicationConfiguration>;
@@ -27,7 +26,6 @@ export class ApplicationConfigurationEditorComponent implements OnInit {
 	}
 
 	public changed(value: { applicationConfiguration: ApplicationConfiguration, isValid: boolean }): void {
-		console.warn('changed editor: ', value);
 		this.isValid = value.isValid;
 		this.applicationConfiguration = value.applicationConfiguration;
 	}

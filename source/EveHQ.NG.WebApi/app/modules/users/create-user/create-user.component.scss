@@ -1,11 +1,8 @@
 @import "~assets/styles/sizes";
 @import "~assets/styles/colors";
 @import "~assets/styles/typography";
-@import "~assets/styles/common-mixins";
 
 :host {
-	@include editor-with-description;
-
 	.create-button {
 		padding: $grid-step;
 	}

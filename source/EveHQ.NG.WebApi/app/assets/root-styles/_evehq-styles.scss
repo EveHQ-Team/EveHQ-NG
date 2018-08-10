@@ -1,5 +1,6 @@
 @import "../styles/sizes.scss";
 @import "../styles/colors.scss";
+@import "../styles/typography.scss";
 
 .ui-card-title {
 	margin-bottom: $grid-step * 4;
@@ -68,4 +69,37 @@
 
 .error-message {
 	color: $error-color;
+}
+
+.description-text {
+	summary {
+		font-size: 20px;
+	}
+
+	ul {
+		list-style: disc;
+	}
+}
+
+section.field-with-description {
+	display: grid;
+	margin-bottom: $grid-step * 4;
+	grid-template-columns: 1fr 1fr;
+	grid-template-areas: "form description";
+	grid-column-gap: $grid-step * 4;
+	grid-row-gap: $grid-step * 2;
+
+	.editor {
+		grid-area: form;
+	}
+
+	.description {
+		grid-area: description;
+
+		@include base-font(m, light);
+
+		p {
+			margin-bottom: $base-line-height-m;
+		}
+	}
 }

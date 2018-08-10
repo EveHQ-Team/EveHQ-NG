@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap, map, mergeMap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
+import { from } from 'rxjs/observable/from';
 import { Action, createFeatureSelector, createSelector } from '@ngrx/store';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { ApplicationConfiguration } from 'application-configuration';
 import { InstallationService } from 'modules/backend/application/installation.service';
-import { CustomUrlSchema } from 'modules/application/models/custom-url-schema';
 import { ApplicationStore } from 'modules/application/stores/application.state';
+import { SsoConfiguration } from 'sso-configuration';
+import {SetSsoConfiguration} from 'modules/application/stores/sso-configuration.state';
 
 export enum InstallApplicationUseCaseActionTypes {
 	InstallApplication = '[INSTALL APPLICATION USE CASE] Install Application',
@@ -76,7 +78,7 @@ export class OpenCustomUrlSchemaScreen implements Action {
 }
 
 export class InstallCustomUrlSchema implements Action {
-	constructor(public readonly payload: { customUrlSchema: CustomUrlSchema }) {}
+	constructor(public readonly ssoConfiguration: SsoConfiguration) {}
 
 	public readonly type: string = InstallApplicationUseCaseActionTypes.InstallCustomUrlSchema;
 }
@@ -267,17 +269,16 @@ export class InstallApplicationUseCaseEffects {
 	@Effect({ dispatch: false })
 	public openCustomUrlSchemaScreen$ = this.actions$.pipe(
 		ofType(InstallApplicationUseCaseActionTypes.OpenCustomUrlSchemaScreen),
-		tap(() => this.router.navigate(['/installation/custom-url-schema'])));
+		tap(() => this.router.navigate(['/installation/sso-configuration'])));
 
 	@Effect()
 	public installCustomUrlSchema$ = this.actions$.pipe(
 		ofType(InstallApplicationUseCaseActionTypes.InstallCustomUrlSchema),
-		map((action: InstallCustomUrlSchema) => action.payload.customUrlSchema),
-		mergeMap(customUrlSchema => this.installationService.installCustomUrlSchema(customUrlSchema).pipe(
-			map(() => new CreateApplicationDatabase()),
+		map((action: InstallCustomUrlSchema) => action.ssoConfiguration),
+		mergeMap(ssoConfiguration => this.installationService.installCustomUrlSchema(ssoConfiguration).pipe(
+			mergeMap(() => from([new SetSsoConfiguration(ssoConfiguration), new CreateApplicationDatabase()])),
 			catchError(error => of(new InstallCustomUrlSchemaError({ error: error })))
-		))
-	);
+		)));
 
 	@Effect()
 	public createApplicationDatabase$ = this.actions$.pipe(
