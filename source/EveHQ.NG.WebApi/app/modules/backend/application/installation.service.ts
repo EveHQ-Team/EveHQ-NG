@@ -41,10 +41,15 @@ export class InstallationService {
 		return subject.asObservable();
 	}
 
-	public installCustomUrlSchema(ssoConfiguration: SsoConfiguration): Observable<void> {
-		console.warn('####installCustomUrlSchema');
-		return of();
-		//return _throw('TODO: Error message');
+	public setSsoConfiguration(ssoConfiguration: SsoConfiguration): Observable<void> {
+		console.warn('####setSsoConfiguration');
+		const subject = new Subject<void>();
+		ipcRenderer.once(
+			InstallationIpc.setSsoConfiguration,
+			(event: any, result: IpcResult) => this.notifySubscribers(subject, result));
+
+		ipcRenderer.send(InstallationIpc.setSsoConfiguration, ssoConfiguration);
+		return subject.asObservable();
 	}
 
 	public createApplicationDatabase(): Observable<any> {

@@ -25,7 +25,7 @@ export class SsoConfigurationFormComponent implements OnChanges, OnDestroy {
 
 	private clientIdErrors: string;
 	private clientSecretErrors: string;
-	private customUrlSchemaErrors: string;
+	private callbackUrlErrors: string;
 
 	public ngOnChanges(changes: SimpleChanges): void {
 		if (changes['ssoConfiguration'] && changes['ssoConfiguration'].currentValue) {
@@ -44,15 +44,13 @@ export class SsoConfigurationFormComponent implements OnChanges, OnDestroy {
 	}
 
 	private buildForm(): void {
-		this.doUseDefualtSsoConfiguration = new FormControl(true);
 		this.clientId = new FormControl('', Validators.required);
 		this.clientSecret = new FormControl('', Validators.required);
-		this.customUrlSchema = new FormControl('', Validators.required);
+		this.callbackUrl = new FormControl('', Validators.required);
 		this.formGroup = new FormGroup({
-			doUseDefualtSsoConfiguration: this.doUseDefualtSsoConfiguration,
 			clientId: this.clientId,
 			clientSecret: this.clientSecret,
-			customUrlSchema: this.customUrlSchema
+			callbackUrl: this.callbackUrl
 		});
 
 		this.formGroup.valueChanges.pipe(takeUntil(this.destroyed$))
@@ -68,11 +66,7 @@ export class SsoConfigurationFormComponent implements OnChanges, OnDestroy {
 	private buildErrorMessages(): void {
 		this.clientIdErrors = '';
 		this.clientSecretErrors = '';
-		this.customUrlSchemaErrors = '';
-
-		if (!this.doUseDefualtSsoConfiguration) {
-			return;
-		}
+		this.callbackUrlErrors = '';
 
 		if (this.clientId.errors) {
 			this.clientIdErrors = this.clientId.errors['required'] ? 'Specify the Client ID.' : '';
@@ -82,16 +76,15 @@ export class SsoConfigurationFormComponent implements OnChanges, OnDestroy {
 			this.clientSecretErrors = this.clientSecret.errors['required'] ? 'Specify the Client secret.' : '';
 		}
 
-		if (this.customUrlSchema.errors) {
-			this.customUrlSchemaErrors = this.customUrlSchema.errors['required'] ? 'Specify the Custom URL-schema.' : '';
+		if (this.callbackUrl.errors) {
+			this.callbackUrlErrors = this.callbackUrl.errors['required'] ? 'Specify the Custom URL-schema.' : '';
 		}
 
 
 	}
 
-	private doUseDefualtSsoConfiguration: FormControl;
 	private clientId: FormControl;
 	private clientSecret: FormControl;
-	private customUrlSchema: FormControl;
+	private callbackUrl: FormControl;
 	private destroyed$ = new Subject<void>();
 }

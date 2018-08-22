@@ -1,14 +1,4 @@
 <form [formGroup]="formGroup">
-	<section>
-		<label>
-			<input type="radio" name="doUseDefualtSsoConfiguration" value="true" formControlName="doUseDefualtSsoConfiguration"/>
-			Use default SSO configuration
-		</label>
-		<label>
-			<input type="radio" name="doUseDefualtSsoConfiguration" value="false" formControlName="doUseDefualtSsoConfiguration"/>
-			Use custom SSO configuration
-		</label>
-	</section>
 	<section class="field-with-description">
 		<div class="field-holder editor">
 			<label class="field-name">Client ID:</label>
@@ -33,12 +23,12 @@
 	</section>
 	<section class="field-with-description">
 		<div class="field-holder">
-			<label class="field-name">Custom URL-schema:</label>
-			<input type="text" pInputText class="field-editor" formControlName="customUrlSchema"/>
-			<p class="field-error">{{customUrlSchemaErrors}}</p>
+			<label class="field-name">Callback URL:</label>
+			<input type="text" pInputText class="field-editor" formControlName="callbackUrl"/>
+			<p class="field-error">{{callbackUrlErrors}}</p>
 		</div>
 		<div class="description">
-			The custom URL-schema used to redirect from your browser to your application after successful authorization on SSO.
+			The callback URL used to redirect from your browser to your application after successful authorization on SSO.
 		</div>
 	</section>
 	<section>

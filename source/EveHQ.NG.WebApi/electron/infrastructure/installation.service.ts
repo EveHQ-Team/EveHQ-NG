@@ -7,6 +7,8 @@ import { ApplicationConfigurationHandler } from './application-configuration-han
 import { InstallationChecker} from './installation-checker';
 import { SupportsInjection } from 'good-injector';
 import { BackendService } from './backend-service';
+import { SsoConfiguration } from '../ipc-shared/sso-configuration';
+import { SsoConfigurationHandler } from './sso-configuration-handler';
 
 @SupportsInjection
 export class InstallationService {
@@ -14,10 +16,13 @@ export class InstallationService {
 		private readonly systemErrorDescriber: SystemErrorDescriber,
 		private readonly installationChecker: InstallationChecker,
 		private readonly backendService: BackendService,
-		private readonly applicationConfigurationHandler: ApplicationConfigurationHandler) {
+		private readonly applicationConfigurationHandler: ApplicationConfigurationHandler,
+		private readonly ssoConfigurationHandler: SsoConfigurationHandler) {
 		this.registerIsApplicationInstalled();
 		this.registerGetApplicationConfiguration();
 		this.registerSetApplicationConfiguration();
+		this.registerGetSsoConfiguration();
+		this.registerSetSsoConfiguration();
 	}
 
 	private registerIsApplicationInstalled(): void {
@@ -72,6 +77,40 @@ export class InstallationService {
 				}
 
 				event.sender.send(InstallationIpc.setApplicationConfiguration, result);
+			}
+		);
+	}
+
+	private registerGetSsoConfiguration(): void {
+		ipcMain.on(
+			InstallationIpc.getSsoConfiguration,
+			async (event: any) => {
+				let result: IpcResult;
+				try {
+					result = IpcResult.success(await this.ssoConfigurationHandler.getSsoConfiguration());
+				}
+				catch (error) {
+					result = IpcResult.error('Cant not get the SSO-configuration from file.', error);
+				}
+
+				event.sender.send(InstallationIpc.getSsoConfiguration, result);
+			});
+	}
+
+	private registerSetSsoConfiguration(): void {
+		ipcMain.on(
+			InstallationIpc.setSsoConfiguration,
+			async (event: any, args: SsoConfiguration) => {
+				let result: IpcResult;
+				try {
+					await this.ssoConfigurationHandler.setSsoConfiguration(args);
+					result = IpcResult.success();
+				}
+				catch (error) {
+					result = IpcResult.error('Can not change the SSO-configuration.', error);
+				}
+
+				event.sender.send(InstallationIpc.setSsoConfiguration, result);
 			}
 		);
 	}

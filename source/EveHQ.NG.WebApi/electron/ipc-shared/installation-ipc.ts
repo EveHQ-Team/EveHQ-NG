@@ -11,6 +11,14 @@ export class InstallationIpc {
 		return this.getChannelFor('setApplicationConfiguration');
 	}
 
+	public static get getSsoConfiguration(): string {
+		return this.getChannelFor('getSsoConfiguration');
+	}
+
+	public static get setSsoConfiguration(): string {
+		return this.getChannelFor('setSsoConfiguration');
+	}
+
 	private static getChannelFor(message: string): string {
 		return `InstallationService.${message}`;
 	}

@@ -258,8 +258,7 @@ export class InstallApplicationUseCaseEffects {
 		mergeMap(applicationConfiguration => this.installationService.setApplicationConfiguration(applicationConfiguration).pipe(
 			map(() => new GetherCustomUrlSchemaData()),
 			catchError(error => of(new SetApplicationConfigurationError({ error: error })))
-		))
-	);
+		)));
 
 	@Effect()
 	public getherCustomUrlSchemaData$ = this.actions$.pipe(
@@ -275,7 +274,7 @@ export class InstallApplicationUseCaseEffects {
 	public installCustomUrlSchema$ = this.actions$.pipe(
 		ofType(InstallApplicationUseCaseActionTypes.InstallCustomUrlSchema),
 		map((action: InstallCustomUrlSchema) => action.ssoConfiguration),
-		mergeMap(ssoConfiguration => this.installationService.installCustomUrlSchema(ssoConfiguration).pipe(
+		mergeMap(ssoConfiguration => this.installationService.setSsoConfiguration(ssoConfiguration).pipe(
 			mergeMap(() => from([new SetSsoConfiguration(ssoConfiguration), new CreateApplicationDatabase()])),
 			catchError(error => of(new InstallCustomUrlSchemaError({ error: error })))
 		)));

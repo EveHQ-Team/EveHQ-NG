@@ -1,6 +1,5 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import { app } from 'electron';
 import { ApplicationConfiguration } from '../ipc-shared/application-configuration';
 import { TcpPort } from './tcp-port';
 import { SystemErrorDescriber } from './system-error-describer';
@@ -15,8 +14,7 @@ export class ApplicationConfigurationHandler {
 		private readonly systemErrorDescriber: SystemErrorDescriber,
 		private readonly log: LogBase,
 		private readonly dataFolderManager: DataFolderManager) {
-		this.userDataFolderPath = app.getPath('userData');
-		this.applicationConfigurationFilePath = path.join(this.userDataFolderPath, 'application-configuration.json');
+		this.applicationConfigurationFilePath = path.join(this.dataFolderManager.defaultDataFolderPath, 'application-configuration.json');
 	}
 
 	public async isApplicationConfigurationCreated(): Promise<boolean> {
@@ -38,7 +36,7 @@ export class ApplicationConfigurationHandler {
 	public async createDefaultApplicationConfiguration(): Promise<ApplicationConfiguration> {
 		const portNumber = await this.tcpPort.getRandomFreePort();
 		return {
-			dataFolderPath: this.userDataFolderPath,
+			dataFolderPath: this.dataFolderManager.defaultDataFolderPath,
 			backendServicePortNumber: portNumber
 		};
 	}
@@ -67,14 +65,16 @@ export class ApplicationConfigurationHandler {
 				.catch(error => reject(error));
 
 			const content = JSON.stringify(applicationaConfiguration);
-			const previousDataFolderPath = await this.isApplicationConfigurationCreated()
-												? (await this.readApplicationConfiguration()).dataFolderPath
-												: this.userDataFolderPath;
+			const oldDataFolderPath = await this.isApplicationConfigurationCreated()
+										? (await this.readApplicationConfiguration()).dataFolderPath
+										: undefined;
 
-			this.dataFolderManager.moveDataIfRequired(previousDataFolderPath, applicationaConfiguration.dataFolderPath)
+			const newDataFolderPath = applicationaConfiguration.dataFolderPath;
+			this.dataFolderManager.initializeDataFolder(newDataFolderPath, oldDataFolderPath)
 				.catch(error => reject(error));
 
-			fs.writeFile(this.applicationConfigurationFilePath,
+			fs.writeFile(
+				this.applicationConfigurationFilePath,
 				content,
 				{ encoding: 'utf8' },
 				error => {
@@ -112,5 +112,4 @@ export class ApplicationConfigurationHandler {
 	}
 
 	private readonly applicationConfigurationFilePath: string;
-	private readonly userDataFolderPath: string;
 }

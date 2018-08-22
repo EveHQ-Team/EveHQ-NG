@@ -42,10 +42,9 @@ export interface SsoConfigurationState {
 
 const initialState: SsoConfigurationState = {
 	ssoConfiguration: {
-		doUseDefault: true,
-		clientId: '',
-		clientSecret: '',
-		collbackUrl: ''
+		clientId: '9158bdcbc32a49e29044be4266b029dd',
+		clientSecret: 'SJb4jaOUHbVm3KSrrPsJKo82cmiYxvoXtlEIgu5R',
+		callbackUrl: 'eveauth-evehq-ng://sso-auth/'
 	},
 	setSsoConfigurationError: ''
 };
