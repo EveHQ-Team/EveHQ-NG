@@ -1,92 +1,47 @@
 import * as path from 'path';
-import * as fs from 'fs';
+import * as fse from 'fs-extra';
+import { EventEmitter } from 'events';
 import { ApplicationConfiguration } from '../ipc-shared/application-configuration';
 import { TcpPort } from './tcp-port';
 import { SystemErrorDescriber } from './system-error-describer';
 import { SupportsInjection } from 'good-injector';
-import { LogBase } from './log-base';
-import { DataFolderManager } from './data-folder-manager';
+import { Folders} from './folders';
 
 @SupportsInjection
-export class ApplicationConfigurationHandler {
+export class ApplicationConfigurationHolder extends EventEmitter {
 	constructor(
 		private readonly tcpPort: TcpPort,
-		private readonly systemErrorDescriber: SystemErrorDescriber,
-		private readonly log: LogBase,
-		private readonly dataFolderManager: DataFolderManager) {
-		this.applicationConfigurationFilePath = path.join(this.dataFolderManager.defaultDataFolderPath, 'application-configuration.json');
+		private readonly systemErrorDescriber: SystemErrorDescriber) {
+		super();
+		this.applicationConfigurationFilePath = path.join(Folders.defaultDataFolderPath, 'application-configuration.json');
+		this.initialize();
 	}
 
-	public async isApplicationConfigurationCreated(): Promise<boolean> {
-		return new Promise<boolean>((resolve) => {
-			fs.access(
-				this.applicationConfigurationFilePath,
-				error => {
-					if (error) {
-						this.log.error(
-							`An error occured on access to the file '${this.applicationConfigurationFilePath}'. ` +
-							`The error was: ${this.systemErrorDescriber.describeError(error.code)}`);
-					}
+	public async getApplicationConfiguration(): Promise<ApplicationConfiguration> {
+		if (this.applicationConfiguration) {
+			return Promise.resolve(this.applicationConfiguration);
+		}
 
-					resolve(!error);
-				});
-		});
+		return fse.readJSON(this.applicationConfigurationFilePath)
+			.then(applicationConfiguration => {
+				this.applicationConfiguration = applicationConfiguration;
+				return applicationConfiguration;
+			})
+			.catch(error => `Can not read from the file '${this.applicationConfigurationFilePath}'. ` +
+				`The error was: ${this.systemErrorDescriber.describeError(error.code)}`);
 	}
 
-	public async createDefaultApplicationConfiguration(): Promise<ApplicationConfiguration> {
-		const portNumber = await this.tcpPort.getRandomFreePort();
-		return {
-			dataFolderPath: this.dataFolderManager.defaultDataFolderPath,
-			backendServicePortNumber: portNumber
-		};
-	}
+	public async setApplicationConfiguration(applicationConfiguration: ApplicationConfiguration): Promise<void> {
+		await this.validateAndCoerceApplicationConfiguration(applicationConfiguration);
 
-	public async readApplicationConfiguration(): Promise<ApplicationConfiguration> {
-		return new Promise<ApplicationConfiguration>((resolve, reject) => {
-			fs.readFile(this.applicationConfigurationFilePath,
-				{ encoding: 'utf8' },
-				(error, content) => {
-					if (!error) {
-						resolve(JSON.parse(content));
-					}
-					else {
-						reject(
-							`Can not read from the file '${this.applicationConfigurationFilePath}'. ` +
-							`The error was: ${this.systemErrorDescriber.describeError(error.code)}`);
-					}
-				});
-		});
-	}
-
-	public async writeApplicationConfiguration(applicationaConfiguration: ApplicationConfiguration): Promise<void> {
-		return new Promise<void>(async (resolve, reject) => {
-
-			this.validateAndCoerceApplicationConfiguration(applicationaConfiguration)
-				.catch(error => reject(error));
-
-			const content = JSON.stringify(applicationaConfiguration);
-			const oldDataFolderPath = await this.isApplicationConfigurationCreated()
-										? (await this.readApplicationConfiguration()).dataFolderPath
-										: undefined;
-
-			const newDataFolderPath = applicationaConfiguration.dataFolderPath;
-			this.dataFolderManager.initializeDataFolder(newDataFolderPath, oldDataFolderPath)
-				.catch(error => reject(error));
-
-			fs.writeFile(
-				this.applicationConfigurationFilePath,
-				content,
-				{ encoding: 'utf8' },
-				error => {
-					if (!error) {
-						resolve();
-					}
-					else {
-						reject(`Can not write to the file '${this.applicationConfigurationFilePath}'. ` +
-							`The error was: ${this.systemErrorDescriber.describeError(error.code)}`);
-					}
-				});
-		});
+		return fse.writeJSON(this.applicationConfigurationFilePath, applicationConfiguration)
+			.then(() => {
+				this.applicationConfiguration = applicationConfiguration;
+				this.emit('changed', applicationConfiguration);
+				return Promise.resolve();
+			})
+			.catch(error => Promise.reject(`Can not write to the file '${this.applicationConfigurationFilePath}'. ` +
+				`The error was: ${this.systemErrorDescriber.describeError(error.code)}`));
 	}
 
 	private async validateAndCoerceApplicationConfiguration(applicationaConfiguration: ApplicationConfiguration): Promise<void> {
@@ -99,17 +54,35 @@ export class ApplicationConfigurationHandler {
 			return Promise.reject(`The port specified is occupied by some other service. Please choose another one.`);
 		}
 
-		applicationaConfiguration.dataFolderPath = applicationaConfiguration.dataFolderPath.trim();
-		fs.exists(
-			applicationaConfiguration.dataFolderPath,
-			doesExist => {
-				if (!doesExist) {
-					return Promise.reject(`Data folder path ${applicationaConfiguration.dataFolderPath} does not exists.`);
-				}
-			});
+		applicationaConfiguration.dataFolderPath = path.normalize(applicationaConfiguration.dataFolderPath);
+		if (!await fse.pathExists(applicationaConfiguration.dataFolderPath)) {
+			return Promise.reject(`Data folder path ${applicationaConfiguration.dataFolderPath} does not exists.`);
+		}
 
 		return Promise.resolve();
 	}
 
+	private initialize(): void {
+		if (fse.pathExistsSync(this.applicationConfigurationFilePath)) {
+			this.applicationConfiguration = fse.readJSONSync(this.applicationConfigurationFilePath);
+			return;
+		}
+
+		this.createDefaultApplicationConfiguration().then(applicationConfiguration => {
+			fse.writeJSONSync(this.applicationConfigurationFilePath, applicationConfiguration);
+			this.applicationConfiguration = fse.readJSONSync(this.applicationConfigurationFilePath);
+		});
+	}
+
+	private async createDefaultApplicationConfiguration(): Promise<ApplicationConfiguration> {
+		const portNumber = await this.tcpPort.getRandomFreePort();
+		return {
+			dataFolderPath: Folders.defaultDataFolderPath,
+			backendServicePortNumber: portNumber,
+			isApplicationInstalled: false
+		};
+	}
+
+	private applicationConfiguration: ApplicationConfiguration;
 	private readonly applicationConfigurationFilePath: string;
 }

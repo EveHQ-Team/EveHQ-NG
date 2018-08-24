@@ -56,15 +56,11 @@ export class MainWindow {
 	}
 
 	public show(): void {
-		// and load the index.html of the app.
 		this.window.loadURL(`file://${this.contentFolder}/index.html`);
-		this.log.info('### after load HTML');
 
-		// Open the DevTools.
 		if (this.isDevelopment) {
 			this.window.webContents.openDevTools();
 		}
-		this.log.info('### after open dev tools');
 
 		this.window.show();
 	}

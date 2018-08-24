@@ -3,10 +3,9 @@ import { InstallationIpc } from '../ipc-shared/installation-ipc';
 import { ApplicationConfiguration } from '../ipc-shared/application-configuration';
 import { SystemErrorDescriber } from './system-error-describer';
 import { IpcResult } from '../ipc-shared/ipc-result';
-import { ApplicationConfigurationHandler } from './application-configuration-handler';
+import { ApplicationConfigurationHolder } from './application-configuration-handler';
 import { InstallationChecker} from './installation-checker';
 import { SupportsInjection } from 'good-injector';
-import { BackendService } from './backend-service';
 import { SsoConfiguration } from '../ipc-shared/sso-configuration';
 import { SsoConfigurationHandler } from './sso-configuration-handler';
 
@@ -15,8 +14,7 @@ export class InstallationService {
 	constructor(
 		private readonly systemErrorDescriber: SystemErrorDescriber,
 		private readonly installationChecker: InstallationChecker,
-		private readonly backendService: BackendService,
-		private readonly applicationConfigurationHandler: ApplicationConfigurationHandler,
+		private readonly applicationConfigurationHolder: ApplicationConfigurationHolder,
 		private readonly ssoConfigurationHandler: SsoConfigurationHandler) {
 		this.registerIsApplicationInstalled();
 		this.registerGetApplicationConfiguration();
@@ -49,10 +47,7 @@ export class InstallationService {
 			async (event: any) => {
 				let result: IpcResult;
 				try {
-					result = IpcResult.success(
-						await this.installationChecker.isApplicationInstalled()
-						? await this.applicationConfigurationHandler.readApplicationConfiguration()
-						: await this.applicationConfigurationHandler.createDefaultApplicationConfiguration());
+					result = IpcResult.success(await this.applicationConfigurationHolder.getApplicationConfiguration());
 				}
 				catch (error) {
 					result = IpcResult.error('Can not read the application configuration file.', error);
@@ -68,8 +63,7 @@ export class InstallationService {
 			async (event: any, args: ApplicationConfiguration) => {
 				let result: IpcResult;
 				try {
-					await this.applicationConfigurationHandler.writeApplicationConfiguration(args);
-					await this.backendService.restart();
+					await this.applicationConfigurationHolder.setApplicationConfiguration(args);
 					result = IpcResult.success();
 				}
 				catch (error) {

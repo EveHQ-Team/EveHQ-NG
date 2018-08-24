@@ -1,24 +1,25 @@
 import { app } from 'electron';
 import * as path from 'path';
 import * as os from 'os';
+import * as findProcess from 'find-process';
 import { spawn } from 'child_process';
 import { Subject, Observable } from 'rxjs';
-import { ApplicationConfigurationHandler } from './application-configuration-handler';
+import { ApplicationConfigurationHolder } from './application-configuration-handler';
 import { InstallationChecker } from './installation-checker';
 import { SystemErrorDescriber } from './system-error-describer';
 import { LogBase } from './log-base';
 import { SupportsInjection } from 'good-injector';
-import * as findProcess from 'find-process';
 
 @SupportsInjection
 export class BackendService {
 	constructor(
-		private readonly applicationConfigurationHandler: ApplicationConfigurationHandler,
+		private readonly applicationConfigurationHolder: ApplicationConfigurationHolder,
 		private readonly installationChecker: InstallationChecker,
 		private readonly systemErrorDescriber: SystemErrorDescriber,
 		private readonly log: LogBase) {
+		this.validatePlatform(os.platform());
 		this.platform = os.platform();
-		this.validatePlatform();
+		this.applicationConfigurationHolder.on('changed', () => this.restart());
 	}
 
 	public get isServiceStartedEvent(): Observable<boolean> {
@@ -28,6 +29,7 @@ export class BackendService {
 	public isDevelopment: boolean;
 
 	public async start(): Promise<void> {
+		this.log.info('Starting Backend-service.');
 		await this.getPortNumber().then(portNumber => {
 				this.ensureStarted(portNumber)
 					? this.log.info(`Backend-service started on port ${portNumber}.`)
@@ -37,12 +39,17 @@ export class BackendService {
 	}
 
 	public stop(): void {
+		this.log.info('Backend-service will be stoped.');
+
 		if (this.apiServiceChildProcessId === undefined) {
+			this.log.info('No Backend-service have been found.');
 			return;
 		}
 
 		try {
+			this.log.info('Started to kill Backend-service process.');
 			this.killProcess(this.apiServiceChildProcessId);
+			this.log.info('Finished to kill Backend-service process.');
 		}
 		catch (error) {
 			this.log.error(`Can not stop the Backend-service process. ${this.systemErrorDescriber.describeError(error)}`);
@@ -53,8 +60,10 @@ export class BackendService {
 	}
 
 	public async restart(): Promise<void> {
+		this.log.info('Going to restart Backend-service.');
 		this.stop();
 		await this.start();
+		this.log.info('Backend-service is restarted.');
 	}
 
 	private async ensureStarted(portNumber: number): Promise<boolean> {
@@ -69,28 +78,33 @@ export class BackendService {
 				[`--urls=http://localhost:${portNumber}`]).pid;
 
 			let turn = 1;
-			const numberOfTries = 40;
-			const timeoutBetweenTurns = 500;
+			const numberOfTries = 10;
+			const timeoutBetweenTurns = 1000;
 			const checkInterval = setInterval(
-				async () => {
-					try {
-						if (await this.installationChecker.isBackendServiceAvailableOnPort(portNumber)) {
-							clearInterval(checkInterval);
-							resolve(true);
-						}
-					}
-					catch (error) {
-						clearInterval(checkInterval);
-						reject(`An error occured during initial checking is Backend-service started: ${error}`);
-					}
+				() => {
+					this.log.info(`Checking is Backend-service alive. Turn ${turn} of ${numberOfTries}.`);
+					this.installationChecker.isBackendServiceAvailableOnPort(portNumber)
+						.then(isAlive => {
+							if (isAlive) {
+								this.log.info('Backend-service is alive.');
+								clearInterval(checkInterval);
+								resolve(true);
+							}
 
-					if (turn > numberOfTries) {
-						clearInterval(checkInterval);
-						resolve(false);
-					}
-					else {
-						turn++;
-					}
+							if (turn > numberOfTries) {
+								this.log.info('Number of tries exceeded.');
+								clearInterval(checkInterval);
+								resolve(false);
+							}
+							else {
+								this.log.info('Going to wait before the next try.');
+								turn++;
+							}
+						})
+						.catch(error => {
+							clearInterval(checkInterval);
+							reject(`An error occured during initial checking is Backend-service started: ${error}`);
+						});
 				},
 				timeoutBetweenTurns);
 		});
@@ -98,7 +112,7 @@ export class BackendService {
 
 	private async getPortNumber(): Promise<number> {
 		return new Promise<number>(async (resolve, reject) => {
-			this.applicationConfigurationHandler.readApplicationConfiguration()
+			this.applicationConfigurationHolder.getApplicationConfiguration()
 				.then(applicationConfiguration => resolve(applicationConfiguration.backendServicePortNumber))
 				.catch(error => reject(error));
 		});
@@ -133,10 +147,10 @@ export class BackendService {
 		return fileName;
 	}
 
-	private validatePlatform(): void {
+	private validatePlatform(platform: string): void {
 		const supportedPlatforms = ['win32', 'linux', 'darwin'];
-		if (supportedPlatforms.indexOf(this.platform) < 0) {
-			throw new Error(`Unsupported platform: ${this.platform}.`);
+		if (supportedPlatforms.indexOf(platform) < 0) {
+			throw new Error(`Unsupported platform: ${platform}.`);
 		}
 	}
 

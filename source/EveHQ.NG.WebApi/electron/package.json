@@ -23,16 +23,17 @@
   "main": "main.js",
   "private": true,
   "dependencies": {
-    "@types/fs-extra": "^5.0.4",
+    "@types/fs-extra": "5.0.4",
+    "@types/node": "10.9.1",
     "axios": "0.18.0",
     "devtron": "1.4.0",
     "electron-reload": "1.2.2",
     "electron-unhandled": "1.0.0",
     "find-process": "1.1.0",
-    "fs-extra": "^7.0.0",
+    "fs-extra": "7.0.0",
     "rxjs": "5.5.6"
   },
   "devDependencies": {
-    "good-injector": "^0.2.0"
+    "good-injector": "0.2.0"
   }
 }

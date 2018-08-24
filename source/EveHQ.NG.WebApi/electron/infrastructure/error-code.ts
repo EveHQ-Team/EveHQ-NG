@@ -2,5 +2,6 @@ export enum ErrorCode {
 	OperationNotPermited = 'EPERM',
 	PermissionDenide = 'EACCES',
 	NoSuchFileOrDirectory = 'ENOENT',
-	ProcessDoesNotExists = 'ESRCH'
+	ProcessDoesNotExists = 'ESRCH',
+	ConnectionRefused = 'ECONNREFUSED'
 }

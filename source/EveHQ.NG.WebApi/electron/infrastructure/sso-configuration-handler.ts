@@ -4,45 +4,39 @@ import * as fse from 'fs-extra';
 import { SupportsInjection } from 'good-injector';
 import { LogBase } from './log-base';
 import { SsoConfiguration } from '../ipc-shared/sso-configuration';
-import { ApplicationConfigurationHandler } from './application-configuration-handler';
 import { SystemErrorDescriber } from './system-error-describer';
 import { ErrorCode } from './error-code';
+import { DataFolderManager } from './data-folder-manager';
 
 @SupportsInjection
 export class SsoConfigurationHandler {
 	constructor(
-		private readonly applicationConfigurationHandler: ApplicationConfigurationHandler,
+		private readonly dataFolderManager: DataFolderManager,
 		private readonly systemErrorDescriber: SystemErrorDescriber,
 		private readonly log: LogBase) {}
 
 	public async getSsoConfiguration(): Promise<SsoConfiguration> {
 		try {
-			this.log.error('################1');
-			const ssoConfiguration = await this.readSsoConfiguration();
-			return Promise.resolve(ssoConfiguration);
+			return Promise.resolve(await this.readSsoConfiguration());
 		}
 		catch (error) {
-			this.log.error('################2');
 			this.log.exception(error);
-			if (error.code === ErrorCode.NoSuchFileOrDirectory) {
-				this.log.error('################3');
-				this.log.info('The SSO configuration file is not found. Create a new one with the default content.');
-				const ssoConfiguration = { clientId: '', clientSecret: '', callbackUrl: '' };
-				await this.writeSsoConfiguration(ssoConfiguration)
-					.catch(async error => {
-						this.log.error(
-							`Can not write to the file '${await this.getSsoConfigurationFilePath()}' ` +
-							'during creating of the default SSO-configuration file. ' +
-							`The error was: ${this.systemErrorDescriber.describeError(error.code)}`);
-						throw new Error(error);
-					});
-
-				this.log.error('################4');
-				return Promise.resolve(ssoConfiguration);
+			if (error.code !== ErrorCode.NoSuchFileOrDirectory) {
+				throw new Error(error);
 			}
 
-			this.log.error('################5');
-			throw new Error(error);
+			this.log.info('The SSO configuration file is not found. Create a new one with the default content.');
+			const ssoConfiguration = { clientId: '', clientSecret: '', callbackUrl: '' };
+			await this.writeSsoConfiguration(ssoConfiguration)
+				.catch(async error => {
+					this.log.error(
+						`Can not write to the file '${this.configurationFilePath}' ` +
+						'during creating of the default SSO-configuration file. ' +
+						`The error was: ${this.systemErrorDescriber.describeError(error.code)}`);
+					throw new Error(error);
+				});
+
+			return Promise.resolve(ssoConfiguration);
 		}
 	}
 
@@ -55,14 +49,14 @@ export class SsoConfigurationHandler {
 		await this.writeSsoConfiguration(ssoConfiguration)
 			.catch(async error => {
 				this.log.error(
-					`Can not write to the file '${await this.getSsoConfigurationFilePath()}' ` +
+					`Can not write to the file '${this.configurationFilePath}' ` +
 					'during creating of the default SSO-configuration file. ' +
 					`The error was: ${this.systemErrorDescriber.describeError(error.code)}`);
 				throw new Error(error);
 			});
 
 		if (oldCustomSchema.localeCompare(newCustomSchema, undefined, { sensitivity: 'accent' }) !== 0) {
-			// TODO: Extract into platform-specific class. On Linux it done other way.
+			// TODO: Extract into a platform-specific class. On Linux it done other way.
 			app.removeAsDefaultProtocolClient(oldCustomSchema);
 			app.setAsDefaultProtocolClient(newCustomSchema);
 		}
@@ -71,20 +65,19 @@ export class SsoConfigurationHandler {
 	}
 
 	private async readSsoConfiguration(): Promise<SsoConfiguration> {
-		return fse.readFile(await this.getSsoConfigurationFilePath(), 'utf8').then(content => JSON.parse(content));
+		return fse.readJSON(this.configurationFilePath);
 	}
 
 	private async writeSsoConfiguration(ssoConfiguration: SsoConfiguration): Promise<void> {
-		return fse.writeFile(await this.getSsoConfigurationFilePath(), JSON.stringify(ssoConfiguration));
+		return fse.writeJSON(this.configurationFilePath, ssoConfiguration);
 	}
 
 	private extractSchemaFromUrl(url: string): string {
 		return url.substr(0, url.indexOf(this.schemaSeparator));
 	}
 
-	private async getSsoConfigurationFilePath(): Promise<string> {
-		const applicationConfiguration = await this.applicationConfigurationHandler.readApplicationConfiguration();
-		return path.join(applicationConfiguration.dataFolderPath, 'sso-configuration.json');
+	private get configurationFilePath(): string {
+		return path.join(this.dataFolderManager.configurationFolderPath, 'sso-configuration.json');
 	}
 
 	private async validateSsoConfiguration(ssoConfiguration: SsoConfiguration): Promise<void> {

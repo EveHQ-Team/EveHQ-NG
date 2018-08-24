@@ -7,7 +7,7 @@ import { InstallationService } from './installation.service';
 import { SplashWindow } from './splash-window';
 import { LogBase } from './log-base';
 import { MainWindow } from './main-window';
-import { ApplicationConfigurationHandler } from './application-configuration-handler';
+import { ApplicationConfigurationHolder } from './application-configuration-handler';
 
 export class EveHqApplication {
 	constructor(private readonly isDevelopment: boolean) {
@@ -53,7 +53,7 @@ export class EveHqApplication {
 
 	private async onReady(): Promise<void> {
 		this.createInstallationService();
-		const applicationConfigurationHandler = this.container.resolve(ApplicationConfigurationHandler);
+		const applicationConfigurationHolder = this.container.resolve(ApplicationConfigurationHolder);
 		this.backendService = this.container.resolve(BackendService);
 		this.backendService.isDevelopment = this.isDevelopment;
 
@@ -63,7 +63,7 @@ export class EveHqApplication {
 		splashWindow.open();
 
 		try {
-			if (await applicationConfigurationHandler.isApplicationConfigurationCreated()) {
+			if ((await applicationConfigurationHolder.getApplicationConfiguration()).isApplicationInstalled) {
 				await this.backendService.start();
 			}
 		}

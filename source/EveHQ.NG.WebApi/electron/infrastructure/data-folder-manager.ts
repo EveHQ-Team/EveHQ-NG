@@ -1,59 +1,68 @@
 import * as path from 'path';
 import * as fse from 'fs-extra';
-import { app } from 'electron';
 import { SupportsInjection } from 'good-injector';
+import { ApplicationConfigurationHolder } from './application-configuration-handler';
+import { Folders } from './folders';
+import {ApplicationConfiguration} from '../ipc-shared/application-configuration';
 
 @SupportsInjection
 export class DataFolderManager {
-	constructor() {
-		this.defaultDataFolderPath = app.getPath('userData');
-		this.requiredFolderNames = [
-			this.applicationConfigurationFolderName,
-			this.databasesFolderName
-		];
+	constructor(private readonly applicationConfigurationHolder: ApplicationConfigurationHolder) {
+		applicationConfigurationHolder.getApplicationConfiguration()
+			.then(applicationConfiguration => this.dataFolderPath = applicationConfiguration.dataFolderPath);
+		applicationConfigurationHolder.on(
+			'changed',
+			(applicationConfiguration: ApplicationConfiguration) => this.handleConfigurationChange(applicationConfiguration));
 	}
 
-	public readonly defaultDataFolderPath;
+	public get configurationFolderPath(): string {
+		return path.join(this.dataFolderPath, Folders.configurationFolderName);
+	}
 
-	public async initializeDataFolder(newPath: string, oldPath: string | undefined): Promise<void> {
-		const normalizedNewPath = await this.validateAndNormalizePath(newPath);
-		const normalizedOldPath = oldPath !== undefined ? await this.validateAndNormalizePath(oldPath) : oldPath;
+	public async handleConfigurationChange(applicationConfiguration: ApplicationConfiguration): Promise<void> {
+		const newPath = await this.validateAndNormalizePath(applicationConfiguration.dataFolderPath);
+		if (!applicationConfiguration.isApplicationInstalled) {
+			return this.initializeDataFolder(newPath);
+		}
 
-		const isDataFolderPathChanged = normalizedOldPath && normalizedOldPath.localeCompare(normalizedNewPath) === 0;
+		const isDataFolderPathChanged = this.dataFolderPath.localeCompare(newPath) !== 0;
 		if (!isDataFolderPathChanged) {
 			return Promise.resolve();
 		}
 
-		const doesOldDataFolderInitialized = normalizedOldPath && await this.doesDataFolderInitialized(normalizedOldPath);
-		const doesNewDataFolderInitialized = await this.doesDataFolderInitialized(normalizedNewPath);
-		if (!doesOldDataFolderInitialized && !doesNewDataFolderInitialized) {
-			return this.initializeJustAfterInstall(normalizedNewPath);
-		}
+		const doesOldDataFolderInitialized = await this.doesDataFolderInitialized(this.dataFolderPath);
+		const doesNewDataFolderInitialized = await this.doesDataFolderInitialized(newPath);
 
 		if (doesOldDataFolderInitialized && !doesNewDataFolderInitialized) {
-			// TODO: Move data to the new location.
+			return this.moveDataFolderToNewLocation(newPath);
+		}
+
+		if (!doesOldDataFolderInitialized && doesNewDataFolderInitialized) {
+			this.dataFolderPath = newPath;
 			return Promise.resolve();
 		}
 
 		if (doesOldDataFolderInitialized && doesNewDataFolderInitialized) {
-			// TODO: Both initialized. What to do? TBD.
-			return Promise.resolve();
+			return Promise.reject('TODO: Both initialized. What to do? Merge? Throw? TBD.');
 		}
 
-		// TODO: Just use new data folder.
-		return Promise.resolve();
+		return this.initializeDataFolder(newPath);
 	}
 
-	private async initializeJustAfterInstall(dataFolderPath: string): Promise<void> {
+	private async initializeDataFolder(dataFolderPath: string): Promise<void> {
+		this.dataFolderPath = dataFolderPath;
 		return this.createRequiredFolders(dataFolderPath);
 	}
 
+	private async moveDataFolderToNewLocation(newPath: string): Promise<void> {
+		this.dataFolderPath = newPath;
+		return Promise.reject('TODO: Move data to the new location.');
+	}
+
 	private async createRequiredFolders(dataFolderPath: string): Promise<void> {
-		return new Promise<void>((resolve, reject) => {
-			Promise.all(this.requiredFolderNames.map(folderName => fse.ensureDir(path.join(dataFolderPath, folderName))))
-				.then(() => resolve())
-				.catch(error => reject(error));
-		});
+		return Promise.all(this.requiredFolderNames.map(folderName => fse.ensureDir(path.join(dataFolderPath, folderName))))
+			.then(() => Promise.resolve())
+			.catch(error => Promise.reject(error));
 	}
 
 	private async doesDataFolderInitialized(dataFolderPath: string): Promise<boolean> {
@@ -74,7 +83,9 @@ export class DataFolderManager {
 		return Promise.resolve(normalizedPath);
 	}
 
-	private readonly applicationConfigurationFolderName = 'configuration';
-	private readonly databasesFolderName = 'databases';
-	private readonly requiredFolderNames: string[];
+	private dataFolderPath: string;
+	private readonly requiredFolderNames = [
+		Folders.configurationFolderName,
+		Folders.databasesFolderName
+	];
 }

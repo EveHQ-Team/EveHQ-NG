@@ -42,7 +42,6 @@ export class InstallationService {
 	}
 
 	public setSsoConfiguration(ssoConfiguration: SsoConfiguration): Observable<void> {
-		console.warn('####setSsoConfiguration');
 		const subject = new Subject<void>();
 		ipcRenderer.once(
 			InstallationIpc.setSsoConfiguration,
@@ -63,7 +62,6 @@ export class InstallationService {
 	}
 
 	private notifySubscribers<TResult>(subject: Subject<TResult>, result: IpcResult): void {
-		console.warn('notifySubscribers: ', result);
 		if (result.isSuccessful) {
 			subject.next(result.result);
 			subject.complete();
