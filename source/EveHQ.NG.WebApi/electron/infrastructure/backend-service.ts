@@ -4,17 +4,19 @@ import * as os from 'os';
 import * as findProcess from 'find-process';
 import { spawn } from 'child_process';
 import { Subject, Observable } from 'rxjs';
-import { ApplicationConfigurationHolder } from './application-configuration-handler';
 import { InstallationChecker } from './installation-checker';
 import { SystemErrorDescriber } from './system-error-describer';
 import { LogBase } from './log-base';
 import { SupportsInjection } from 'good-injector';
+import { ApplicationConfigurationHolder } from './application-configuration-holder';
+import { IsAliveService } from '../backend/is-alive.service';
 
 @SupportsInjection
 export class BackendService {
 	constructor(
 		private readonly applicationConfigurationHolder: ApplicationConfigurationHolder,
 		private readonly installationChecker: InstallationChecker,
+		private readonly isAliveService: IsAliveService,
 		private readonly systemErrorDescriber: SystemErrorDescriber,
 		private readonly log: LogBase) {
 		this.validatePlatform(os.platform());
@@ -83,7 +85,7 @@ export class BackendService {
 			const checkInterval = setInterval(
 				() => {
 					this.log.info(`Checking is Backend-service alive. Turn ${turn} of ${numberOfTries}.`);
-					this.installationChecker.isBackendServiceAvailableOnPort(portNumber)
+					this.isAliveService.isBackendServiceAlive()
 						.then(isAlive => {
 							if (isAlive) {
 								this.log.info('Backend-service is alive.');

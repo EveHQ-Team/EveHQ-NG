@@ -6,10 +6,12 @@ import { from } from 'rxjs/observable/from';
 import { Action, createFeatureSelector, createSelector } from '@ngrx/store';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { ApplicationConfiguration } from 'application-configuration';
-import { InstallationService } from 'modules/backend/application/installation.service';
 import { ApplicationStore } from 'modules/application/stores/application.state';
 import { SsoConfiguration } from 'sso-configuration';
-import {SetSsoConfiguration} from 'modules/application/stores/sso-configuration.state';
+import { SetSsoConfiguration } from 'modules/application/stores/sso-configuration.state';
+import { DatabasesService } from 'modules/common/services/databases.service';
+import { ApplicationConfigurationService } from 'modules/backend/application/application-configuration.service';
+import {SsoConfigurationService} from 'modules/backend/application/sso-configuration.service';
 
 export enum InstallApplicationUseCaseActionTypes {
 	InstallApplication = '[INSTALL APPLICATION USE CASE] Install Application',
@@ -221,7 +223,9 @@ export class InstallApplicationUseCaseEffects {
 	constructor(
 		private readonly actions$: Actions,
 		private readonly router: Router,
-		private readonly installationService: InstallationService) {}
+		private readonly applicationConfigurationService: ApplicationConfigurationService,
+		private readonly ssoConfigurationService: SsoConfigurationService,
+		private readonly databasesService: DatabasesService) {}
 
 	@Effect()
 	public installApplication$ = this.actions$.pipe(
@@ -231,7 +235,7 @@ export class InstallApplicationUseCaseEffects {
 	@Effect()
 	public getApplicationConfiguration$ = this.actions$.pipe(
 		ofType(InstallApplicationUseCaseActionTypes.GetApplicationConfiguration),
-		mergeMap(() => this.installationService.getApplicationConfiguration().pipe(
+		mergeMap(() => this.applicationConfigurationService.getApplicationConfiguration().pipe(
 			map((applicationConfiguration: ApplicationConfiguration) =>
 				new GetApplicationConfigurationSuccessful({ applicationConfiguration: applicationConfiguration }))
 		)));
@@ -255,10 +259,10 @@ export class InstallApplicationUseCaseEffects {
 	public setApplicationConfiguration$ = this.actions$.pipe(
 		ofType(InstallApplicationUseCaseActionTypes.SetApplicationConfiguration),
 		map((action: SetApplicationConfiguration) => action.payload.applicationConfiguration),
-		mergeMap(applicationConfiguration => this.installationService.setApplicationConfiguration(applicationConfiguration).pipe(
-			map(() => new GetherCustomUrlSchemaData()),
-			catchError(error => of(new SetApplicationConfigurationError({ error: error })))
-		)));
+		mergeMap(applicationConfiguration => this.applicationConfigurationService.setApplicationConfiguration(applicationConfiguration)
+			.pipe(map(() => new GetherCustomUrlSchemaData()),
+				catchError(error => of(new SetApplicationConfigurationError({ error: error })))
+			)));
 
 	@Effect()
 	public getherCustomUrlSchemaData$ = this.actions$.pipe(
@@ -274,7 +278,7 @@ export class InstallApplicationUseCaseEffects {
 	public installCustomUrlSchema$ = this.actions$.pipe(
 		ofType(InstallApplicationUseCaseActionTypes.InstallCustomUrlSchema),
 		map((action: InstallCustomUrlSchema) => action.ssoConfiguration),
-		mergeMap(ssoConfiguration => this.installationService.setSsoConfiguration(ssoConfiguration).pipe(
+			mergeMap(ssoConfiguration => this.ssoConfigurationService.setSsoConfiguration(ssoConfiguration).pipe(
 			mergeMap(() => from([new SetSsoConfiguration(ssoConfiguration), new CreateApplicationDatabase()])),
 			catchError(error => of(new InstallCustomUrlSchemaError({ error: error })))
 		)));
@@ -282,12 +286,13 @@ export class InstallApplicationUseCaseEffects {
 	@Effect()
 	public createApplicationDatabase$ = this.actions$.pipe(
 		ofType(InstallApplicationUseCaseActionTypes.CreateApplicationDatabase),
-		mergeMap(() => this.installationService.createApplicationDatabase().pipe(
+		mergeMap(() => this.databasesService.createDatabases().pipe(
 			map(() => new DownloadSde()),
 			catchError(error => of(new CreateApplicationDatabaseError({ error: error })))
 		))
 	);
 
+/*
 	@Effect()
 	public downloadSde$ = this.actions$.pipe(
 		ofType(InstallApplicationUseCaseActionTypes.DownloadSde),
@@ -301,4 +306,5 @@ export class InstallApplicationUseCaseEffects {
 	public openDownloadSdeScreen$ = this.actions$.pipe(
 		ofType(InstallApplicationUseCaseActionTypes.OpenDownloadSdeScreen),
 		tap(() => this.router.navigate(['/installation/download-sde'])));
+*/
 }

@@ -8,6 +8,7 @@ using EveHQ.NG.Infrastructure.Options;
 using EveHQ.NG.Infrastructure.Settings;
 using EveHQ.NG.Infrastructure.UiNotification;
 using EveHQ.NG.WebApi.Infrastructure;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,19 +20,18 @@ using Newtonsoft.Json.Serialization;
 
 namespace EveHQ.NG.WebApi
 {
-	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Constructed by ASP.NET Core.")]
-	public class Startup
+	[UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+	public sealed class Startup
 	{
 		public Startup(IConfiguration configuration)
 		{
 			Configuration = configuration;
 		}
 
-		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Used by ASP.NET Core.")]
-		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+		[UsedImplicitly(ImplicitUseKindFlags.Access)]
 		public IConfiguration Configuration { get; }
 
-		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Called by ASP.NET Core")]
+		[UsedImplicitly(ImplicitUseKindFlags.Access)]
 		public IServiceProvider ConfigureServices(IServiceCollection services)
 		{
 			// Add framework services.
@@ -45,15 +45,15 @@ namespace EveHQ.NG.WebApi
 
 			services.AddSignalR();
 
-			services.ConfigureWritable<ApplicationSettings>(
+			services.ConfigureWritable<ApplicationConfiguration>(
 				Configuration.GetSection(nameof(FolderSettings)),
-				$"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/EveHQ NG/Settings/ApplicationSettings.json");
+				$"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/EveHQ NG/application-configuration.json");
 
 			_applicationContainer = new IocContainerBootstrapper().BuildContainer(services);
 			return new AutofacServiceProvider(_applicationContainer);
 		}
 
-		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Called by ASP.NET Core.")]
+		[UsedImplicitly(ImplicitUseKindFlags.Access)]
 		public void Configure(
 			IApplicationBuilder applicationBuilder,
 			IHostingEnvironment hostingEnvironment,

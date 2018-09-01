@@ -27,8 +27,8 @@ import {
 	SetCurrentProfile
 	} from 'modules/application/stores/application.state';
 import { tag } from 'rxjs-spy/operators/tag';
-import { InstallationService } from 'modules/backend/application/installation.service';
 import { InstallApplication } from 'modules/application/use-cases/install-application.use-case';
+import {ApplicationConfigurationService} from 'modules/backend/application/application-configuration.service';
 
 export enum StartupUseCaseActionTypes {
 	StartApplication = '[STARTUP USE CASE] Start Application',
@@ -58,15 +58,15 @@ export class StartupUseCaseEffects {
 	constructor(
 		private readonly actions$: Actions,
 		private readonly store: Store<ApplicationStore>,
-		private readonly installationService: InstallationService,
+		private readonly applicationConfigurationService: ApplicationConfigurationService,
 		private readonly userService: UserService,
 		private readonly router: Router) {}
 
 	@Effect()
 	public startApplication$ = this.actions$.pipe(
 		ofType(StartupUseCaseActionTypes.StartApplication),
-		mergeMap(() => this.installationService.isApplicationInstalled().pipe(
-			mergeMap(isApplicationInstalled => isApplicationInstalled
+		mergeMap(() => this.applicationConfigurationService.getApplicationConfiguration().pipe(
+			mergeMap(applicationConfiguration => applicationConfiguration.isApplicationInstalled
 												? of(new InitializeApplication())
 												: of(new InstallApplication())))));
 

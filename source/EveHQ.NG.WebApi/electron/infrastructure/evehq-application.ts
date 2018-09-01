@@ -3,11 +3,11 @@ import { app, net } from 'electron';
 import { ContainerBuilder } from './container-builder';
 import { Container } from 'good-injector';
 import { BackendService } from './backend-service';
-import { InstallationService } from './installation.service';
 import { SplashWindow } from './splash-window';
 import { LogBase } from './log-base';
 import { MainWindow } from './main-window';
-import { ApplicationConfigurationHolder } from './application-configuration-handler';
+import { ApplicationConfigurationHolder } from './application-configuration-holder';
+import { IpcServiceCollection } from '../remote/ipc-service-collection';
 
 export class EveHqApplication {
 	constructor(private readonly isDevelopment: boolean) {
@@ -52,7 +52,7 @@ export class EveHqApplication {
 	}
 
 	private async onReady(): Promise<void> {
-		this.createInstallationService();
+		this.registerIpcHandlers();
 		const applicationConfigurationHolder = this.container.resolve(ApplicationConfigurationHolder);
 		this.backendService = this.container.resolve(BackendService);
 		this.backendService.isDevelopment = this.isDevelopment;
@@ -78,12 +78,11 @@ export class EveHqApplication {
 		this.mainWindow.show();
 	}
 
-	private createInstallationService(): void {
-		if (this.installationService !== undefined) {
-			return;
+	private registerIpcHandlers(): void {
+		if (this.ipcServiceCollection === undefined) {
+			this.ipcServiceCollection = this.container.resolve(IpcServiceCollection);
+			this.ipcServiceCollection.registerIpcServices();
 		}
-
-		this.installationService = this.container.resolve(InstallationService);
 	}
 
 	private onActivate(): void {
@@ -144,7 +143,7 @@ export class EveHqApplication {
 	private backendService: BackendService;
 	private mainWindow: MainWindow;
 	private serviceBaseUrl = 'http://localhost:55555/api';
-	private installationService: InstallationService;
+	private ipcServiceCollection: IpcServiceCollection;
 	private readonly log: LogBase;
 	private readonly containerBuilder: ContainerBuilder;
 	private readonly contentFolder: string;

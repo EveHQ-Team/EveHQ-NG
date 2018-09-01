@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class ApiEndpointsService {
-
+	constructor() {
+		
+	}
 	public get authenticationNotification() {
 		return `${this.baseUri}/authentication-notification`;
 	}

@@ -1,9 +1,9 @@
 import * as path from 'path';
 import * as fse from 'fs-extra';
 import { SupportsInjection } from 'good-injector';
-import { ApplicationConfigurationHolder } from './application-configuration-handler';
+import { ApplicationConfigurationHolder } from './application-configuration-holder';
 import { Folders } from './folders';
-import {ApplicationConfiguration} from '../ipc-shared/application-configuration';
+import { ApplicationConfiguration } from '../ipc-shared/application-configuration';
 
 @SupportsInjection
 export class DataFolderManager {

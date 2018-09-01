@@ -7,9 +7,9 @@
 #region Usings
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using EveHQ.NG.Domain.Core;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -19,7 +19,7 @@ using Newtonsoft.Json;
 
 namespace EveHQ.NG.Infrastructure.UiNotification
 {
-	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Constructed by ASP.NET Core.")]
+	[UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature)]
 	public sealed class AuthenticationNotificationHub : Hub, IAuthenticationNotificationService
 	{
 		public AuthenticationNotificationHub(ILogger<AuthenticationNotificationHub> logger)

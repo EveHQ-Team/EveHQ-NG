@@ -7,14 +7,14 @@
 #region Usings
 
 using System;
-using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
 #endregion
 
 
 namespace EveHQ.NG.Domain.Core
 {
-	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "DTO")]
+	[UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 	public sealed class CharacterInfo
 	{
 		public uint Id { get; set; }

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ApplicationConfigurationHolder } from './application-configuration-handler';
+import { ApplicationConfigurationHolder } from './application-configuration-holder';
 import { SupportsInjection } from 'good-injector';
 import { LogBase } from './log-base';
 import { SystemErrorDescriber } from './system-error-describer';
@@ -16,15 +16,4 @@ export class InstallationChecker {
 			.then(applicationConfiguration => applicationConfiguration.isApplicationInstalled);
 	}
 
-	public async isBackendServiceAvailableOnPort(portNumber: number): Promise<boolean> {
-		const requestDoneSuccessfully = 200;
-		return axios.get(`http://localhost:${portNumber}/api/isalive`)
-			.then(response => response.status === requestDoneSuccessfully)
-			.catch(error => {
-					this.log.error(
-						`An error occured on try to check is Backend-service alive: ${this.systemErrorDescriber.describeError(error.code)}.`);
-					return false;
-				}
-			);
-	}
 }

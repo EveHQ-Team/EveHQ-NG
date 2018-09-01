@@ -7,9 +7,9 @@
 #region Usings
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using EveHQ.NG.Infrastructure.Settings;
+using JetBrains.Annotations;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;
 
@@ -18,12 +18,12 @@ using Microsoft.Extensions.Options;
 
 namespace EveHQ.NG.WebServices.Ccp.Characters
 {
-	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Constructed by IoC-container.")]
+	[UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature)]
 	public sealed class DatabaseTypesCatalog : ITypesCatalog
 	{
-		public DatabaseTypesCatalog(IOptions<ApplicationSettings> applicationSettings)
+		public DatabaseTypesCatalog(IOptions<ApplicationConfiguration> applicationSettings)
 		{
-			var databaseFilePath = Path.Combine(applicationSettings.Value.FolderSettings.ApplicationDataFolder, "sde", "eve.db");
+			var databaseFilePath = Path.Combine(applicationSettings.Value.DataFolderPath, "sde", "eve.db");
 			_connectionString = $"Data Source={databaseFilePath}";
 		}
 

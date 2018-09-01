@@ -6,18 +6,18 @@
 
 #region Usings
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using EveHQ.NG.Domain.Core;
 using EveHQ.NG.Infrastructure.Core;
 using EveHQ.NG.WebServices.Ccp.Sso;
+using JetBrains.Annotations;
 
 #endregion
 
 
 namespace EveHQ.NG.WebServices.Ccp.Characters
 {
-	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Created by IoC-container.")]
+	[UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature)]
 	public sealed class CharactersApiUriProvider : ApiUriProviderBase, ICharactersApiUriProvider
 	{
 		public CharactersApiUriProvider(

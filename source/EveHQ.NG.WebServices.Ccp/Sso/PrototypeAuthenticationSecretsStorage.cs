@@ -6,14 +6,14 @@
 
 #region Usings
 
-using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
 #endregion
 
 
 namespace EveHQ.NG.WebServices.Ccp.Sso
 {
-	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Constructed by IoC container.")]
+	[UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature)]
 	public sealed class PrototypeAuthenticationSecretsStorage : IAuthenticationSecretsStorage
 	{
 		public PrototypeAuthenticationSecretsStorage()

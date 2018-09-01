@@ -11,7 +11,7 @@ The best occasion for setup of course is the first application start. This use c
 ## Post-conditions
 
 - All required information from the user gathered.
-- The application configuration database created and its structure and required data initialized.
+- The application database created and its structure and required data initialized.
 - The SDE database created and initialized with downloaded data.
 - Custom URL-protocol registered in the operation system.
 

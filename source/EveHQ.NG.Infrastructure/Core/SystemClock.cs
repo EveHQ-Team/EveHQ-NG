@@ -7,14 +7,14 @@
 #region Usings
 
 using System;
-using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
 #endregion
 
 
 namespace EveHQ.NG.Infrastructure.Core
 {
-	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Created by IoC-container.")]
+	[UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature)]
 	public sealed class SystemClock : IClock
 	{
 		public DateTimeOffset UtcNow => DateTime.UtcNow;

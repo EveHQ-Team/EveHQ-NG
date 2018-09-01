@@ -11,7 +11,8 @@ namespace EveHQ.NG.WebApi.Controllers
 {
 	public sealed class SettingsController : ApiControllerBase
 	{
-		public SettingsController(IWritableOptions<ApplicationSettings> applicationSettings)
+/*
+		public SettingsController(IWritableOptions<ApplicationConfiguration> applicationSettings)
 		{
 			_applicationSettings = applicationSettings;
 		}
@@ -24,6 +25,7 @@ namespace EveHQ.NG.WebApi.Controllers
 			return Ok();
 		}
 
-		private readonly IWritableOptions<ApplicationSettings> _applicationSettings;
+		private readonly IWritableOptions<ApplicationConfiguration> _applicationSettings;
+*/
 	}
 }

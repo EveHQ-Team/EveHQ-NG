@@ -9,7 +9,7 @@ import { ErrorCode } from './error-code';
 import { DataFolderManager } from './data-folder-manager';
 
 @SupportsInjection
-export class SsoConfigurationHandler {
+export class SsoConfigurationHolder {
 	constructor(
 		private readonly dataFolderManager: DataFolderManager,
 		private readonly systemErrorDescriber: SystemErrorDescriber,
