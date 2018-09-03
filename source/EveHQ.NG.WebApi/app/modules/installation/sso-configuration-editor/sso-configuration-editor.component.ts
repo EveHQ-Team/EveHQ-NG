@@ -5,12 +5,14 @@ import { SsoConfiguration } from 'sso-configuration';
 import {
 	getSsoConfiguration,
 	getSetSsoConfigurationError,
-	SsoConfigurationState
 	} from 'modules/application/stores/sso-configuration.state';
 import {
 	InstallCustomUrlSchema,
 	getInstallCustomUrlSchemaError
 	} from 'modules/application/use-cases/install-application.use-case';
+import { InstallApplicationUseCaseState } from 'modules/application/use-cases/install-application.use-case';
+import { combineLatest } from 'rxjs/observable/combineLatest'
+import { map } from 'rxjs/operators'
 
 @Component({
 	selector: 'evehq-sso-configuration-editor',
@@ -18,7 +20,7 @@ import {
 	styleUrls: ['./sso-configuration-editor.component.scss']
 })
 export class SsoConfigurationEditorComponent implements OnInit {
-	constructor(private readonly store: Store<SsoConfigurationState>) {}
+	constructor(private readonly store: Store<InstallApplicationUseCaseState>) {}
 
 	public ssoConfiguration$: Observable<SsoConfiguration>;
 	public setSsoConfigurationErrors$: Observable<any>;
@@ -26,9 +28,14 @@ export class SsoConfigurationEditorComponent implements OnInit {
 
 	public ngOnInit() {
 		this.ssoConfiguration$ = this.store.pipe(select(getSsoConfiguration));
-		this.setSsoConfigurationErrors$ = this.store.pipe(select(getSetSsoConfigurationError))
-			.combineLatest(this.store.pipe(select(getInstallCustomUrlSchemaError)))
-			.map((errors: string[]) => errors.join('\n').trim());
+		//this.setSsoConfigurationErrors$ = this.store.pipe(select(getInstallCustomUrlSchemaError));
+		this.setSsoConfigurationErrors$ =
+			this.setSsoConfigurationErrors$ =
+			combineLatest([
+				this.store.pipe(select(getSetSsoConfigurationError)),
+				this.store.pipe(select(getInstallCustomUrlSchemaError))
+			])
+			.pipe(map((errors: string[]) => errors.join('\n').trim()));
 	}
 
 	public changed(value: { ssoConfiguration: SsoConfiguration, isValid: boolean }): void {

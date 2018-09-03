@@ -3,14 +3,18 @@ import { Observable } from 'rxjs/Rx';
 import { mergeMap, every } from 'rxjs/operators';
 import { from } from 'rxjs/observable/from';
 import { ApiService } from 'modules/common/services/api.service';
+import { ApiEndpointsService } from 'modules/common/services/api-endpoints.service';
 
 @Injectable()
 export class DatabasesService {
-	constructor(private readonly api: ApiService) {}
+	constructor(
+		private readonly api: ApiService,
+		private readonly apiEndpointsService: ApiEndpointsService) { }
 
 	public createDatabases(): Observable<boolean> {
+		const endpoint = `${this.apiEndpointsService.databases}/create`;
 		return from(this.requiredDatabases).pipe(
-			mergeMap(database => this.api.post('databases/create', { database: database })),
+			mergeMap(databaseName => this.api.post(endpoint, databaseName)),
 			every(response => response.status === 201)
 		);
 	}

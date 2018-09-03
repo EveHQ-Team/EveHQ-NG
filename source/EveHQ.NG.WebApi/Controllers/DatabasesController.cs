@@ -7,10 +7,10 @@
 #region Usings
 
 using System;
-using System.Net;
 using EveHQ.NG.Infrastructure.Storage;
 using EveHQ.NG.Infrastructure.Storage.ApplicationDatabase;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 #endregion
 
@@ -19,9 +19,12 @@ namespace EveHQ.NG.WebApi.Controllers
 {
 	public sealed class DatabasesController : ApiControllerBase
 	{
-		public DatabasesController(IApplicationDatabase applicationDatabase)
+		public DatabasesController(
+			IApplicationDatabase applicationDatabase,
+			ILogger<DatabasesController> logger)
 		{
 			_applicationDatabase = applicationDatabase;
+			_logger = logger;
 		}
 
 		[HttpPost("create")]
@@ -45,12 +48,13 @@ namespace EveHQ.NG.WebApi.Controllers
 			}
 			catch (Exception exception)
 			{
-				// TODO: Log exception.
 				// TODO: Should I return the error message?
-				return StatusCode((int)HttpStatusCode.InternalServerError);
+				_logger.LogError(exception, $"Can't create the database {databaseName}.");
+				throw;
 			}
 		}
 
 		private readonly IApplicationDatabase _applicationDatabase;
+		private readonly ILogger<DatabasesController> _logger;
 	}
 }

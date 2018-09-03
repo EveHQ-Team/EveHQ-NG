@@ -1,11 +1,8 @@
 #region Usings
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using EveHQ.NG.Infrastructure.Options;
-using EveHQ.NG.Infrastructure.Settings;
 using EveHQ.NG.Infrastructure.UiNotification;
 using EveHQ.NG.WebApi.Infrastructure;
 using JetBrains.Annotations;
@@ -35,19 +32,19 @@ namespace EveHQ.NG.WebApi
 		public IServiceProvider ConfigureServices(IServiceCollection services)
 		{
 			// Add framework services.
-			services.AddMvc().AddJsonOptions(
-				options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+			services
+				.AddMvc()
+				.AddJsonOptions(
+					options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+			services.AddOptions();
 
+			var signalRPort = Configuration[ConfigurationKeyNames.PortNumber];
 			services.AddCors(
 				options => options.AddPolicy(
 					CorsPolicyName,
-					builder => builder.AllowAnyMethod().AllowAnyHeader().WithOrigins($"http://localhost:{SignalRPort}")));
+					builder => builder.AllowAnyMethod().AllowAnyHeader().WithOrigins($"{ApplicationPaths.ApiHostUrl}:{signalRPort}")));
 
 			services.AddSignalR();
-
-			services.ConfigureWritable<ApplicationConfiguration>(
-				Configuration.GetSection(nameof(FolderSettings)),
-				$"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/EveHQ NG/application-configuration.json");
 
 			_applicationContainer = new IocContainerBootstrapper().BuildContainer(services);
 			return new AutofacServiceProvider(_applicationContainer);
@@ -65,16 +62,14 @@ namespace EveHQ.NG.WebApi
 			}
 
 			applicationBuilder.UseCors(CorsPolicyName);
-			applicationBuilder.UseSignalR(routeBuilder => routeBuilder.MapHub<AuthenticationNotificationHub>(AuthenticationNotificationHubName));
+			applicationBuilder.UseSignalR(
+				routeBuilder => routeBuilder.MapHub<AuthenticationNotificationHub>(SignalREndpoints.AuthenticationNotificationHubName));
 			applicationBuilder.UseMvc();
 
 			applicationLifetime.ApplicationStopped.Register(() => _applicationContainer.Dispose());
 		}
 
 		private IContainer _applicationContainer;
-
-		private const int SignalRPort = 5000;
-		private const string AuthenticationNotificationHubName = "/authentication-notification";
 		private const string CorsPolicyName = "CorsPolicy";
 	}
 }

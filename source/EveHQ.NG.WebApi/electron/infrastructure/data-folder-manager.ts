@@ -86,6 +86,7 @@ export class DataFolderManager {
 	private dataFolderPath: string;
 	private readonly requiredFolderNames = [
 		Folders.configurationFolderName,
-		Folders.databasesFolderName
+		Folders.databasesFolderName,
+		Folders.logFilesFolderName
 	];
 }

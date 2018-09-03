@@ -7,9 +7,7 @@
 #region Usings
 
 using System.IO;
-using EveHQ.NG.Infrastructure.Settings;
 using Microsoft.Data.Sqlite;
-using Microsoft.Extensions.Options;
 
 #endregion
 
@@ -18,13 +16,10 @@ namespace EveHQ.NG.Infrastructure.Storage
 {
 	public abstract class SqliteDatabaseBase : DatabaseBase<SqliteConnection>
 	{
-		protected SqliteDatabaseBase(IOptions<ApplicationConfiguration> applicationSettings) : base(applicationSettings)
-		{
-		}
-
 		protected override SqliteConnection CreateConnection(string databaseFilePath) =>
-			new SqliteConnection($"Data Source={databaseFilePath};Version=3;");
+			new SqliteConnection($"Data Source={databaseFilePath};");
 
-		protected override void CreateDatabaseFile(string databaseFilePath) => File.Create(databaseFilePath);
+		protected override void CreateDatabaseFile(string databaseFilePath) =>
+			File.Open(databaseFilePath, FileMode.CreateNew).Dispose();
 	}
 }

@@ -6,10 +6,9 @@
 
 #region Usings
 
-using EveHQ.NG.Infrastructure.Settings;
+using System.IO;
 using JetBrains.Annotations;
 using Microsoft.Data.Sqlite;
-using Microsoft.Extensions.Options;
 
 #endregion
 
@@ -20,12 +19,12 @@ namespace EveHQ.NG.Infrastructure.Storage.ApplicationDatabase.Sqlite
 	public sealed class SqliteApplicationDatabase : SqliteDatabaseBase, IApplicationDatabase
 	{
 		public SqliteApplicationDatabase(
-			IOptions<ApplicationConfiguration> applicationSettings,
+			string databasesFolderPath,
 			ApplicationDatabaseStructureBuilder<SqliteConnection> structureBuilder,
 			ApplicationDatabaseInitialDataPopulator<SqliteConnection> initialDataPopulator,
 			ApplicationDatabaseStructureValidator<SqliteConnection> structureValidator)
-			: base(applicationSettings)
 		{
+			_databasesFolderPath = databasesFolderPath;
 			_structureBuilder = structureBuilder;
 			_initialDataPopulator = initialDataPopulator;
 			_structureValidator = structureValidator;
@@ -41,8 +40,9 @@ namespace EveHQ.NG.Infrastructure.Storage.ApplicationDatabase.Sqlite
 			_structureValidator.ValidateStructure(connection);
 
 		protected override string GetDatabaseFilePath() =>
-			ApplicationConfiguration.ApplicationDatabaseFilePath(DatabaseConstants.SqliteFileExtension);
+			Path.Combine(_databasesFolderPath, $"{DatabaseConstants.Application}.{DatabaseConstants.SqliteFileExtension}");
 
+		private readonly string _databasesFolderPath;
 		private readonly ApplicationDatabaseStructureBuilder<SqliteConnection> _structureBuilder;
 		private readonly ApplicationDatabaseInitialDataPopulator<SqliteConnection> _initialDataPopulator;
 		private readonly ApplicationDatabaseStructureValidator<SqliteConnection> _structureValidator;

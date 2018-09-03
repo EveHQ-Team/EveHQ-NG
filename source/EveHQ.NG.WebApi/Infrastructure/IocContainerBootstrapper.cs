@@ -17,6 +17,7 @@ using EveHQ.NG.Infrastructure.UiNotification;
 using EveHQ.NG.WebServices.Ccp.Characters;
 using EveHQ.NG.WebServices.Ccp.Sso;
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 #endregion
@@ -60,7 +61,15 @@ namespace EveHQ.NG.WebApi.Infrastructure
 			builder.RegisterType<HttpService>().As<IHttpService>().SingleInstance();
 			builder.RegisterType<SystemClock>().As<IClock>().InstancePerDependency();
 			builder.RegisterType<DatabaseTypesCatalog>().As<ITypesCatalog>().SingleInstance();
-			builder.RegisterType<SqliteApplicationDatabase>().As<IApplicationDatabase>().SingleInstance();
+			builder.RegisterType<SqliteApplicationDatabase>().As<IApplicationDatabase>()
+					.WithParameter(
+						(parameter, context) => parameter.Name == "databasesFolderPath",
+						(parameter, context) =>
+						{
+							var dataFolderPath = context.Resolve<IConfiguration>()[ConfigurationKeyNames.DataFolderPath];
+							return ApplicationPaths.GetDatabasesFolderPath(dataFolderPath);
+						})
+					.SingleInstance();
 			builder.RegisterType<SqliteApplicationDatabaseStructureBuilderCommandFactory>()
 					.As<IApplicationDatabaseStructureBuilderCommandFactory<SqliteConnection>>().SingleInstance();
 			builder.RegisterType<ApplicationDatabaseStructureBuilder<SqliteConnection>>().AsSelf().SingleInstance();

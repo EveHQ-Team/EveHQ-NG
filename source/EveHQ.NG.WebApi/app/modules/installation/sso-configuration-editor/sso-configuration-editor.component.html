@@ -4,7 +4,7 @@
 <div class="commands">
 	<button pButton class="main-action" [disabled]="!isValid" (click)="save()">Save</button>
 </div>
-<p class="error-message">{{setSsoConfigurationError$ | async}}</p>
+<p class="error-message">{{setSsoConfigurationErrors$ | async}}</p>
 <section class="description-text">
 	<details>
 		<summary>What is application authentication and authorization</summary>

@@ -148,7 +148,7 @@ export interface InstallApplicationUseCaseState {
 const initialState: InstallApplicationUseCaseState = {
 	applicationConfiguration: { dataFolderPath: '', backendServicePortNumber: 4000, isApplicationInstalled: false },
 	setApplicationConfigurationError: undefined,
-	installCustomUrlSchemaError: undefined,
+	installCustomUrlSchemaError: '',
 	createApplicationDatabaseError: undefined,
 	downloadSdeError: undefined,
 	downloadSdeDownloadId: undefined

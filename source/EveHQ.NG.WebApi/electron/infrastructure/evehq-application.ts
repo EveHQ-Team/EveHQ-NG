@@ -64,7 +64,7 @@ export class EveHqApplication {
 
 		try {
 			if ((await applicationConfigurationHolder.getApplicationConfiguration()).isApplicationInstalled) {
-				await this.backendService.start();
+				await this.backendService.restart();
 			}
 		}
 		catch (error) {

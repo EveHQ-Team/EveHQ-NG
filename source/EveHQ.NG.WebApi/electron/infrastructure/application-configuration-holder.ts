@@ -32,7 +32,22 @@ export class ApplicationConfigurationHolder extends EventEmitter {
 	}
 
 	public async setApplicationConfiguration(applicationConfiguration: ApplicationConfiguration): Promise<void> {
-		await this.validateAndCoerceApplicationConfiguration(applicationConfiguration);
+		const presentApplicationConfiguration = await this.getApplicationConfiguration();
+		if (presentApplicationConfiguration.backendServicePortNumber !== applicationConfiguration.backendServicePortNumber) {
+			const portNumber = applicationConfiguration.backendServicePortNumber;
+			if (portNumber < TcpPort.minPortNumber || portNumber > TcpPort.maxPortNumber) {
+				return Promise.reject(`The port number ${portNumber} not in valid range.`);
+			}
+			
+			if (!(await this.tcpPort.isPortFree(portNumber))) {
+				return Promise.reject(`The port specified is occupied by some other service. Please choose another one.`);
+			}
+		}
+
+		applicationConfiguration.dataFolderPath = path.normalize(applicationConfiguration.dataFolderPath);
+		if (!await fse.pathExists(applicationConfiguration.dataFolderPath)) {
+			return Promise.reject(`Data folder path ${applicationConfiguration.dataFolderPath} does not exists.`);
+		}
 
 		return fse.writeJSON(this.applicationConfigurationFilePath, applicationConfiguration)
 			.then(() => {
@@ -42,24 +57,6 @@ export class ApplicationConfigurationHolder extends EventEmitter {
 			})
 			.catch(error => Promise.reject(`Can not write to the file '${this.applicationConfigurationFilePath}'. ` +
 				`The error was: ${this.systemErrorDescriber.describeError(error.code)}`));
-	}
-
-	private async validateAndCoerceApplicationConfiguration(applicationaConfiguration: ApplicationConfiguration): Promise<void> {
-		const portNumber = applicationaConfiguration.backendServicePortNumber;
-		if (portNumber < TcpPort.minPortNumber || portNumber > TcpPort.maxPortNumber) {
-			return Promise.reject(`The port number ${portNumber} not in valid range.`);
-		}
-
-		if (!(await this.tcpPort.isPortFree(portNumber))) {
-			return Promise.reject(`The port specified is occupied by some other service. Please choose another one.`);
-		}
-
-		applicationaConfiguration.dataFolderPath = path.normalize(applicationaConfiguration.dataFolderPath);
-		if (!await fse.pathExists(applicationaConfiguration.dataFolderPath)) {
-			return Promise.reject(`Data folder path ${applicationaConfiguration.dataFolderPath} does not exists.`);
-		}
-
-		return Promise.resolve();
 	}
 
 	private initialize(): void {

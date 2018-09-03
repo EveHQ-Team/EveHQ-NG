@@ -9,8 +9,6 @@
 using System;
 using System.Data;
 using System.IO;
-using EveHQ.NG.Infrastructure.Settings;
-using Microsoft.Extensions.Options;
 
 #endregion
 
@@ -19,11 +17,6 @@ namespace EveHQ.NG.Infrastructure.Storage
 {
 	public abstract class DatabaseBase<TConnection> : IDatabase where TConnection : IDbConnection
 	{
-		protected DatabaseBase(IOptions<ApplicationConfiguration> applicationSettings)
-		{
-			_applicationSettings = applicationSettings;
-		}
-
 		public void CreateAndPopulateIfNeeded()
 		{
 			var databaseFilePath = GetDatabaseFilePath();
@@ -51,8 +44,6 @@ namespace EveHQ.NG.Infrastructure.Storage
 			}
 		}
 
-		protected ApplicationConfiguration ApplicationConfiguration => _applicationSettings.Value;
-
 		protected abstract void CreateDatabaseFile(string databaseFilePath);
 
 		protected abstract bool ValidateDatabaseStructure(TConnection connection);
@@ -64,7 +55,5 @@ namespace EveHQ.NG.Infrastructure.Storage
 		protected abstract TConnection CreateConnection(string databaseFilePath);
 
 		protected abstract string GetDatabaseFilePath();
-
-		private readonly IOptions<ApplicationConfiguration> _applicationSettings;
 	}
 }

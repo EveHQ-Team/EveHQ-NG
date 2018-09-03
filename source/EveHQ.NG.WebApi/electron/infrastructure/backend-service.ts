@@ -1,21 +1,19 @@
 import { app } from 'electron';
 import * as path from 'path';
 import * as os from 'os';
-import * as findProcess from 'find-process';
 import { spawn } from 'child_process';
 import { Subject, Observable } from 'rxjs';
-import { InstallationChecker } from './installation-checker';
 import { SystemErrorDescriber } from './system-error-describer';
 import { LogBase } from './log-base';
 import { SupportsInjection } from 'good-injector';
 import { ApplicationConfigurationHolder } from './application-configuration-holder';
 import { IsAliveService } from '../backend/is-alive.service';
+import * as psList from 'ps-list';
 
 @SupportsInjection
 export class BackendService {
 	constructor(
 		private readonly applicationConfigurationHolder: ApplicationConfigurationHolder,
-		private readonly installationChecker: InstallationChecker,
 		private readonly isAliveService: IsAliveService,
 		private readonly systemErrorDescriber: SystemErrorDescriber,
 		private readonly log: LogBase) {
@@ -30,14 +28,20 @@ export class BackendService {
 
 	public isDevelopment: boolean;
 
-	public async start(): Promise<void> {
+	public start(): Promise<void> {
 		this.log.info('Starting Backend-service.');
-		await this.getPortNumber().then(portNumber => {
-				this.ensureStarted(portNumber)
-					? this.log.info(`Backend-service started on port ${portNumber}.`)
-					: this.log.error(`Backend-service can not be started on port ${portNumber}.`);
+		return this.getPortNumber()
+			.then(portNumber => {
+				this.ensureStarted(portNumber).then(
+					isStarted => isStarted
+								? this.log.info(`Backend-service started on port ${portNumber}.`)
+								: this.log.error(`Backend-service can not be started on port ${portNumber}.`));
+				return Promise.resolve();
 			})
-			.catch(error => this.log.error(`Can not start the Backend-service. The error was: ${error}.`));
+			.catch(error => {
+				this.log.error(`Can not start the Backend-service. The error was: ${error}.`);
+				return Promise.reject('Service did not start.');
+			});
 	}
 
 	public stop(): void {
@@ -61,11 +65,12 @@ export class BackendService {
 		}
 	}
 
-	public async restart(): Promise<void> {
+	public restart(): Promise<void> {
 		this.log.info('Going to restart Backend-service.');
 		this.stop();
-		await this.start();
-		this.log.info('Backend-service is restarted.');
+		return this.start()
+			.then(() => this.log.info('Backend-service is restarted.'))
+			.catch(error => this.log.error(error));
 	}
 
 	private async ensureStarted(portNumber: number): Promise<boolean> {
@@ -156,13 +161,29 @@ export class BackendService {
 		}
 	}
 
-	private async killExcessBackendServices(): Promise<void> {
-		const foundbackendServices: Partial<{ pid: number, ppid: number }>[] = await findProcess('name', this.getExecutableName());
-		if (foundbackendServices.length > 0) {
-			this.log.warning(`Found ${foundbackendServices.length} previously started Backend-services. They will be killed.`);
-		}
+	private killExcessBackendServices(): Promise<void> {
+		console.warn('###1 ', this.getExecutableName());
+		return psList().then((processes: any[]) => {
+			const processToFind = this.getExecutableName();
+			const foundbackendServices = processes.reduce((found, current) => {
+					if (current.name.localeCompare(processToFind) === 0) {
+						found.push(current);
+					}
 
-		foundbackendServices.forEach((backendService: Partial<{ pid: number, ppid: number }>) => this.killProcess(backendService.pid));
+					return found;
+				},
+				[]);
+
+			if (foundbackendServices.length > 0) {
+				this.log.warning(`Found ${foundbackendServices.length} previously started Backend-services. They will be killed.`);
+				foundbackendServices.forEach((backendService: Partial<{ pid: number }>) => this.killProcess(backendService.pid));
+			}
+
+			return Promise.resolve();
+		}).catch(error => {
+			this.log.error(error);
+			Promise.reject(`Can not kill excess backend processes. ${error}`);
+		});
 	}
 
 	private killProcess(processId: number): void {

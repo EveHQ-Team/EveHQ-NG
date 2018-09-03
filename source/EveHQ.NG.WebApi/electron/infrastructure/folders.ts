@@ -7,4 +7,5 @@ export class Folders {
 
 	public static readonly configurationFolderName = 'configuration';
 	public static readonly databasesFolderName = 'databases';
+	public static readonly logFilesFolderName = 'logs';
 }

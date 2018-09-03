@@ -27,7 +27,7 @@ namespace EveHQ.NG.Infrastructure.Storage.ApplicationDatabase.Sqlite
 
 		public IDbCommand GetAddDefaultMetaGameProfileCommand(SqliteConnection connection) =>
 			new SqliteCommand(
-				$"insert into MetaGameProfiles(Id, Name) values ({Guid.NewGuid()}, 'Default profile')",
+				$"insert into MetaGameProfiles(Id, Name) values ('{Guid.NewGuid():D}', 'Default profile')",
 				connection);
 	}
 }
