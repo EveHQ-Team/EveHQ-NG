@@ -8,8 +8,7 @@ namespace EveHQ.NG.Infrastructure.Storage
 {
 	public static class DatabaseConstants
 	{
-		public const string Application = "evehq-ng";
-		public const string Sde = "sde";
-		public const string SqliteFileExtension = "sqlite";
+		public const string ApplicationDatabaseName = "evehq-ng";
+		public const string SdeDatabaseName = "sde";
 	}
 }

@@ -8,52 +8,23 @@
 
 using System;
 using System.Data;
-using System.IO;
 
 #endregion
 
 
 namespace EveHQ.NG.Infrastructure.Storage
 {
-	public abstract class DatabaseBase<TConnection> : IDatabase where TConnection : IDbConnection
+	public abstract class DatabaseBase<TConnection> where TConnection : IDbConnection
 	{
-		public void CreateAndPopulateIfNeeded()
-		{
-			var databaseFilePath = GetDatabaseFilePath();
-			var doesDatabaseAlreadyExist = File.Exists(databaseFilePath);
-			if (!doesDatabaseAlreadyExist)
-			{
-				CreateDatabaseFile(databaseFilePath);
-			}
+		protected abstract TConnection CreateConnection();
 
-			using (var connection = CreateConnection(databaseFilePath))
+		protected TResult Execute<TResult>(Func<TConnection, TResult> script)
+		{
+			using (var connection = CreateConnection())
 			{
 				connection.Open();
-				if (doesDatabaseAlreadyExist)
-				{
-					if (!ValidateDatabaseStructure(connection))
-					{
-						throw new ApplicationException("The application database present but has invalid structure.");
-					}
-				}
-				else
-				{
-					BuildDatabaseStructure(connection);
-					PopulateDatabaseWithInitialData(connection);
-				}
+				return script(connection);
 			}
 		}
-
-		protected abstract void CreateDatabaseFile(string databaseFilePath);
-
-		protected abstract bool ValidateDatabaseStructure(TConnection connection);
-
-		protected abstract void BuildDatabaseStructure(TConnection connection);
-
-		protected abstract void PopulateDatabaseWithInitialData(TConnection connection);
-
-		protected abstract TConnection CreateConnection(string databaseFilePath);
-
-		protected abstract string GetDatabaseFilePath();
 	}
 }

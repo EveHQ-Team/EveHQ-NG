@@ -6,14 +6,16 @@
 
 #region Usings
 
+using System.IO;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using EveHQ.NG.Infrastructure;
 using EveHQ.NG.Infrastructure.Core;
 using EveHQ.NG.Infrastructure.Settings;
 using EveHQ.NG.Infrastructure.Storage.ApplicationDatabase;
-using EveHQ.NG.Infrastructure.Storage.ApplicationDatabase.Sqlite;
 using EveHQ.NG.Infrastructure.UiNotification;
+using EveHQ.NG.Storage.Sqlite;
+using EveHQ.NG.Storage.Sqlite.ApplicationDatabase;
 using EveHQ.NG.WebServices.Ccp.Characters;
 using EveHQ.NG.WebServices.Ccp.Sso;
 using Microsoft.Data.Sqlite;
@@ -56,29 +58,26 @@ namespace EveHQ.NG.WebApi.Infrastructure
 			builder.RegisterType<AuthenticationNotificationHub>()
 					.As<IAuthenticationNotificationService, AuthenticationNotificationHub>().SingleInstance();
 			builder.RegisterType<LoggedInCharacterRepositoryStub>().As<ILoggedInCharacterRepository>().SingleInstance();
-			builder.RegisterType<ApplicationConfiguration>().AsSelf().SingleInstance();
 			builder.RegisterType<CharactersApiUriProvider>().As<ICharactersApiUriProvider>().InstancePerDependency();
 			builder.RegisterType<HttpService>().As<IHttpService>().SingleInstance();
 			builder.RegisterType<SystemClock>().As<IClock>().InstancePerDependency();
-			builder.RegisterType<DatabaseTypesCatalog>().As<ITypesCatalog>().SingleInstance();
 			builder.RegisterType<SqliteApplicationDatabase>().As<IApplicationDatabase>()
 					.WithParameter(
-						(parameter, context) => parameter.Name == "databasesFolderPath",
+						(parameter, context) => parameter.Name == "databaseFilePath",
 						(parameter, context) =>
 						{
 							var dataFolderPath = context.Resolve<IConfiguration>()[ConfigurationKeyNames.DataFolderPath];
-							return ApplicationPaths.GetDatabasesFolderPath(dataFolderPath);
+							return Path.Combine(
+								ApplicationPaths.GetDatabasesFolderPath(dataFolderPath),
+								SqliteTools.ApplicationDatabaseFileName);
 						})
 					.SingleInstance();
-			builder.RegisterType<SqliteApplicationDatabaseStructureBuilderCommandFactory>()
-					.As<IApplicationDatabaseStructureBuilderCommandFactory<SqliteConnection>>().SingleInstance();
-			builder.RegisterType<ApplicationDatabaseStructureBuilder<SqliteConnection>>().AsSelf().SingleInstance();
-			builder.RegisterType<SqliteApplicationDatabaseInitialDataPopulatorCommandFactory>()
-					.As<IApplicationDatabaseInitialDataPopulatorCommandFactory<SqliteConnection>>().SingleInstance();
-			builder.RegisterType<ApplicationDatabaseInitialDataPopulator<SqliteConnection>>().AsSelf().SingleInstance();
-			builder.RegisterType<SqliteApplicationDatabaseStructureValidatorCommandFactory>()
-					.As<IApplicationDatabaseStructureValidatorCommandFactory<SqliteConnection>>().SingleInstance();
-			builder.RegisterType<ApplicationDatabaseStructureValidator<SqliteConnection>>().AsSelf().SingleInstance();
+			builder.RegisterType<SqliteApplicationDatabaseManagementCommandFactory>()
+					.As<IApplicationDatabaseManagementCommandFactory<SqliteConnection>>()
+					.SingleInstance();
+			builder.RegisterType<EmbeddedResourceFileReaderFactory>()
+					.As<IEmbeddedResourceFileReaderFactory>()
+					.SingleInstance();
 		}
 	}
 }

@@ -67,6 +67,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\EveHQ.NG.Domain.Core\EveHQ.NG.Domain.Core.csproj" />
 	  <ProjectReference Include="..\EveHQ.NG.Infrastructure\EveHQ.NG.Infrastructure.csproj" />
+	  <ProjectReference Include="..\EveHQ.NG.Storage.Sqlite\EveHQ.NG.Storage.Sqlite.csproj" />
 	  <ProjectReference Include="..\EveHQ.NG.WebServices.Ccp\EveHQ.NG.WebServices.Ccp.csproj" />
 	</ItemGroup>
 </Project>

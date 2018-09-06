@@ -6,8 +6,6 @@
 
 #region Usings
 
-using System.IO;
-using EveHQ.NG.Infrastructure.Storage;
 using JetBrains.Annotations;
 
 #endregion
@@ -23,21 +21,5 @@ namespace EveHQ.NG.Infrastructure.Settings
 		public uint BackendServicePortNumber { get; set; }
 
 		public bool IsApplicationInstalled { get; set; }
-	}
-
-	public static class ApplicationConfigurationExtensions
-	{
-		public static string ApplicationDatabaseFilePath(this ApplicationConfiguration applicationConfiguration, string extension) =>
-			Path.Combine(applicationConfiguration.DatabasesFolderPath(), $"{DatabaseConstants.Application}.{extension}");
-
-		public static string SdeDatabaseFilePath(this ApplicationConfiguration applicationConfiguration, string extension) =>
-			Path.Combine(applicationConfiguration.DatabasesFolderPath(), $"{DatabaseConstants.Sde}.{extension}");
-
-		private static string DatabasesFolderPath(this ApplicationConfiguration applicationConfiguration)
-		{
-			return Path.Combine(applicationConfiguration.DataFolderPath, DatabasesFolderName);
-		}
-
-		private const string DatabasesFolderName = "databases";
 	}
 }

@@ -9,6 +9,7 @@
 using System;
 using EveHQ.NG.Infrastructure.Storage;
 using EveHQ.NG.Infrastructure.Storage.ApplicationDatabase;
+using EveHQ.NG.WebApi.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -34,10 +35,10 @@ namespace EveHQ.NG.WebApi.Controllers
 			{
 				switch (databaseName)
 				{
-					case DatabaseConstants.Application:
-						_applicationDatabase.CreateAndPopulateIfNeeded();
+					case DatabaseConstants.ApplicationDatabaseName:
+						_applicationDatabase.CreateOrVerifyApplicationDatabase();
 						break;
-					case DatabaseConstants.Sde:
+					case DatabaseConstants.SdeDatabaseName:
 						// TODO: Do same for SDE!
 						break;
 					default:
@@ -48,9 +49,9 @@ namespace EveHQ.NG.WebApi.Controllers
 			}
 			catch (Exception exception)
 			{
-				// TODO: Should I return the error message?
-				_logger.LogError(exception, $"Can't create the database {databaseName}.");
-				throw;
+				var message = $"Can't create the database {databaseName} or structure of present database instance is invalid.";
+				_logger.LogError(exception, message);
+				return new ApiErrorResult(message, ApiErrorCode.CannotCreateDatabase);
 			}
 		}
 

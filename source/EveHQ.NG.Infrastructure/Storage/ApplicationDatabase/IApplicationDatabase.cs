@@ -6,7 +6,10 @@
 
 namespace EveHQ.NG.Infrastructure.Storage.ApplicationDatabase
 {
-	public interface IApplicationDatabase : IDatabase
+	public interface IApplicationDatabase
 	{
+		void CreateOrVerifyApplicationDatabase();
+
+		void Update();
 	}
 }

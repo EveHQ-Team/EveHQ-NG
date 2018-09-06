@@ -2,7 +2,6 @@
 
 using System;
 using System.IO;
-using EveHQ.NG.Infrastructure;
 using EveHQ.NG.Infrastructure.Settings;
 using EveHQ.NG.WebApi.Infrastructure;
 using JetBrains.Annotations;
@@ -30,8 +29,6 @@ namespace EveHQ.NG.WebApi
 			try
 			{
 				Log.Information("Starting web host...");
-				var sdeExtractor = new SdeExtractor();
-				sdeExtractor.ExtractIfNeeded();
 				BuildWebHost(args).Run();
 
 				return 0;
