@@ -1,10 +1,10 @@
-import { Action, ActionReducer, ActionReducerMap, MetaReducer, createFeatureSelector, createSelector } from '@ngrx/store';
+import { Action, ActionReducer, MetaReducer, createFeatureSelector, createSelector } from '@ngrx/store';
 import { ApplicationUser } from 'modules/application/models/application-user';
 import { MetaGameProfile } from 'modules/application/models/meta-game-profile';
 import { Character } from 'modules/application/models/character';
 import { Role } from 'modules/application/models/role';
 import { Tool } from 'modules/application/models/tool';
-import { SsoConfigurationState, ssoConfigurationStateReducer } from 'modules/application/stores/sso-configuration.state';
+import { ConfigurationState, configurationStateReducer } from 'modules/application/stores/configuration.state';
 
 export enum ApplicationStateActionTypes {
 	SetCurrentUser = '[APPLICATION] Set Current User',
@@ -199,12 +199,12 @@ function applicationStateReducer(state = initialState, action: ApplicationStateA
 
 export interface ApplicationStore {
 	application: ApplicationState;
-	ssoConfiguration: SsoConfigurationState;
+	configuration: ConfigurationState;
 }
 
 export const applicationReducers = {
 	application: applicationStateReducer,
-	ssoConfiguration: ssoConfigurationStateReducer
+	configuration: configurationStateReducer
 };
 
 export function logger(reducer: ActionReducer<ApplicationStore>): ActionReducer<ApplicationStore> {
@@ -220,6 +220,11 @@ export const metaReducers: MetaReducer<ApplicationStore>[] = [logger];
 
 const getApplicationState = createFeatureSelector<ApplicationStore>('application');
 const getApplication = createSelector(getApplicationState, state => state.application);
+const getConfiguration = createSelector(getApplicationState, state => state.configuration);
 export const getCurrentUser = createSelector(getApplication, state => state.currentUser);
 export const getCurrentUserProfiles = createSelector(getApplication, state => state.currentUserProfiles);
 export const getCurrentCharacterId = createSelector(getApplication, state => state.currentCharacterId);
+export const getApplicationConfiguration = createSelector(getConfiguration, state => state.applicationConfiguration);
+export const getSsoConfiguration = createSelector(getConfiguration, state => state.ssoConfiguration);
+export const getSaveApplicationConfigurationError = createSelector(getConfiguration, state => state.saveApplicationConfigurationError);
+export const getSaveSsoConfigurationError = createSelector(getConfiguration, state => state.saveSsoConfigurationError);

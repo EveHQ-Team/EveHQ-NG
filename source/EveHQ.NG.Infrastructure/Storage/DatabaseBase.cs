@@ -18,11 +18,14 @@ namespace EveHQ.NG.Infrastructure.Storage
 	{
 		protected abstract TConnection CreateConnection();
 
+		protected abstract void PrepareConnection(TConnection connection);
+
 		protected TResult Execute<TResult>(Func<TConnection, TResult> script)
 		{
 			using (var connection = CreateConnection())
 			{
 				connection.Open();
+				PrepareConnection(connection);
 				return script(connection);
 			}
 		}

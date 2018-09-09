@@ -28,8 +28,8 @@ namespace EveHQ.NG.WebApi.Controllers
 			_logger = logger;
 		}
 
-		[HttpPost("create")]
-		public IActionResult Create([FromBody] string databaseName)
+		[HttpPost("{databaseName}/create")]
+		public IActionResult Create([FromRoute] string databaseName)
 		{
 			try
 			{

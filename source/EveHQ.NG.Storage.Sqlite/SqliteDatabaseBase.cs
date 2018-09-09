@@ -22,6 +22,13 @@ namespace EveHQ.NG.Storage.Sqlite
 			_databaseFilePath = databaseFilePath;
 		}
 
+		protected override void PrepareConnection(SqliteConnection connection)
+		{
+			const string PrepareConnectionScript = "PRAGMA foreign_keys = ON;";
+			var prepareCommand = new SqliteCommand(PrepareConnectionScript, connection);
+			prepareCommand.ExecuteNonQuery();
+		}
+
 		protected void Create()
 		{
 			if (DoesExist())
