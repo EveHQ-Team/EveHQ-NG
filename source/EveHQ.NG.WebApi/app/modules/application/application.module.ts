@@ -1,10 +1,8 @@
 import 'zone.js/dist/zone-mix';
 import 'polyfills';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { ApplicationRoutingModule } from 'modules/application/application-routing.module';
 import { BackendModule } from 'modules/backend/backend.module';
@@ -22,13 +20,18 @@ import { CreateUserUseCaseEffects, createUserUseCaseReducers } from 'modules/app
 import { LoginUseCaseEffects, loginUseCaseReducers } from 'modules/application/use-cases/login.use-case';
 import { StartupUseCaseEffects } from 'modules/application/use-cases/startup.use-case';
 import { SelectProfileUseCaseEffects } from 'modules/application/use-cases/select-profile.use-case';
+import { InstallApplicationUseCaseEffects } from 'modules/application/use-cases/install-application.use-case';
+import { GetherApplicationConfigurationUseCaseEffects } from 'modules/application/use-cases/gether-application-configuration.use-case';
+import { GetherSsoConfigurationUseCaseEffects } from 'modules/application/use-cases/gether-sso-configuration.use-case';
+import { CreateRequiredDatabasesUseCaseEffects, createRequiredDatabasesUseCaseReducers } from 'modules/application/use-cases/create-required-databases.use-case';
+import { SharedModule } from 'modules/shared/shared.module';
+import { ConfigurationStateEffects } from 'modules/application/stores/configuration.state';
 
 @NgModule({
 	imports: [
-		CommonModule,
 		BrowserModule,
 		BrowserAnimationsModule,
-		FormsModule,
+		SharedModule,
 		HttpClientModule,
 		BackendModule,
 		StoreModule.forRoot(applicationReducers, { metaReducers }),
@@ -36,11 +39,17 @@ import { SelectProfileUseCaseEffects } from 'modules/application/use-cases/selec
 		StoreModule.forFeature('shell', shellReducers),
 		StoreModule.forFeature('createUserUseCase', createUserUseCaseReducers),
 		StoreModule.forFeature('loginUseCase', loginUseCaseReducers),
+		StoreModule.forFeature('createRequiredDatabasesUseCase', createRequiredDatabasesUseCaseReducers),
 		EffectsModule.forRoot([
 			StartupUseCaseEffects,
 			CreateUserUseCaseEffects,
 			LoginUseCaseEffects,
-			SelectProfileUseCaseEffects
+			SelectProfileUseCaseEffects,
+			InstallApplicationUseCaseEffects,
+			ConfigurationStateEffects,
+			GetherApplicationConfigurationUseCaseEffects,
+			GetherSsoConfigurationUseCaseEffects,
+			CreateRequiredDatabasesUseCaseEffects
 		]),
 		CommonServicesModule.forRoot(),
 		ApplicationRoutingModule

@@ -9,7 +9,7 @@ if (environment.production) {
 	enableProdMode();
 }
 
-const spy = create();
-spy.log(/a./);
+//const spy = create();
+//spy.log(/a./);
 
 platformBrowserDynamic().bootstrapModule(ApplicationModule);

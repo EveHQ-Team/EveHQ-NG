@@ -7,14 +7,14 @@
 #region Usings
 
 using System;
-using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
 #endregion
 
 
 namespace EveHQ.NG.WebServices.Ccp.Characters
 {
-	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "DTO")]
+	[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 	public sealed class SkillQueueItem
 	{
 		public int SkillId { get; set; }

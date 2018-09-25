@@ -1,32 +1,39 @@
 {
-	"name": "evehq-ng",
-	"productName": "EveHQ NG",
-	"version": "0.0.1",
-	"description": "EVE Online professions assistant tool",
-	"homepage": "https://ng.evehq.co",
-	"author": {
-		"name": "EveHQ Team",
-		"email": "mike@eshva.ru"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/Eshva/EveHQ-NG.Prototype.git"
-	},
-	"bugs": {
-		"url": "https://github.com/Eshva/EveHQ-NG.Prototype/issues"
-	},
-	"keywords": [
-		"eve online",
-		"tool"
-	],
-	"license": "SEE LICENSE IN LICENSE.md",
-	"main": "main.js",
-	"private": true,
-	"dependencies": {
-		"electron-unhandled": "1.0.0",
-		"electron-reload": "1.2.2",
-		"devtron": "1.4.0",
-		"find-process": "1.1.0",
-		"rxjs": "5.5.6"
-	}
+  "name": "evehq-ng",
+  "productName": "EveHQ NG",
+  "version": "0.0.1",
+  "description": "EVE Online professions assistant tool",
+  "homepage": "https://ng.evehq.co",
+  "author": {
+    "name": "EveHQ Team",
+    "email": "mike@eshva.ru"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Eshva/EveHQ-NG.Prototype.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Eshva/EveHQ-NG.Prototype/issues"
+  },
+  "keywords": [
+    "eve online",
+    "tool"
+  ],
+  "license": "SEE LICENSE IN LICENSE.md",
+  "main": "main.js",
+  "private": true,
+  "dependencies": {
+    "@types/fs-extra": "5.0.4",
+    "@types/node": "10.9.1",
+    "axios": "0.18.0",
+    "devtron": "1.4.0",
+    "electron-reload": "1.2.2",
+    "electron-unhandled": "1.0.0",
+    "fs-extra": "7.0.0",
+    "ps-list": "5.0.0",
+    "rxjs": "5.5.6"
+  },
+  "devDependencies": {
+    "good-injector": "0.2.0"
+  }
 }

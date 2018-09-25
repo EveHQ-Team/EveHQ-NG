@@ -7,16 +7,16 @@
 #region Usings
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 #endregion
 
 
 namespace EveHQ.NG.Infrastructure.Core
 {
-	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Constracted by IoC-container.")]
+	[UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature)]
 	public class HttpService : IHttpService, IDisposable
 	{
 		public HttpService()

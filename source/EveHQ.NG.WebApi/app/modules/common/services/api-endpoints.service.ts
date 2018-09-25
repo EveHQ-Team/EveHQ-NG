@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
+import { ApplicationConfigurationService } from 'modules/backend/application/application-configuration.service';
 
 @Injectable()
 export class ApiEndpointsService {
+	constructor(applicationConfigurationService: ApplicationConfigurationService) {
+		applicationConfigurationService.getAndNotifyOnChangeApplicationConfiguration()
+			.subscribe(applicationConfiguration => this.portNumber = applicationConfiguration.backendServicePortNumber);
+	}
 
 	public get authenticationNotification() {
-		return `${this.baseUri}/authentication-notification`;
+		return `${this.apiBaseUri}/authentication-notification`;
 	}
 
 	public get characters() {
@@ -19,6 +24,15 @@ export class ApiEndpointsService {
 		return `${this.apiBaseUri}/settings`;
 	}
 
-	private readonly baseUri = 'http://localhost:5000';
-	private readonly apiBaseUri = `${this.baseUri}/api`;
+	public get databases() {
+		return `${this.apiBaseUri}/databases`;
+	}
+
+	private get apiBaseUri(): string {
+		return `${this.apiHostUri}:${this.portNumber}/api`;
+	}
+
+	private apiHostUri = 'http://localhost';
+	// ReSharper disable once PrivateVariableCanBeMadeReadonly Updated on observe a new value.
+	private portNumber: number;
 }

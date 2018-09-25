@@ -27,6 +27,10 @@
 		"paths": {
 			"environments": [
 				"environments"
+			],
+			"*": [
+				"*",
+				"../electron/ipc-shared/*"
 			]
 		},
 		"types": [

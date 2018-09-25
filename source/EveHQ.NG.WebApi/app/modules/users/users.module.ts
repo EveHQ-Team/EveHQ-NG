@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common'; // TODO: Remove?
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { CreateUserComponent } from 'modules/users/create-user/create-user.component';
@@ -13,7 +13,7 @@ import { CardModule } from 'primeng/card';
 import { UserEditorComponent } from './user-editor/user-editor.component';
 import { ProfilesEditorComponent } from './profiles-editor/profiles-editor.component';
 
-export const usersRoutes: Routes = [
+const usersRoutes: Routes = [
 	{
 		path: '',
 		pathMatch: 'full',

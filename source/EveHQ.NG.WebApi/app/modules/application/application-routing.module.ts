@@ -13,6 +13,10 @@ const routes: Routes = [
 	{
 		path: 'characters',
 		loadChildren: 'modules/characters/characters.module#CharactersModule'
+	},
+	{
+		path: 'installation',
+		loadChildren: 'modules/installation/installation.module#InstallationModule'
 	}
 ];
 
@@ -20,5 +24,4 @@ const routes: Routes = [
 	imports: [RouterModule.forRoot(routes, { useHash: true })],
 	exports: [RouterModule]
 })
-export class ApplicationRoutingModule {
-}
+export class ApplicationRoutingModule {}

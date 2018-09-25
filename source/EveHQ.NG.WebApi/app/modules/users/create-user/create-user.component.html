@@ -1,4 +1,4 @@
-<section>
+<section class="field-with-description">
 	<p-card class="editor" title="The application user data">
 		<evehq-user-editor [user]="user$ | async" [password]="password$ | async" #userEditor></evehq-user-editor>
 	</p-card>
@@ -9,8 +9,8 @@
 		</p>
 	</div>
 </section>
-<section>
-	<p-card class="editor" title="The application user data">
+<section class="field-with-description">
+	<p-card class="editor" title="Meta-game profiles">
 		<evehq-profiles-editor [profiles]="profiles$ | async"
 								(addProfile)="addProfile($event)"
 								(removeProfile)="removeProfile($event)">

@@ -7,12 +7,12 @@
 #region Usings
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using EveHQ.NG.Domain.Core;
 using EveHQ.NG.Infrastructure.Core;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 
 namespace EveHQ.NG.WebServices.Ccp.Characters
 {
-	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Constructed by IoC-container.")]
+	[UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature)]
 	public sealed class EsiCharacterApi : ICharactersApi
 	{
 		public EsiCharacterApi(

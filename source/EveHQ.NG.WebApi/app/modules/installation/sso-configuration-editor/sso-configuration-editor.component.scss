@@ -1,0 +1,11 @@
+@import "~assets/styles/sizes";
+
+:host {
+	display: flex;
+	flex-direction: column;
+
+	.commands {
+		display: flex;
+		margin-bottom: $grid-step * 2;
+	}
+}

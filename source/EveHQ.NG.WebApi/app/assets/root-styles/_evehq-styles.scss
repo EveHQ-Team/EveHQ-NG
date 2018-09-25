@@ -1,9 +1,6 @@
 @import "../styles/sizes.scss";
 @import "../styles/colors.scss";
-
-.ui-inputtext:focus {
-	box-shadow: none;
-}
+@import "../styles/typography.scss";
 
 .ui-card-title {
 	margin-bottom: $grid-step * 4;
@@ -24,11 +21,16 @@
 
 	&:focus {
 		//clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+		box-shadow: none;
 		clip-path: polygon(0% 0%, 100% 0%, 100% calc(100% - 1px), 100% calc(100% - 1px), 100% 100%, 100% 100%, 0% 100%, 0% 100%, 0% calc(100% - 1px), 0% calc(100% - 1px));
 	}
 
 	&[disabled] {
 		border-bottom-style: dotted;
+	}
+
+	&.ng-invalid {
+		border-color: $error-color;
 	}
 }
 
@@ -41,5 +43,63 @@
 
 	&:focus {
 		clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+	}
+}
+
+.main-action {
+	padding: $grid-step;
+	min-width: $grid-step * 15;
+	height: $grid-step * 5;
+}
+
+.field-holder {
+	display: flex;
+	flex-flow: column nowrap;
+	margin-bottom: $grid-step * 2;
+
+	.field-name, .field-editor {
+		margin-bottom: $grid-step;
+	}
+
+	.field-error {
+		color: $error-color;
+		min-height: $grid-step * 4;
+	}
+}
+
+.error-message {
+	color: $error-color;
+}
+
+.description-text {
+	summary {
+		font-size: 20px;
+	}
+
+	ul {
+		list-style: disc;
+	}
+}
+
+section.field-with-description {
+	display: grid;
+	margin-bottom: $grid-step * 4;
+	grid-template-columns: 1fr 1fr;
+	grid-template-areas: "form description";
+	grid-column-gap: $grid-step * 4;
+	grid-row-gap: $grid-step * 2;
+
+	.editor {
+		grid-area: form;
+	}
+
+	.description {
+		grid-area: description;
+
+		@include base-font(m, light);
+
+		p {
+			margin-bottom: $base-line-height-m;
+		}
 	}
 }

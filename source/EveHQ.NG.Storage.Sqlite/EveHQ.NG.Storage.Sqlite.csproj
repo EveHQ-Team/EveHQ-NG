@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+	<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="ApplicationDatabase\Scripts\BuildStructure.tpl" />
+    <None Remove="ApplicationDatabase\Scripts\PopulateWithInitialData.tpl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="ApplicationDatabase\Scripts\BuildStructure.tpl" />
+    <EmbeddedResource Include="ApplicationDatabase\Scripts\PopulateWithInitialData.tpl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="2.1.0" />
+    <PackageReference Include="Simplify.Templates" Version="1.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EveHQ.NG.Infrastructure\EveHQ.NG.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

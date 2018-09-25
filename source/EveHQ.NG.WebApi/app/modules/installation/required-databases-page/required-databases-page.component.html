@@ -1,0 +1,16 @@
+<ul class="database-list">
+	<li *ngFor="let database of databases$ | async">
+		<div class="status">{{database.isCreated ? 'Created' : 'Not yet created'}}</div>
+		<div class="name">{{database.displayName}}</div>
+	</li>
+</ul>
+
+<ul class="errors">
+	<li *ngFor="let error of errors$ | async">{{error}}</li>
+</ul>
+
+<div class="commands">
+	<button pButton class="main-action" [disabled]="!(haveAllDatabasesCreated$ | async)" (click)="configureAuthentication()">
+		Configure authentication
+	</button>
+</div>

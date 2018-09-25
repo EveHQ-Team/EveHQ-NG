@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
-import 'rxjs/Rx';
 
 @Injectable()
 export class ApiService {
-	constructor(private readonly http: HttpClient) {
-	}
+	constructor(private readonly http: HttpClient) {}
 
 	public get(url: string, params: HttpParams = new HttpParams()): Observable<any> {
 		return this.http.get(url, { params });
 	}
 
-	public post(url: string, body: Object = {}): Observable<any> {
-		return this.http.post(url, JSON.stringify(body), { headers: this.headers });
+	public post<TEntity>(url: string, body: TEntity): Observable<HttpResponse<TEntity>> {
+		return this.http.post<TEntity>(url, JSON.stringify(body), { headers: this.headers, observe: 'response' });
 	}
 
 	public put(url: string, body: Object = {}): Observable<any> {

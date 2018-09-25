@@ -1,0 +1,37 @@
+<form [formGroup]="formGroup">
+	<section class="field-with-description">
+		<div class="field-holder editor">
+			<label class="field-name">Client ID:</label>
+			<input type="text" pInputText class="field-editor" formControlName="clientId"/>
+			<p class="field-error">{{clientIdErrors}}</p>
+		</div>
+		<div class="description">
+			<p>
+				The client ID is the unique ID of your application generated and used by SSO. You can get it on the EVE Online developers' site.
+			</p>
+		</div>
+	</section>
+	<section class="field-with-description">
+		<div class="field-holder">
+			<label class="field-name">Client secret:</label>
+			<input type="text" pInputText class="field-editor" formControlName="clientSecret"/>
+			<p class="field-error">{{clientSecretErrors}}</p>
+		</div>
+		<div class="description">
+			The client secret required to authenticate your application to SSO. You can get it on the EVE Online developers' site.
+		</div>
+	</section>
+	<section class="field-with-description">
+		<div class="field-holder">
+			<label class="field-name">Callback URL:</label>
+			<input type="text" pInputText class="field-editor" formControlName="callbackUrl"/>
+			<p class="field-error">{{callbackUrlErrors}}</p>
+		</div>
+		<div class="description">
+			The callback URL used to redirect from your browser to your application after successful authorization on SSO.
+		</div>
+	</section>
+	<section>
+		<a (click)="openDevelopersSite()" role="link">Go to EVE Online developers' site</a>
+	</section>
+</form>

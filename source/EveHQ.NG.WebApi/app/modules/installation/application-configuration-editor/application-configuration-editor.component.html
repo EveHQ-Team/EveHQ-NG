@@ -1,0 +1,7 @@
+<evehq-application-configuration-form [applicationConfiguration]="applicationConfiguration$ | async"
+									(changed)="changed($event)">
+</evehq-application-configuration-form>
+<div class="commands">
+	<button pButton class="main-action" [disabled]="!isValid" (click)="save()">Save</button>
+</div>
+<p class="error-message">{{setApplicationConfigurationError$ | async}}</p>

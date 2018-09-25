@@ -1,0 +1,15 @@
+@import "~assets/styles/sizes";
+
+:host {
+	display: flex;
+	align-content: center;
+	width: 100%;
+
+	.path-edit {
+		flex: 1 1 400px;
+	}
+
+	.open-dialog {
+		margin-left: $grid-step;
+	}
+}
