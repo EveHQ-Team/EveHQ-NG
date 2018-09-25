@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { Action } from '@ngrx/store';
+import { map, mergeMap } from 'rxjs/operators';
+import { Action, select, Store } from '@ngrx/store';
 import { Effect, Actions, ofType } from '@ngrx/effects';
-import { DatabasesService } from 'modules/common/services/databases.service';
 import {
 	GetherApplicationConfigurationUseCaseActionTypes,
 	GetherApplicationConfigurationStart
-	} from 'modules/application/use-cases/gether-application-configuration.use-case';
-import {GetherSsoConfigurationStart} from 'modules/application/use-cases/gether-sso-configuration.use-case';
-import {GetherSsoConfigurationUseCaseActionTypes} from 'modules/application/use-cases/gether-sso-configuration.use-case';
-import {CreateRequiredDatabasesUseCaseActionTypes} from 'modules/application/use-cases/create-required-databases.use-case';
-import {CreateRequiredDatabasesStart} from 'modules/application/use-cases/create-required-databases.use-case';
+} from 'modules/application/use-cases/gether-application-configuration.use-case';
+import { GetherSsoConfigurationStart } from 'modules/application/use-cases/gether-sso-configuration.use-case';
+import { GetherSsoConfigurationUseCaseActionTypes } from 'modules/application/use-cases/gether-sso-configuration.use-case';
+import { CreateRequiredDatabasesUseCaseActionTypes } from 'modules/application/use-cases/create-required-databases.use-case';
+import { CreateRequiredDatabasesStart } from 'modules/application/use-cases/create-required-databases.use-case';
+import { from } from 'rxjs/observable/from';
+import { SaveApplicationConfiguration } from 'modules/application/stores/configuration.state';
+import { ApplicationStore, getApplicationConfiguration } from 'modules/application/stores/application.state';
+import { StartApplication } from 'modules/application/use-cases/startup.use-case';
 
 export enum InstallApplicationUseCaseActionTypes {
 	InstallApplication = '[INSTALL APPLICATION USE CASE] Install Application',
@@ -29,7 +32,7 @@ export class InstallApplicationComplete implements Action {
 export class InstallApplicationUseCaseEffects {
 	constructor(
 		private readonly actions$: Actions,
-		private readonly databasesService: DatabasesService) {}
+		private readonly applicationStore: Store<ApplicationStore>) {}
 
 	// STEP: Gether the application configuration.
 	@Effect()
@@ -52,6 +55,18 @@ export class InstallApplicationUseCaseEffects {
 	@Effect()
 	public createApplicationDatabase$ = this.actions$.pipe(
 		ofType(CreateRequiredDatabasesUseCaseActionTypes.CreateRequiredDatabasesSuccess),
-		map(() => new InstallApplicationComplete()));
+		mergeMap(() => this.applicationStore.pipe(
+			select(getApplicationConfiguration),
+			mergeMap(applicationConfiguration => {
+				applicationConfiguration.isApplicationInstalled = true;
+				return from([
+					new SaveApplicationConfiguration(applicationConfiguration),
+					new InstallApplicationComplete()
+				]);
+			}))));
 
+	@Effect()
+	public installApplicationComplete$ = this.actions$.pipe(
+		ofType(InstallApplicationUseCaseActionTypes.InstallApplicationComplete),
+		map(() => new StartApplication()));
 }

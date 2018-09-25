@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { ApplicationConfiguration } from 'application-configuration';
 import { getApplicationConfiguration, getSaveApplicationConfigurationError } from 'modules/application/stores/application.state';
 import { ApplicationStore } from 'modules/application/stores/application.state';
-import { SaveApplicationConfiguration } from 'modules/application/stores/configuration.state';
+import { GetherApplicationConfigurationSave } from 'modules/application/use-cases/gether-application-configuration.use-case';
 
 @Component({
 	templateUrl: './application-configuration-editor.component.html',
@@ -34,7 +34,7 @@ export class ApplicationConfigurationEditorComponent implements OnInit {
 			return;
 		}
 
-		this.store.dispatch(new SaveApplicationConfiguration(this.applicationConfiguration));
+		this.store.dispatch(new GetherApplicationConfigurationSave(this.applicationConfiguration));
 	}
 
 	private applicationConfiguration: ApplicationConfiguration;

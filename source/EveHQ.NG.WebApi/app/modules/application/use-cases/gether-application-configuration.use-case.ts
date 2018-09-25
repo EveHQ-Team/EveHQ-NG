@@ -6,7 +6,8 @@ import { Effect, Actions, ofType } from '@ngrx/effects';
 import { ApplicationConfiguration } from 'application-configuration';
 import { ConfigurationStateActionTypes } from 'modules/application/stores/configuration.state';
 import { SaveApplicationConfiguration } from 'modules/application/stores/configuration.state';
-import {LoadApplicationConfiguration} from 'modules/application/stores/configuration.state';
+import { LoadApplicationConfiguration } from 'modules/application/stores/configuration.state';
+import { from } from 'rxjs/observable/from';
 
 export enum GetherApplicationConfigurationUseCaseActionTypes {
 	GetherApplicationConfigurationStart = '[GETHER APPLICATION CONFIGURATION] Gether Application Configuration Start',
@@ -62,10 +63,8 @@ export class GetherApplicationConfigurationUseCaseEffects {
 	public readonly getherApplicationConfigurationSave$ = this.actions$.pipe(
 		ofType(GetherApplicationConfigurationUseCaseActionTypes.GetherApplicationConfigurationSave),
 		map((action: GetherApplicationConfigurationSave) => action.applicationConfiguration),
-		map(applicationConfiguration => new SaveApplicationConfiguration(applicationConfiguration)));
-
-	@Effect()
-	public readonly saveApplicationConfigurationSuccess$ = this.actions$.pipe(
-		ofType(ConfigurationStateActionTypes.SaveApplicationConfigurationSuccess),
-		map(() => new GetherApplicationConfigurationSuccess()));
+		mergeMap(applicationConfiguration => from([
+			new SaveApplicationConfiguration(applicationConfiguration),
+			new GetherApplicationConfigurationSuccess()
+		])));
 }

@@ -162,7 +162,6 @@ export class BackendService {
 	}
 
 	private killExcessBackendServices(): Promise<void> {
-		console.warn('###1 ', this.getExecutableName());
 		return psList().then((processes: any[]) => {
 			const processToFind = this.getExecutableName();
 			const foundbackendServices = processes.reduce((found, current) => {

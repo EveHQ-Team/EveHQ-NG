@@ -11,7 +11,6 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using EveHQ.NG.Infrastructure;
 using EveHQ.NG.Infrastructure.Core;
-using EveHQ.NG.Infrastructure.Settings;
 using EveHQ.NG.Infrastructure.Storage.ApplicationDatabase;
 using EveHQ.NG.Infrastructure.UiNotification;
 using EveHQ.NG.Storage.Sqlite;

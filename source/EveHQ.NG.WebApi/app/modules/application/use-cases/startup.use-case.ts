@@ -26,7 +26,6 @@ import {
 	SetCurrentUser,
 	SetCurrentProfile
 	} from 'modules/application/stores/application.state';
-import { tag } from 'rxjs-spy/operators/tag';
 import { InstallApplication } from 'modules/application/use-cases/install-application.use-case';
 import {ApplicationConfigurationService} from 'modules/backend/application/application-configuration.service';
 

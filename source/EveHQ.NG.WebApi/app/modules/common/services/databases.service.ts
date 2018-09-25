@@ -1,27 +1,23 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import { mergeMap, every, catchError } from 'rxjs/operators';
-import { from } from 'rxjs/observable/from';
+import { Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { _throw } from 'rxjs/observable/throw';
 import { ApiService } from 'modules/common/services/api.service';
 import { ApiEndpointsService } from 'modules/common/services/api-endpoints.service';
+import { ApiException } from 'modules/application/models/api-exception';
+import { of } from 'rxjs/observable/of';
 
 @Injectable()
 export class DatabasesService {
 	constructor(
 		private readonly api: ApiService,
-		private readonly apiEndpointsService: ApiEndpointsService) { }
+		private readonly apiEndpointsService: ApiEndpointsService) {}
 
-	public createDatabases(): Observable<boolean> {
-		return from(this.requiredDatabases).pipe(
-			mergeMap(databaseName => this.api.post(`${this.apiEndpointsService.databases}/${databaseName}/create`, {})),
-			every(response => response.status === 201)
-		);
+	public createDatabase(databaseName: string): Observable<void> {
+		return this.api.post(`${this.apiEndpointsService.databases}/${databaseName}/create`, {}).pipe(
+			map(response => response.status === 201
+							? of<void>()
+							: _throw(new Error(`Can not create database ${databaseName}: ${response.body}`))),
+			catchError(error => _throw(ApiException.fromHttpErrorResponse(error, `Can not create database ${databaseName}.`))));
 	}
-
-	private readonly applicationDatabaseName = 'evehq-ng';
-	private readonly sdeDatabaseName = 'sde';
-	private readonly requiredDatabases = [
-		this.applicationDatabaseName,
-		this.sdeDatabaseName
-	];
 }

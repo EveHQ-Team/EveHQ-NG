@@ -1,0 +1,32 @@
+@import "~assets/styles/sizes";
+@import "~assets/styles/colors";
+
+:host {
+	display: flex;
+	flex-flow: column nowrap;
+
+	.database-list {
+		display: flex;
+		flex-flow: column nowrap;
+		margin-bottom: $grid-step * 2;
+
+		li {
+			display: flex;
+			flex-flow: row nowrap;
+		}
+
+		.status {
+			width: 100px;
+		}
+	}
+
+	.errors {
+		color: $error-color;
+		margin-bottom: $grid-step * 2;
+	}
+
+	.commands {
+		display: flex;
+		margin-bottom: $grid-step * 2;
+	}
+}

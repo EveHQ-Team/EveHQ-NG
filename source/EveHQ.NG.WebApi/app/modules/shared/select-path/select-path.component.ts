@@ -46,7 +46,6 @@ export class SelectPathComponent implements ControlValueAccessor {
 	public registerOnTouched(fn: any): void {}
 
 	public validate(control: FormControl): any {
-		console.warn('control: ', !this.path);
 		return this.isRequired && !this.path
 					? {
 						requiredError: { given: control.value }
@@ -59,7 +58,6 @@ export class SelectPathComponent implements ControlValueAccessor {
 	}
 
 	private onPathSelected(): void {
-		console.warn('###: ', this.systemOpenDialogButton.nativeElement.files[0].path);
 		this.path = this.systemOpenDialogButton.nativeElement.files[0].path;
 		this.propagateChange(this.path);
 	}

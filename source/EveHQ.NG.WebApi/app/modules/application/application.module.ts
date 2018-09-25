@@ -23,7 +23,7 @@ import { SelectProfileUseCaseEffects } from 'modules/application/use-cases/selec
 import { InstallApplicationUseCaseEffects } from 'modules/application/use-cases/install-application.use-case';
 import { GetherApplicationConfigurationUseCaseEffects } from 'modules/application/use-cases/gether-application-configuration.use-case';
 import { GetherSsoConfigurationUseCaseEffects } from 'modules/application/use-cases/gether-sso-configuration.use-case';
-import { CreateRequiredDatabasesUseCaseEffects } from 'modules/application/use-cases/create-required-databases.use-case';
+import { CreateRequiredDatabasesUseCaseEffects, createRequiredDatabasesUseCaseReducers } from 'modules/application/use-cases/create-required-databases.use-case';
 import { SharedModule } from 'modules/shared/shared.module';
 import { ConfigurationStateEffects } from 'modules/application/stores/configuration.state';
 
@@ -39,6 +39,7 @@ import { ConfigurationStateEffects } from 'modules/application/stores/configurat
 		StoreModule.forFeature('shell', shellReducers),
 		StoreModule.forFeature('createUserUseCase', createUserUseCaseReducers),
 		StoreModule.forFeature('loginUseCase', loginUseCaseReducers),
+		StoreModule.forFeature('createRequiredDatabasesUseCase', createRequiredDatabasesUseCaseReducers),
 		EffectsModule.forRoot([
 			StartupUseCaseEffects,
 			CreateUserUseCaseEffects,

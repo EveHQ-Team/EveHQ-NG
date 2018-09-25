@@ -5,6 +5,7 @@ import { ApplicationConfigurationEditorComponent } from
 import { SharedModule } from 'modules/shared/shared.module';
 import { SsoConfigurationEditorComponent } from 'modules/installation/sso-configuration-editor/sso-configuration-editor.component';
 import { ConfigurationModule } from 'modules/configuration/configuration.module';
+import { RequiredDatabasesPageComponent } from './required-databases-page/required-databases-page.component';
 
 const installationRoutes: Routes = [
 	{
@@ -17,7 +18,7 @@ const installationRoutes: Routes = [
 	},
 	{
 		path: 'required-databases',
-		component: SsoConfigurationEditorComponent // TODO: implement RequiredDatabasesScreenComponent
+		component: RequiredDatabasesPageComponent
 	}
 ];
 
@@ -29,7 +30,8 @@ const installationRoutes: Routes = [
 	],
 	declarations: [
 		ApplicationConfigurationEditorComponent,
-		SsoConfigurationEditorComponent
+		SsoConfigurationEditorComponent,
+		RequiredDatabasesPageComponent
 	]
 })
 export class InstallationModule {}
