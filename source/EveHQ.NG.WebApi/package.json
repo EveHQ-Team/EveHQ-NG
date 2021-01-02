@@ -90,7 +90,7 @@
     "fs-extra-cli": "0.0.4",
     "html-loader": "0.5.1",
     "json-loader": "0.5.7",
-    "minimist": "1.2.0",
+    "minimist": "1.2.5",
     "mkdirp": "0.5.1",
     "ncp": "2.0.0",
     "node-fs-extra": "0.8.2",
